@@ -140,12 +140,14 @@ export function base(): string {
 /** Points the app at a different node and re-checks it. */
 export async function setEndpoint(input: string): Promise<boolean> {
   const url = normalize(input)
+  selectionGeneration++
+  checking = null
   if (!url) {
-    endpoint.error = 'That is not a URL.'
-    endpoint.hint = `Try ${DEFAULT_RPC}`
-    endpoint.health = 'error'
+    fail('That is not a URL.', `Try ${DEFAULT_RPC}`)
     return false
   }
+  endpoint.health = 'checking'
+  clearChain()
   endpoint.rpc = url
   save(url)
   return check()
@@ -184,20 +186,37 @@ async function infoOf(apiBase: string): Promise<ChainInfo | null> {
   }
 }
 
-let checking: Promise<boolean> | null = null
+let selectionGeneration = 0
+let checking: {url: string; generation: number; promise: Promise<boolean>} | null = null
 
 /** Asks the node for its chain id and its deployment, and classifies the failure when it does not answer. */
 export function check(): Promise<boolean> {
-  if (checking) return checking
-  checking = run().finally(() => {
-    checking = null
+  const url = endpoint.rpc, generation = selectionGeneration
+  if (checking?.url === url && checking.generation === generation) return checking.promise
+  let selectedURL = url
+  const current = () => selectionGeneration === generation && endpoint.rpc === selectedURL
+  // Own the promise before fetch or a reactive observer can reenter check.
+  let accept!: (value: boolean) => void
+  let decline!: (reason: unknown) => void
+  const completed = new Promise<boolean>((resolve, reject) => {accept = resolve; decline = reject})
+  const promise = completed.finally(() => {
+    if (checking?.promise === promise) checking = null
   })
-  return checking
+  checking = {url, generation, promise}
+  const selectRPC = (candidate: string) => {
+    if (!current()) return false
+    selectedURL = candidate
+    if (checking?.promise === promise) checking.url = candidate
+    endpoint.rpc = candidate
+    return current()
+  }
+  void run(url, current, selectRPC).then(accept, decline)
+  return promise
 }
 
-async function run(): Promise<boolean> {
-  const url = endpoint.rpc
+async function run(url: string, current: () => boolean, selectRPC: (candidate: string) => boolean): Promise<boolean> {
   endpoint.health = 'checking'
+  clearChain()
   endpoint.error = null
   endpoint.hint = null
 
@@ -219,22 +238,34 @@ async function run(): Promise<boolean> {
   for (const candidate of candidates) {
     try {
       const chainId = await chainIdOf(candidate, 8000)
+      if (!current()) return false
       const apiBase = /\/rpc$/.test(candidate) ? candidate.replace(/\/rpc$/, '') : null
       const info = apiBase ? await infoOf(apiBase) : null
-      endpoint.rpc = candidate
+      if (!current()) return false
+      if (!selectRPC(candidate)) return false
       save(candidate)
+      if (!current()) return false
       endpoint.chainId = chainId
+      if (!current()) return false
       endpoint.latency = Math.round(performance.now() - started)
+      if (!current()) return false
       endpoint.apiBase = info ? apiBase : null
+      if (!current()) return false
       endpoint.info = info
+      if (!current()) return false
       endpoint.health = 'ok'
+      if (!current()) return false
       endpoint.error = null
+      if (!current()) return false
       endpoint.hint = null
+      if (!current()) return false
       return true
     } catch (err) {
+      if (!current()) return false
       last = err
     }
   }
+  if (!current()) return false
   describe(last, url)
   return false
 }
@@ -271,14 +302,18 @@ export function hostOf(url: string): string {
   }
 }
 
-function fail(error: string, hint: string | null) {
-  endpoint.health = 'error'
-  endpoint.error = error
-  endpoint.hint = hint
+function clearChain() {
   endpoint.latency = null
   endpoint.chainId = null
   endpoint.apiBase = null
   endpoint.info = null
+}
+
+function fail(error: string, hint: string | null) {
+  endpoint.health = 'error'
+  endpoint.error = error
+  endpoint.hint = hint
+  clearChain()
 }
 
 export const reachable = computed(() => endpoint.health === 'ok')

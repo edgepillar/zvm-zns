@@ -10,7 +10,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview --port 47801",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "test:context": "node --experimental-vm-modules --test-reporter=tap --test test/endpoint-race.test.mjs test/heartbeat-race.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.5",

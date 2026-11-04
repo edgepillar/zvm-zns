@@ -48,7 +48,10 @@ export function onBlock(fn: (head: number) => void): () => void {
 }
 
 let timer: number | undefined
-let lastSeen = 0
+let lastSeen: number | null = null
+let started = false
+let generation = 0
+let reading: {generation: number; promise?: Promise<void>} | null = null
 const gaps: number[] = []
 
 // A hidden tab does not poll. Every page refreshes on the beat, so a
@@ -57,25 +60,46 @@ const gaps: number[] = []
 // Coming back polls at once, and the listeners catch the page up.
 const hidden = () => typeof document !== 'undefined' && document.hidden
 
-async function poll() {
+function poll(): Promise<void> | undefined {
   if (!reachable.value || endpoint.chainId === null || hidden()) return
+  const selected = generation
+  if (reading?.generation === selected) return reading.promise
+  const rpc = endpoint.rpc, chainId = endpoint.chainId
+  const current = () => generation === selected && endpoint.rpc === rpc &&
+    endpoint.chainId === chainId && reachable.value && !hidden()
+  const owner: {generation: number; promise?: Promise<void>} = {generation: selected}
+  reading = owner
+  owner.promise = read(chainId, current).finally(() => {
+    if (reading === owner) reading = null
+  })
+  return owner.promise
+}
+
+async function read(chainId: number, current: () => boolean): Promise<void> {
   try {
-    const client = publicClient(endpoint.chainId)
+    const client = publicClient(chainId)
+    if (!current()) return
     // The height first, and the block only when it moved. cacheTime 0 because
     // viem otherwise caches the height for its polling interval.
     const number = await client.getBlockNumber({cacheTime: 0})
+    if (!current()) return
     chain.polledAt = Date.now()
-    chain.chainId = endpoint.chainId
+    if (!current()) return
+    chain.chainId = chainId
+    if (!current()) return
     chain.error = null
+    if (!current()) return
     if (Number(number) === lastSeen) return
     const block = await client.getBlock({blockNumber: number})
+    if (!current()) return
     const head = Number(block.number)
     chain.baseFee = block.baseFeePerGas ?? null
+    if (!current()) return
     if (head !== lastSeen) {
       // Blocks carry NoM's own timestamps, so the gap between two of them is
       // the momentum cadence rather than this browser's clock drift. A poll
       // a minute apart sees several blocks at once; the gap is per block.
-      if (chain.timestamp && block.timestamp && lastSeen) {
+      if (chain.timestamp && block.timestamp && lastSeen !== null && head > lastSeen) {
         const gap = (Number(block.timestamp) - chain.timestamp) / Math.max(1, head - lastSeen)
         if (gap > 0 && gap < 120) {
           gaps.push(gap)
@@ -83,38 +107,57 @@ async function poll() {
           chain.interval = gaps.reduce((a, b) => a + b, 0) / gaps.length
         }
       }
+      if (!current()) return
       lastSeen = head
+      if (!current()) return
       chain.head = head
+      if (!current()) return
       chain.timestamp = Number(block.timestamp)
+      if (!current()) return
       chain.landedAt = Date.now()
-      onBlockListeners.forEach((fn) => fn(head))
+      if (!current()) return
+      for (const fn of onBlockListeners) {
+        if (!current()) break
+        fn(head)
+      }
     }
   } catch (err: any) {
-    chain.error = err?.shortMessage ?? err?.message ?? String(err)
+    if (current()) chain.error = err?.shortMessage ?? err?.message ?? String(err)
   }
 }
 
 export function startChainPolling(intervalMs = 60_000) {
-  if (timer) return
+  if (started || timer !== undefined) return
+  started = true
   chain.pollMs = intervalMs
   poll()
   timer = window.setInterval(poll, intervalMs)
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) poll()
+    if (document.hidden) {
+      generation++
+      reading = null
+    } else poll()
   })
 }
 
 // A new node is a new chain until proven otherwise: drop what the old one said
 // rather than showing its head height under the new endpoint's name.
 watch(
-  () => endpoint.rpc,
+  () => [endpoint.rpc, endpoint.chainId, endpoint.health],
   () => {
-    lastSeen = 0
+    generation++
+    reading = null
+    lastSeen = null
     gaps.length = 0
+    chain.chainId = null
     chain.head = null
     chain.timestamp = null
     chain.baseFee = null
+    chain.interval = 15
+    chain.landedAt = Date.now()
+    chain.polledAt = Date.now()
     chain.error = null
-    poll()
+    return poll()
   },
+  {flush: 'sync'},
 )

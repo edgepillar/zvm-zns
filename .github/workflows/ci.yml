@@ -43,6 +43,8 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       - run: npm ci
+      - name: Check shipped endpoint and heartbeat context controls without network
+        run: npm run test:context
       # The build refuses to run without its endpoints; the example has them.
       - run: cp ../.env.example ../.env
       - run: npm run build
