@@ -9,6 +9,26 @@ permissions:
 
 # Linux, as most people who build this will be on.
 jobs:
+  lock-inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Observe the selected source and Python runtime
+        run: |
+          git rev-parse --verify HEAD
+          python3 --version
+      - name: Check declaration-graph data controls
+        run: python3 -B -m unittest discover -s tools/dependency-review -p 'test_*.py' -v
+      - name: Inventory both lock inputs without installing packages
+        run: python3 -B tools/dependency-review/lock_review.py
+
   vendor:
     runs-on: ubuntu-latest
     timeout-minutes: 5
