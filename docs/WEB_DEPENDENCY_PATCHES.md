@@ -45,7 +45,10 @@ application dependency tree or download a browser for these controls.
 Normal source-map controls cover small flat-map round trips, line gaps, indexed
 maps extending at most 16 lines beyond short text, twenty constructor-only
 malformed-offset checks and four nested sections. Malformed maps are never
-iterated or serialized. The deepest source getter is expected to be read
+iterated or serialized. The four small source-node cases retain the legacy
+text differences and require the patch to preserve all four original texts.
+A passing legacy comparison records bounded defects; it is not a safety waiver.
+The deepest source getter is expected to be read
 81 times by the legacy version and once by the patch. Separate small sorting
 controls use Node's string-code-generation restriction; observing that restriction
 does not qualify an actual browser CSP. Each source-map profile must pass four

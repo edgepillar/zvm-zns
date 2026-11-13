@@ -407,8 +407,8 @@
       "sha256": "4d0d52499fd12f13fe27922253d7f8da7647de5c945cc32edcbe531768fc7479"
     },
     "web/scripts/source-map-controls.test.mjs": {
-      "bytes": 3388,
-      "sha256": "4a647d78fccc0c8c426d45798429d1109d7cc04ed480283be8478d189a5708d5"
+      "bytes": 3829,
+      "sha256": "002de861c7dd6e33740d932312d790e49770f87a698ed26675da6002f7f4ebc7"
     },
     "web/scripts/verify.mjs": {
       "bytes": 17816,

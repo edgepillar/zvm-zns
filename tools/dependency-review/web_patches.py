@@ -144,14 +144,20 @@ def main():
             raw, restricted = [(output / ('streams/' + role + '-' + label + '.stdout.txt')).read_bytes() for label in ('controls', 'codegen')]
             normal_totals, restricted_totals = test_summary(raw, 4), test_summary(restricted, 1)
             offsets, nesting, codegen = marker(raw, 'ZNS_SOURCE_MAP_OFFSETS'), marker(raw, 'ZNS_SOURCE_MAP_NESTING'), marker(restricted, 'ZNS_SOURCE_MAP_CODEGEN')
-            require(offsets['version'] == nesting['version'] == codegen['version'] == version and offsets['cases'] == 20, 'selected control version differs')
+            source_node = marker(raw, 'ZNS_SOURCE_MAP_NODE')
+            require(offsets['version'] == nesting['version'] == codegen['version'] == source_node['version'] == version
+                and offsets['cases'] == 20, 'selected control version differs')
             require(offsets['accepted'] + offsets['rejected'] == 20 and not offsets['malformedMappingIterationPerformed'], 'offset control budget differs')
+            require(source_node['cases'] == source_node['unchanged'] + source_node['mismatches'] == 4
+                and source_node['maximumSectionOffset'] == 16 and not source_node['malformedNumericOffsetsUsed'], 'source-node control budget differs')
+            require(source_node['mismatches'] == 0 if role == 'candidate' else source_node['mismatches'] > 0,
+                'source-node correction not observed')
             require((offsets['accepted'] == 0 if role == 'candidate' else offsets['accepted'] > 0)
                 and nesting['depth'] == 4 and nesting['deepestSourceReads'] == (1 if role == 'candidate' else 81), 'source-map correction not observed')
             require(codegen['stringCodeGenerationDisabled'] and codegen['patchedSortingPassed'] == (role == 'candidate')
                 and codegen['expectedLegacyRejectionObserved'] == (role == 'baseline') and not codegen['browserCSPQualified'], 'restricted-runtime control differs')
             profiles[role] = {'version': version, 'normalTestCounts': normal_totals, 'restrictedTestCounts': restricted_totals,
-                'offsets': offsets, 'nesting': nesting, 'codeGenerationRestriction': codegen}
+                'offsets': offsets, 'nesting': nesting, 'sourceNode': source_node, 'codeGenerationRestriction': codegen}
         distribution = dist_inventory(web / 'dist')
         for notice in plan['retainedNotices']:
             require(distribution['files'][notice['distPath']] == notice['pin'], 'original notice not preserved in build output')

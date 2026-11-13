@@ -25,12 +25,21 @@ test('flat maps retain small line gaps, original positions and generated text', 
   assert.equal(SourceNode.fromStringWithSourceMap(text, consumer).toString(), text)
 })
 
-test('small indexed maps preserve text when mappings extend past its end', () => {
+test('small indexed maps compare legacy and patched handling past the text end', () => {
   const text = 'var x;\n'
+  let unchanged = 0, mismatches = 0
   for (const line of [0, 2, 8, 16]) {
     const consumer = new SourceMapConsumer(indexed(line))
-    assert.equal(SourceNode.fromStringWithSourceMap(text, consumer).toString(), text)
+    const result = SourceNode.fromStringWithSourceMap(text, consumer).toString()
+    assert.ok(result.length <= text.length + 512)
+    if (result === text) unchanged++
+    else mismatches++
   }
+  assert.equal(unchanged + mismatches, 4)
+  if (version === '1.2.2') assert.equal(mismatches, 0)
+  else assert.ok(mismatches > 0)
+  console.log('ZNS_SOURCE_MAP_NODE ' + JSON.stringify({version, cases: 4, unchanged, mismatches,
+    maximumSectionOffset: 16, malformedNumericOffsetsUsed: false}))
 })
 
 test('malformed offsets are checked at construction without generating mappings', () => {
