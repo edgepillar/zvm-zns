@@ -28,6 +28,13 @@ jobs:
         run: python3 -B -m unittest discover -s tools/dependency-review -p 'test_*.py' -v
       - name: Inventory both lock inputs without installing packages
         run: python3 -B tools/dependency-review/lock_review.py
+      - name: Fetch the exact locked bundled publication with a transport cap
+        run: |
+          archive="$RUNNER_TEMP/oxide-wasm32-wasi-4.3.3.tgz"
+          test ! -e "$archive"
+          curl --fail --silent --show-error --retry 0 --max-time 90 --max-filesize 33554432 --proto '=https' --output "$archive" https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.3.3.tgz
+      - name: Inspect bundled manifests and original notice candidates without extracting
+        run: python3 -B tools/dependency-review/bundled_archive.py --root web --location node_modules/@tailwindcss/oxide-wasm32-wasi --archive "$RUNNER_TEMP/oxide-wasm32-wasi-4.3.3.tgz"
 
   vendor:
     runs-on: ubuntu-latest

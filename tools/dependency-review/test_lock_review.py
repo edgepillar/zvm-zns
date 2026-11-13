@@ -124,12 +124,12 @@ class LockControls(unittest.TestCase):
         self.lock["packages"]["node_modules/a"].update(optionalDependencies={"optional": "1"}, peerDependencies={"peer": "1"})
         result = self.run_inventory()
         self.assertEqual(len(result["unresolvedDeclarations"]), 2)
-        self.assertTrue(result["allRequiredDeclarationTargetsRecorded"])
+        self.assertTrue(result["allRequiredDeclarationsHaveRecordedSourceRoute"])
 
     def test_missing_required_transitive_is_an_explicit_open_gap(self):
         self.lock["packages"]["node_modules/a"].update(optional=True, cpu=["wasm32"], dependencies={"missing": "1"})
         result = self.run_inventory()
-        self.assertFalse(result["allRequiredDeclarationTargetsRecorded"])
+        self.assertFalse(result["allRequiredDeclarationsHaveRecordedSourceRoute"])
         self.assertEqual(result["unresolvedRequiredDeclarations"][0]["name"], "missing")
         self.assertEqual(result["unresolvedRequiredDeclarations"][0]["parentDeclaredCPU"], ["wasm32"])
         self.assertFalse(result["completeLockIntegrityReview"])
@@ -137,6 +137,55 @@ class LockControls(unittest.TestCase):
     def test_invalid_platform_declaration(self):
         self.lock["packages"]["node_modules/a"]["cpu"] = "wasm32"
         self.rejects()
+
+    def test_bundle_declaration_is_not_a_missing_lock_target(self):
+        self.lock["packages"]["node_modules/a"].update(dependencies={"bundled": "^1"}, bundleDependencies=["bundled"])
+        result = self.run_inventory()
+        self.assertEqual(result["schema"], 2)
+        self.assertEqual(result["unresolvedRequiredDeclarations"], [])
+        self.assertEqual(result["declaredBundledArchiveDependencies"][0]["name"], "bundled")
+        self.assertTrue(result["allRequiredDeclarationsHaveRecordedSourceRoute"])
+        self.assertFalse(result["allRequiredDeclarationsHaveSeparateLockLocation"])
+        self.assertFalse(result["bundledArchiveContentsVerified"])
+        self.assertEqual(result["rootDeclarationRoutes"][0]["declaredArchiveDependencies"][0]["name"], "bundled")
+
+    def test_bundle_alias_and_boolean_forms(self):
+        row = self.lock["packages"]["node_modules/a"]
+        row.update(dependencies={"bundled": "1"}, bundledDependencies=True)
+        self.assertEqual(len(self.run_inventory()["declaredBundledArchiveDependencies"]), 1)
+        row["bundledDependencies"] = False
+        self.assertEqual(len(self.run_inventory()["unresolvedRequiredDeclarations"]), 1)
+        row["bundledDependencies"] = ["bundled"]
+        row["bundleDependencies"] = ["bundled"]
+        self.assertEqual(len(self.run_inventory()["declaredBundledArchiveDependencies"]), 1)
+        row["bundleDependencies"] = False
+        self.rejects()
+
+    def test_malformed_or_undeclared_bundles_refused(self):
+        row = self.lock["packages"]["node_modules/a"]
+        row["dependencies"] = {"bundled": "1"}
+        for value in (["bundled", "bundled"], ["other"], {"bundled": True}, ["../outside"], 1):
+            row["bundleDependencies"] = value
+            self.rejects()
+
+    def test_optional_peer_absence_has_its_own_classification(self):
+        self.lock["packages"]["node_modules/a"].update(peerDependencies={"peer": "1"}, peerDependenciesMeta={"peer": {"optional": True}})
+        result = self.run_inventory()
+        self.assertEqual(result["unresolvedDeclarations"], [])
+        self.assertEqual(result["absentOptionalPeerDeclarations"][0]["name"], "peer")
+
+    def test_invalid_optional_peer_metadata(self):
+        row = self.lock["packages"]["node_modules/a"]
+        row["peerDependencies"] = {"peer": "1"}
+        for value in ({"peer": {"optional": "true"}}, {"../other": {"optional": True}}, {"peer": {"unknown": True}}):
+            row["peerDependenciesMeta"] = value
+            self.rejects()
+
+    def test_orphan_optional_peer_metadata_is_not_an_invented_dependency(self):
+        self.lock["packages"]["node_modules/a"]["peerDependenciesMeta"] = {"orphan": {"optional": True}}
+        result = self.run_inventory()
+        self.assertEqual(result["packageRecords"][0]["peerMetadataWithoutDeclaration"], ["orphan"])
+        self.assertEqual(result["absentOptionalPeerDeclarations"], [])
 
     def test_license_absence_and_install_scripts_are_observations(self):
         row = self.lock["packages"]["node_modules/a"]

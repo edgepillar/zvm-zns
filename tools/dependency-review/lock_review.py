@@ -67,6 +67,33 @@ def effective_name(name, spec):
     return name
 
 
+def bundled_names(row):
+    """A publication declaration, not evidence of an archive member."""
+    fields = [row[key] for key in ("bundleDependencies", "bundledDependencies") if key in row]
+    require(len(fields) < 2 or fields[0] == fields[1], "conflicting bundle declarations")
+    value = fields[0] if fields else []
+    declared = set(dependencies(row, "dependencies")) | set(dependencies(row, "optionalDependencies"))
+    if type(value) is bool:
+        return sorted(declared) if value else []
+    require(type(value) is list and len(value) <= MAX_PACKAGES, "invalid bundled dependency list")
+    require(all(type(name) is str and NAME.fullmatch(name) for name in value), "invalid bundled dependency name")
+    require(len(set(value)) == len(value) and set(value) <= declared, "duplicate or undeclared bundled dependency")
+    return sorted(value)
+
+
+def optional_peers(row):
+    value = row.get("peerDependenciesMeta", {})
+    require(type(value) is dict, "invalid peer dependency metadata")
+    declared = dependencies(row, "peerDependencies")
+    result = []
+    for name, meta in value.items():
+        require(type(name) is str and NAME.fullmatch(name) and type(meta) is dict and set(meta) <= {"optional"}, "unreviewed peer metadata")
+        require("optional" not in meta or type(meta["optional"]) is bool, "invalid optional peer flag")
+        if name in declared and meta.get("optional", False):
+            result.append(name)
+    return sorted(result)
+
+
 def location_name(path):
     require(type(path) is str and 0 < len(path) <= 2048, "invalid lock location")
     parts = path.split("/")
@@ -109,6 +136,9 @@ def inventory(package_raw, lock_raw):
     for scope in SCOPES:
         require(dependencies(package, scope) == dependencies(root, scope), "manifest and lock root declarations differ")
 
+    bundles = {path: bundled_names(row) for path, row in packages.items() if type(row) is dict}
+    peers = {path: optional_peers(row) for path, row in packages.items() if type(row) is dict}
+    require(not bundles[""], "root publication bundling is outside this private-project inventory")
     records = []
     for path, row in sorted(packages.items()):
         if path == "":
@@ -141,16 +171,25 @@ def inventory(package_raw, lock_raw):
             "resolved": expected, "integrity": integrity, "declaredLicense": license_value,
             "lockDeclaredDev": row.get("dev", False), "lockDeclaredOptional": row.get("optional", False),
             "lockDeclaredPeer": row.get("peer", False), "declaredInstallScript": row.get("hasInstallScript", False),
-            "declaredOS": row.get("os", []), "declaredCPU": row.get("cpu", []), "declaredLibc": row.get("libc", [])})
+            "declaredOS": row.get("os", []), "declaredCPU": row.get("cpu", []), "declaredLibc": row.get("libc", []),
+            "declaredBundledDependencies": bundles[path], "declaredOptionalPeers": peers[path],
+            "peerMetadataWithoutDeclaration": sorted(set(row.get("peerDependenciesMeta", {})) - set(row.get("peerDependencies", {})))})
 
-    edges, unresolved, direct = [], [], []
+    edges, unresolved, direct, archive_routes, absent_optional_peers = [], [], [], [], []
     for path, row in sorted(packages.items()):
         scopes = SCOPES if path == "" else ("dependencies", "optionalDependencies", "peerDependencies")
         for scope in scopes:
             for name, spec in sorted(dependencies(row, scope).items()):
                 target = resolve(path, name, packages)
                 edge = {"from": path, "scope": scope, "name": name, "requested": spec, "to": target}
-                if target is None:
+                if scope in ("dependencies", "optionalDependencies") and name in bundles[path]:
+                    archive_routes.append({"from": path, "scope": scope, "name": name, "requested": spec,
+                        "effectiveName": effective_name(name, spec), "parentArchiveURL": row["resolved"],
+                        "parentArchiveIntegrity": row["integrity"], "coincidentLockLocation": target,
+                        "status": "DECLARED_BUNDLED_ARCHIVE_CONTENT_NOT_VERIFIED"})
+                elif target is None and scope == "peerDependencies" and name in peers[path]:
+                    absent_optional_peers.append({**edge, "status": "OPTIONAL_PEER_NOT_RECORDED"})
+                elif target is None:
                     require(path != "", "root dependency has no locked target")
                     edge["parentLockDeclaredOptional"] = row.get("optional", False)
                     edge["parentDeclaredOS"] = row.get("os", [])
@@ -162,7 +201,7 @@ def inventory(package_raw, lock_raw):
                     edges.append(edge)
                     if path == "":
                         direct.append(edge)
-                require(len(edges) + len(unresolved) <= MAX_EDGES, "dependency edge budget")
+                require(sum(map(len, (edges, unresolved, archive_routes, absent_optional_peers))) <= MAX_EDGES, "dependency edge budget")
     adjacency = {}
     for edge in edges:
         adjacency.setdefault(edge["from"], set()).add(edge["to"])
@@ -177,18 +216,23 @@ def inventory(package_raw, lock_raw):
             pending.extend(adjacency.get(here, set()) - seen)
         covered.update(seen)
         routes.append({"scope": edge["scope"], "name": edge["name"], "lockedTarget": edge["to"],
-                       "declaredGraphLocations": sorted(seen)})
-    return {"schema": 1, "status": "LOCK_DECLARATIONS_OBSERVED_REVIEW_REQUIRED", "lockfileVersion": 3,
+                       "declaredGraphLocations": sorted(seen), "declaredArchiveDependencies": [
+                           {"from": row["from"], "name": row["name"], "parentArchiveIntegrity": row["parentArchiveIntegrity"]}
+                           for row in archive_routes if row["from"] in seen]})
+    return {"schema": 2, "status": "LOCK_AND_BUNDLED_DECLARATIONS_OBSERVED_REVIEW_REQUIRED", "lockfileVersion": 3,
         "packageJsonSha256": hashlib.sha256(package_raw).hexdigest(), "packageLockSha256": hashlib.sha256(lock_raw).hexdigest(),
         "packageCount": len(records), "packageRecords": records, "resolvedDeclarationEdges": edges,
         "unresolvedDeclarations": unresolved, "rootDeclarationRoutes": routes,
         "unresolvedRequiredDeclarations": [row for row in unresolved if row["scope"] == "dependencies"],
-        "allRequiredDeclarationTargetsRecorded": not any(row["scope"] == "dependencies" for row in unresolved),
+        "declaredBundledArchiveDependencies": archive_routes, "absentOptionalPeerDeclarations": absent_optional_peers,
+        "allRequiredDeclarationsHaveRecordedSourceRoute": not any(row["scope"] == "dependencies" for row in unresolved),
+        "allRequiredDeclarationsHaveSeparateLockLocation": not any(row["scope"] == "dependencies" for row in unresolved + archive_routes),
         "locationsWithoutRootDeclarationRoute": sorted(set(packages) - {""} - covered),
         "locationsWithoutDeclaredLicense": [row["location"] for row in records if row["declaredLicense"] is None],
         "locationsDeclaringInstallScripts": [row["location"] for row in records if row["declaredInstallScript"]],
         "scope": "All lock locations, including development and optional/platform packages; no installed platform projection.",
         "packagePayloadsAcquiredOrVerified": False, "publisherOrRegistryAttestationsVerified": False,
+        "bundledArchiveContentsVerified": False,
         "semverSatisfactionIndependentlyVerified": False, "vulnerabilityScanExecuted": False,
         "applicationRuntimeReachabilityEstablished": False, "licenseReviewComplete": False,
         "installedPlatformQualified": False, "completeLockIntegrityReview": False,
