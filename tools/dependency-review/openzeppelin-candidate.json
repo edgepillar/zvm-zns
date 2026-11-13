@@ -399,6 +399,164 @@
     "repository": "edgepillar/zvm-zns",
     "revision": "44360c841df4b22a1b8e71c33e90d271014d8171"
   },
+  "profilePackageSourcePins": {
+    "baseline": {
+      "@ensdomains/buffer/contracts/Buffer.sol": {
+        "bytes": 8959,
+        "sha256": "86c9d6aba703ccb58b813ad6b28abb7678efeaeab61f2a9a10af5c343c537a06"
+      },
+      "@openzeppelin/contracts-v5/access/Ownable.sol": {
+        "bytes": 3102,
+        "sha256": "38578bd71c0a909840e67202db527cc6b4e6b437e0f39f0c909da32c1e30cb81"
+      },
+      "@openzeppelin/contracts-v5/utils/Context.sol": {
+        "bytes": 963,
+        "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6"
+      },
+      "@openzeppelin/contracts/access/Ownable.sol": {
+        "bytes": 2616,
+        "sha256": "a8e4e1ae19d9bd3e8b0a6d46577eec098c01fbaffd3ec1252fd20d799e73393b"
+      },
+      "@openzeppelin/contracts/token/ERC1155/IERC1155.sol": {
+        "bytes": 4026,
+        "sha256": "11a1673048905dbd7703b3e23c22d612484db9c0b5a629c303ed609c04850f3b"
+      },
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "bytes": 2737,
+        "sha256": "7ebde70853ccafcf1876900dad458f46eb9444d591d39bfc58e952e2582f5587"
+      },
+      "@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+        "bytes": 17006,
+        "sha256": "7af3ff063370acb5e1f1a2aab125ceca457cd1fa60ff8afa37aabc366349d286"
+      },
+      "@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+        "bytes": 4877,
+        "sha256": "c8d867eda0fd764890040a3644f5ccf5db92f852779879f321ab3ad8b799bf97"
+      },
+      "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+        "bytes": 987,
+        "sha256": "77f0f7340c2da6bb9edbc90ab6e7d3eb8e2ae18194791b827a3e8c0b11a09b43"
+      },
+      "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+        "bytes": 761,
+        "sha256": "f16b861aa1f623ccc5e173f1a82d8cf45b678a7fb81e05478fd17eb2ccb7b37e"
+      },
+      "@openzeppelin/contracts/utils/Address.sol": {
+        "bytes": 9364,
+        "sha256": "8b85a2463eda119c2f42c34fa3d942b61aee65df381f48ed436fe8edb3a7d602"
+      },
+      "@openzeppelin/contracts/utils/Base64.sol": {
+        "bytes": 3534,
+        "sha256": "9fbd7a4462f54bbb6b0bd03231738e5f081a092e9a8fd789fb4d1aeca3758aec"
+      },
+      "@openzeppelin/contracts/utils/Context.sol": {
+        "bytes": 844,
+        "sha256": "1458c260d010a08e4c20a4a517882259a23a4baa0b5bd9add9fb6d6a1549814a"
+      },
+      "@openzeppelin/contracts/utils/Strings.sol": {
+        "bytes": 2780,
+        "sha256": "cb2df477077a5963ab50a52768cb74ec6f32177177a78611ddbbe2c07e2d36de"
+      },
+      "@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+        "bytes": 987,
+        "sha256": "8806a632d7b656cadb8133ff8f2acae4405b3a64d8709d93b0fa6a216a8a6154"
+      },
+      "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol": {
+        "bytes": 5071,
+        "sha256": "392034d759da4cfd866690b5ca71576a35d79c51055046ef0c591702561b8778"
+      },
+      "@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "bytes": 853,
+        "sha256": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5"
+      },
+      "@openzeppelin/contracts/utils/math/Math.sol": {
+        "bytes": 12785,
+        "sha256": "85a2caf3bd06579fb55236398c1321e15fd524a8fe140dff748c0f73d7a52345"
+      },
+      "@openzeppelin/contracts/utils/math/SignedMath.sol": {
+        "bytes": 1263,
+        "sha256": "420a5a5d8d94611a04b39d6cf5f02492552ed4257ea82aba3c765b1ad52f77f6"
+      }
+    },
+    "candidate": {
+      "@ensdomains/buffer/contracts/Buffer.sol": {
+        "bytes": 8959,
+        "sha256": "86c9d6aba703ccb58b813ad6b28abb7678efeaeab61f2a9a10af5c343c537a06"
+      },
+      "@openzeppelin/contracts-v5/access/Ownable.sol": {
+        "bytes": 3102,
+        "sha256": "38578bd71c0a909840e67202db527cc6b4e6b437e0f39f0c909da32c1e30cb81"
+      },
+      "@openzeppelin/contracts-v5/utils/Context.sol": {
+        "bytes": 963,
+        "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6"
+      },
+      "@openzeppelin/contracts/access/Ownable.sol": {
+        "bytes": 2616,
+        "sha256": "a8e4e1ae19d9bd3e8b0a6d46577eec098c01fbaffd3ec1252fd20d799e73393b"
+      },
+      "@openzeppelin/contracts/token/ERC1155/IERC1155.sol": {
+        "bytes": 4026,
+        "sha256": "11a1673048905dbd7703b3e23c22d612484db9c0b5a629c303ed609c04850f3b"
+      },
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "bytes": 2737,
+        "sha256": "7ebde70853ccafcf1876900dad458f46eb9444d591d39bfc58e952e2582f5587"
+      },
+      "@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+        "bytes": 17006,
+        "sha256": "7af3ff063370acb5e1f1a2aab125ceca457cd1fa60ff8afa37aabc366349d286"
+      },
+      "@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+        "bytes": 4877,
+        "sha256": "c8d867eda0fd764890040a3644f5ccf5db92f852779879f321ab3ad8b799bf97"
+      },
+      "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+        "bytes": 987,
+        "sha256": "77f0f7340c2da6bb9edbc90ab6e7d3eb8e2ae18194791b827a3e8c0b11a09b43"
+      },
+      "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+        "bytes": 761,
+        "sha256": "f16b861aa1f623ccc5e173f1a82d8cf45b678a7fb81e05478fd17eb2ccb7b37e"
+      },
+      "@openzeppelin/contracts/utils/Address.sol": {
+        "bytes": 9364,
+        "sha256": "8b85a2463eda119c2f42c34fa3d942b61aee65df381f48ed436fe8edb3a7d602"
+      },
+      "@openzeppelin/contracts/utils/Base64.sol": {
+        "bytes": 3890,
+        "sha256": "f2e03a1a5df36e5ac5fe80391ce9c7f5b973c6122df6b82274caad1ef3f3a5f5"
+      },
+      "@openzeppelin/contracts/utils/Context.sol": {
+        "bytes": 962,
+        "sha256": "b2cfee351bcafd0f8f27c72d76c054df9b571b62cfac4781ed12c86354e2a56c"
+      },
+      "@openzeppelin/contracts/utils/Strings.sol": {
+        "bytes": 2780,
+        "sha256": "cb2df477077a5963ab50a52768cb74ec6f32177177a78611ddbbe2c07e2d36de"
+      },
+      "@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+        "bytes": 987,
+        "sha256": "8806a632d7b656cadb8133ff8f2acae4405b3a64d8709d93b0fa6a216a8a6154"
+      },
+      "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol": {
+        "bytes": 5071,
+        "sha256": "392034d759da4cfd866690b5ca71576a35d79c51055046ef0c591702561b8778"
+      },
+      "@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "bytes": 853,
+        "sha256": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5"
+      },
+      "@openzeppelin/contracts/utils/math/Math.sol": {
+        "bytes": 12785,
+        "sha256": "85a2caf3bd06579fb55236398c1321e15fd524a8fe140dff748c0f73d7a52345"
+      },
+      "@openzeppelin/contracts/utils/math/SignedMath.sol": {
+        "bytes": 1263,
+        "sha256": "420a5a5d8d94611a04b39d6cf5f02492552ed4257ea82aba3c765b1ad52f77f6"
+      }
+    }
+  },
   "qualificationScope": "Candidate source variants and synthetic EVM controls; no adoption, merge, live chain, signing or release.",
   "schema": 1,
   "sourceGraph": "The unchanged production recipe; original saved metadata is compared before refreshing the isolated baseline."

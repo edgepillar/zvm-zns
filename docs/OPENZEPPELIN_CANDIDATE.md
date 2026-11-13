@@ -23,7 +23,10 @@ transport of identical control packages. Dependency installation ignores
 lifecycle scripts and receives empty explicit npm configuration files.
 One locked test dependency tree serves each profile's build and tests through
 an explicit read-only import fallback; ordinary nested resolution is preserved.
-No dependency tree is copied or linked into a second installation directory.
+The original build script also reads package Solidity files at fixed paths.
+The job checks and stages only its 19 explicitly pinned Solidity source files
+at those paths. It copies or links no complete dependency tree and performs no
+second installation per profile. All staged bytes are checked before compilation.
 
 The baseline keeps 4.9.3. The candidate changes only the selected 4.x package in
 the application and control manifests/locks, and updates the ENS provenance

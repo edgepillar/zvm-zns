@@ -5,7 +5,7 @@ import copy
 import json
 import unittest
 
-from openzeppelin_candidate import (check_candidate, checked_name, executable_part,
+from openzeppelin_candidate import (check_build_source, check_candidate, checked_name, executable_part,
                                     patch_controls, patch_inputs, sha, tap_counts)
 
 
@@ -57,6 +57,20 @@ class CandidateControls(unittest.TestCase):
         for name in ('../private', '/private', 'contracts//src', 'contracts/./src', 'contracts/.env', '.git/config', 'contracts/../private'):
             with self.subTest(name=name), self.assertRaises(ValueError):
                 checked_name(name)
+
+    def test_fixed_path_build_sources_require_the_reviewed_package_bytes(self):
+        raw = b'// Reviewed Solidity source\n'
+        pin = {'bytes': len(raw), 'sha256': sha(raw)}
+        check_build_source('@openzeppelin/contracts/utils/Base64.sol', raw, pin)
+        for unit, value, expected in (
+            ('@openzeppelin/contracts/utils/Base64.sol', raw + b'changed', pin),
+            ('@openzeppelin/contracts/utils/Base64.sol', raw, {**pin, 'sha256': '0' * 64}),
+            ('unreviewed/Example.sol', raw, pin),
+            ('@openzeppelin/contracts/../private.sol', raw, pin),
+            ('@openzeppelin/contracts/package.json', raw, pin),
+        ):
+            with self.subTest(unit=unit), self.assertRaises(ValueError):
+                check_build_source(unit, value, expected)
 
     def test_metadata_is_separate_from_creation_executable(self):
         metadata = 'a2' + '11' * 8

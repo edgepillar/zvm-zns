@@ -94,6 +94,29 @@ def patch_controls(package_raw, lock_raw, candidate):
     return encoded(package), encoded(lock)
 
 
+def check_build_source(unit, raw, pin):
+    checked_name(unit)
+    require(unit.startswith(('@openzeppelin/contracts/', '@openzeppelin/contracts-v5/', '@ensdomains/buffer/'))
+        and unit.endswith('.sol'), 'unreviewed build source')
+    require(type(raw) is bytes and {'bytes': len(raw), 'sha256': sha(raw)} == pin, 'installed build source differs')
+
+
+def stage_build_sources(profile, expected):
+    require(type(expected) is dict and 1 <= len(expected) <= 64, 'build source budget')
+    sources = {}
+    for unit, pin in expected.items():
+        checked_name(unit)
+        raw = read_input(profile / 'contracts/test/node_modules', unit)
+        check_build_source(unit, raw, pin)
+        sources[unit] = raw
+    for unit, raw in sources.items():
+        target = profile / 'contracts/node_modules' / unit
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open('xb') as output:
+            output.write(raw)
+    return expected
+
+
 def executable_part(bytecode):
     require(type(bytecode) is str and re.fullmatch(r'0x[0-9a-f]+', bytecode), 'invalid creation bytecode')
     code = bytecode[2:]
@@ -248,6 +271,8 @@ def main():
                 ('controls', ['node', '--import', str(loader), '--test', '--test-concurrency=1', '--test-reporter=tap', 'behavior.test.mjs', 'base64-padding.test.mjs'], profile / 'contracts/test')]
             saved = {Path(name).stem: json.loads(raw) for name, raw in inputs.items() if name.startswith('contracts/out/') and name.endswith('.json') and not name.endswith('/input.json')}
             for label, argv, cwd in commands:
+                if label == 'build':
+                    staged_sources = stage_build_sources(profile, plan['profilePackageSourcePins'][role])
                 result = run_bounded(argv, cwd, env, output, role + '-' + label)
                 report['commands'].append(result)
                 require(result['actualExit'] == 0 and result['outputComplete'], role + ' ' + label + ' failed or incomplete')
@@ -261,6 +286,7 @@ def main():
             padding = json.loads(padding[0]); require(padding['version'] == version and padding['cases'] == padding['tailRestored'] == 291, 'padding control incomplete')
             require(padding['noncanonical'] == (128 if role == 'baseline' else 0), 'padding control mismatch')
             report['profiles'][role] = {'version': version, 'testCounts': tap_counts(tap), 'padding': padding,
+                'stagedBuildSourcePins': staged_sources,
                 'savedArtifactComparison': original_comparison, 'sourceInputSha256': sha((profile / 'contracts/out/input.json').read_bytes()),
                 'compilerVersion': next(iter(artifacts.values()))['compilerVersion']}
             snapshots[role] = artifacts
