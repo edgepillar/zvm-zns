@@ -9,6 +9,51 @@ permissions:
 
 # Linux, as most people who build this will be on.
 jobs:
+  openzeppelin-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: edgepillar/zvm-zns
+          ref: 44360c841df4b22a1b8e71c33e90d271014d8171
+          path: .ci-contract-controls
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /contracts/scripts/compiler-input.mjs
+            /contracts/test/
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Observe the selected toolchain
+        run: |
+          node --version
+          node -e "if (typeof require('node:module').registerHooks !== 'function') process.exit(1)"
+          npm --version
+          python3 --version
+      - name: Qualify isolated baseline and patched source variants
+        run: python3 -B tools/dependency-review/openzeppelin_candidate.py --controls .ci-contract-controls --output "$RUNNER_TEMP/zns-openzeppelin-review"
+      - name: Retain bounded qualification evidence without profile trees
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: openzeppelin-candidate-qualification
+          path: |
+            ${{ runner.temp }}/zns-openzeppelin-review/source-binding.json
+            ${{ runner.temp }}/zns-openzeppelin-review/report.json
+            ${{ runner.temp }}/zns-openzeppelin-review/outputs.json
+            ${{ runner.temp }}/zns-openzeppelin-review/streams/*.txt
+          if-no-files-found: error
+          retention-days: 14
+
   lock-inputs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
