@@ -91,3 +91,12 @@ hosted and supported-platform qualification, real wallet and external gateway
 integration, accepted deployment/genesis and independent maintainer/operator
 acceptance remain separate gates. See [`NOTICE.md`](../NOTICE.md) for retained
 third-party attribution. Byte equality is not production approval.
+
+## Selected OpenZeppelin 4.x update
+
+The contracts lock and its provenance binding now select OpenZeppelin Contracts
+4.9.6. The selected ENS publication and local Solidity sources remain unchanged.
+The original 4.x license is retained under `vendor/notices/`, and
+[`OpenZeppelin source qualification`](../docs/OPENZEPPELIN_CANDIDATE.md) records
+the before/after controls and current-source CI requirements. Updating this lock
+binding does not reassign the old ENS or contract-test evidence to a new revision.

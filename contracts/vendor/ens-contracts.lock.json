@@ -315,7 +315,7 @@
     }
   },
   "dependencyLock": {
-    "sha256": "851cfd38e4e0bd37f0046e554ad3a101c8ba5b33c3ae087d272bbc4d9f8e909d",
+    "sha256": "3ccca4e1389c319338869a6a3aae012962aa1f356804600da2e2e921dc651c99",
     "imports": [
       {
         "prefix": "@ensdomains/buffer",
@@ -327,9 +327,9 @@
       {
         "prefix": "@openzeppelin/contracts",
         "name": "@openzeppelin/contracts",
-        "version": "4.9.3",
-        "resolved": "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.3.tgz",
-        "integrity": "sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg=="
+        "version": "4.9.6",
+        "resolved": "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.6.tgz",
+        "integrity": "sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA=="
       },
       {
         "prefix": "@openzeppelin/contracts-v5",

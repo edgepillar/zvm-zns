@@ -1,0 +1,562 @@
+{
+  "comparisonEvidence": {
+    "all10ABIsUnchanged": true,
+    "artifact": {
+      "digest": "sha256:7f155764f6a27d36bf5ad0a009dd2d1fb7ed375dc531efa22d0f7f16cf9fc179",
+      "id": 14084262404,
+      "size_in_bytes": 210439
+    },
+    "baselineNoncanonicalCases": 128,
+    "baselineVersion": "4.9.3",
+    "candidateNoncanonicalCases": 0,
+    "candidateReceiptReplayedBeforeTrackedAdoption": true,
+    "candidateVersion": "4.9.6",
+    "changedCreationExecutableContracts": [
+      "ZNSRegistrar"
+    ],
+    "historicalFailedCommit": "09e162b13d9ba6d14254d5d60bfcb257ee6f4422",
+    "independentAuditOrProductionApproval": false,
+    "paddingCasesPerProfile": 291,
+    "producerCommit": "15e373b2c86c08739cdd3e580c4cd0f7057c74b0",
+    "repository": "edgepillar/zvm-zns",
+    "runAttempt": 1,
+    "runId": 43523367551,
+    "testsPerProfile": 33
+  },
+  "controls": {
+    "files": {
+      "contracts/scripts/compiler-input.mjs": {
+        "bytes": 2939,
+        "sha256": "726be8869d1c9775b4ad565b7e2f754bc357256dd37b6fba70c657d63e10b5aa"
+      },
+      "contracts/test/Fixtures.sol": {
+        "bytes": 731,
+        "sha256": "c37c5654ed3a2e54c56eaa83d8bfe799f8f96b1563fca15e14528f500678d223"
+      },
+      "contracts/test/README.md": {
+        "bytes": 1884,
+        "sha256": "98bf091daeb701f8d80cb4ebf7e8f8e1b6665b9e515d5c473ed8b856555d004b"
+      },
+      "contracts/test/behavior.test.mjs": {
+        "bytes": 27009,
+        "sha256": "3177481e1e86e29c9737f528b27713f8b0705c5b8471c141151b69ffdbce2376"
+      },
+      "contracts/test/evm.mjs": {
+        "bytes": 11583,
+        "sha256": "f88dd961a2b6656c21b8b9bbe6bc6b736480837daa221660a0df52bb6d4e0893"
+      },
+      "contracts/test/package-lock.json": {
+        "bytes": 25795,
+        "sha256": "b1c9f86992f3544bee7ac067d0704a0680df9cc48ec62522b1ec329f179033b8"
+      },
+      "contracts/test/package.json": {
+        "bytes": 540,
+        "sha256": "55900818591135c0de6e2d4cb97324ffde4337f6b7965b05a0440a20cdf76326"
+      }
+    },
+    "repository": "edgepillar/zvm-zns",
+    "revision": "44360c841df4b22a1b8e71c33e90d271014d8171"
+  },
+  "generatedOutputPins": {
+    "contracts/out/ENSRegistry.json": {
+      "bytes": 12853,
+      "sha256": "c277691fa97df7a3dc4f638763efe2c63ecd655589ae7bb75072e4fc0a360c5f"
+    },
+    "contracts/out/ExponentialPremiumPriceOracle.json": {
+      "bytes": 13026,
+      "sha256": "0630f518bb5cfecbf7f4737e3851527ad45230a5eb61e40f47b09f91f1edf62d"
+    },
+    "contracts/out/GatewayProvider.json": {
+      "bytes": 8975,
+      "sha256": "8d8e21c1a5afba6d54af177b456d9a0f48c854def1b9c6d1ea19404fe741e285"
+    },
+    "contracts/out/PublicResolver.json": {
+      "bytes": 50879,
+      "sha256": "82ca32d9b6c2180789880f031c3d9a470bdbdf31a1c7014fee24bc6aba8f0c45"
+    },
+    "contracts/out/ReverseRegistrar.json": {
+      "bytes": 14858,
+      "sha256": "66fb6f63404d43b4ca6b72685060993feb2505348561af1aa03fdcdabf99d840"
+    },
+    "contracts/out/StaticBulkRenewal.json": {
+      "bytes": 5398,
+      "sha256": "853f89cb941192813b4aca71e292645adf1a2f1419716c95755a06c9847b031e"
+    },
+    "contracts/out/UniversalResolver.json": {
+      "bytes": 52095,
+      "sha256": "fb3f4b7debc1b144550db1fad4a1847dab5e8ba53841bfbe6f52d95af6a04d8e"
+    },
+    "contracts/out/ZNSController.json": {
+      "bytes": 37069,
+      "sha256": "1c396f8558bf9bec8bd3328238a4e2661986a7310033e6dc9cb252ad97072cb7"
+    },
+    "contracts/out/ZNSPriceFeed.json": {
+      "bytes": 4862,
+      "sha256": "383f7f4f808cdafd096aa565f723431f6e496b208889571c5f4d97710845e8bf"
+    },
+    "contracts/out/ZNSRegistrar.json": {
+      "bytes": 56262,
+      "sha256": "66d5e0e2c97cf614cee8441d98a7fc863ebbf9271891fcb0f0dba572deed802b"
+    },
+    "contracts/out/input.json": {
+      "bytes": 324086,
+      "sha256": "f78e414a4e9abdd02182884aa67ed8d30f1e0268bc06f7797d5bc3723324aa17"
+    },
+    "web/src/abi.ts": {
+      "bytes": 53966,
+      "sha256": "2122d59f32905e7a8757999897ed268b578259d488186bf7206bef835b9a1ffa"
+    }
+  },
+  "inputPins": {
+    "NOTICE.md": {
+      "bytes": 867,
+      "sha256": "c6a06311e09d6913a721d947597c5cff4b0b819191c5d94f5f9f40dcfd7bedcd"
+    },
+    "contracts/out/ENSRegistry.json": {
+      "bytes": 12853,
+      "sha256": "c277691fa97df7a3dc4f638763efe2c63ecd655589ae7bb75072e4fc0a360c5f"
+    },
+    "contracts/out/ExponentialPremiumPriceOracle.json": {
+      "bytes": 13026,
+      "sha256": "0630f518bb5cfecbf7f4737e3851527ad45230a5eb61e40f47b09f91f1edf62d"
+    },
+    "contracts/out/GatewayProvider.json": {
+      "bytes": 8975,
+      "sha256": "8d8e21c1a5afba6d54af177b456d9a0f48c854def1b9c6d1ea19404fe741e285"
+    },
+    "contracts/out/PublicResolver.json": {
+      "bytes": 50879,
+      "sha256": "82ca32d9b6c2180789880f031c3d9a470bdbdf31a1c7014fee24bc6aba8f0c45"
+    },
+    "contracts/out/ReverseRegistrar.json": {
+      "bytes": 14858,
+      "sha256": "66fb6f63404d43b4ca6b72685060993feb2505348561af1aa03fdcdabf99d840"
+    },
+    "contracts/out/StaticBulkRenewal.json": {
+      "bytes": 5398,
+      "sha256": "853f89cb941192813b4aca71e292645adf1a2f1419716c95755a06c9847b031e"
+    },
+    "contracts/out/UniversalResolver.json": {
+      "bytes": 52095,
+      "sha256": "fb3f4b7debc1b144550db1fad4a1847dab5e8ba53841bfbe6f52d95af6a04d8e"
+    },
+    "contracts/out/ZNSController.json": {
+      "bytes": 37069,
+      "sha256": "1c396f8558bf9bec8bd3328238a4e2661986a7310033e6dc9cb252ad97072cb7"
+    },
+    "contracts/out/ZNSPriceFeed.json": {
+      "bytes": 4862,
+      "sha256": "383f7f4f808cdafd096aa565f723431f6e496b208889571c5f4d97710845e8bf"
+    },
+    "contracts/out/ZNSRegistrar.json": {
+      "bytes": 56262,
+      "sha256": "66d5e0e2c97cf614cee8441d98a7fc863ebbf9271891fcb0f0dba572deed802b"
+    },
+    "contracts/out/input.json": {
+      "bytes": 324086,
+      "sha256": "f78e414a4e9abdd02182884aa67ed8d30f1e0268bc06f7797d5bc3723324aa17"
+    },
+    "contracts/package-lock.json": {
+      "bytes": 12084,
+      "sha256": "3ccca4e1389c319338869a6a3aae012962aa1f356804600da2e2e921dc651c99"
+    },
+    "contracts/package.json": {
+      "bytes": 625,
+      "sha256": "92c6ac69a6383ce0ec80258edd2cbb61910ee06ae5ad2308f765f2d91b4aa8af"
+    },
+    "contracts/scripts/build.mjs": {
+      "bytes": 5764,
+      "sha256": "a160bf301b56c6cd144e990ea156c01b7ca0991d4e57865ac64a3b6c3911b3ea"
+    },
+    "contracts/src/ZNSController.sol": {
+      "bytes": 14022,
+      "sha256": "0b9a34c5c209ecb2a58964fe4044e1f22467a2dce2b991d72c93700d75f6da60"
+    },
+    "contracts/src/ZNSPriceFeed.sol": {
+      "bytes": 1901,
+      "sha256": "7e9641963241d0e668d4f1134d7b8e79056a4bf523173173d4a63d6658278572"
+    },
+    "contracts/src/ZNSRegistrar.sol": {
+      "bytes": 12035,
+      "sha256": "43da8038224163743bbb9bc1154c2648a31c30adbfe3b6c21b76b6c05b10b258"
+    },
+    "contracts/vendor/ens-contracts.lock.json": {
+      "bytes": 14932,
+      "sha256": "4621477913fe1bd15bec1d5fcf64385b991b38afb6b4915216d0fd3be88951d8"
+    },
+    "contracts/vendor/ens-contracts/LICENSE.txt": {
+      "bytes": 1062,
+      "sha256": "e15f7dbf6999953c40ae662b3801576f31840dd370ae3175d0a8926e57674d91"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/CCIPBatcher.sol": {
+      "bytes": 7802,
+      "sha256": "92420680ef987e2762be18edd1a1ef86b1130eda610e9f63fd6412dbb587602a"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/CCIPReader.sol": {
+      "bytes": 6980,
+      "sha256": "c1f672b9779dc88da088dbbcddcb615df735312e5e622ed726d328b87e9914b9"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/EIP3668.sol": {
+      "bytes": 979,
+      "sha256": "5310dc141bd51dcba475afd2c3aaf7b2ea9f62c1948010d46198bb303441bfc5"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/GatewayProvider.sol": {
+      "bytes": 666,
+      "sha256": "b447453f44392350900b6e6b6bc68fd5195a77ee861108db5ae5c83a86db6f9a"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/IBatchGateway.sol": {
+      "bytes": 1009,
+      "sha256": "744fb89a1a9d1d30e1ecfe2ef99dbfd8d006f10d6730973540333516e945e340"
+    },
+    "contracts/vendor/ens-contracts/contracts/ccipRead/IGatewayProvider.sol": {
+      "bytes": 310,
+      "sha256": "f30b380dad49f2785c788005989f5d85b737e81978283bb145fb5e028d810b69"
+    },
+    "contracts/vendor/ens-contracts/contracts/dnssec-oracle/RRUtils.sol": {
+      "bytes": 13994,
+      "sha256": "5f4aa1b51f8d4b714d1ef789085d2f011588696b84d2ffdcef17abc666573d37"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/BaseRegistrarImplementation.sol": {
+      "bytes": 6967,
+      "sha256": "59493f986d844b2948c78aa766511553ffd0df25764faddba5b2e42f56eff127"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/ETHRegistrarController.sol": {
+      "bytes": 14565,
+      "sha256": "e6a42e76f53ec5d45559480d50ffa32d6c4413718e7e4e8e984efa4f9d54217d"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/ExponentialPremiumPriceOracle.sol": {
+      "bytes": 4616,
+      "sha256": "aa66b5d00afb6c8184c9ac3906a5e067282fef2dfec1d861f9187e1fcaa328f1"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/IBaseRegistrar.sol": {
+      "bytes": 1594,
+      "sha256": "f903385525e5d8122f0f03d45d87a5bd239941123de029350084c09dd13eaafc"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/IBulkRenewal.sol": {
+      "bytes": 342,
+      "sha256": "775cfacdfaea9cf178dbc382cb11b1c2ed8660cde089f10bc83ab085bb516898"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/IETHRegistrarController.sol": {
+      "bytes": 935,
+      "sha256": "95a7537ff625c774b1c355f3ac5803a2b3284a79b5e7ec35b52a02dc2b732bb3"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/IPriceOracle.sol": {
+      "bytes": 675,
+      "sha256": "c7d22db1f65e09747425603c2fa75222422b4f25cba3343c7ac6495d28becbde"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/StablePriceOracle.sol": {
+      "bytes": 3095,
+      "sha256": "a52e106668da131a9798f9e3f3f9cb2f4927402416df3c2769d2a609d4406059"
+    },
+    "contracts/vendor/ens-contracts/contracts/ethregistrar/StaticBulkRenewal.sol": {
+      "bytes": 1854,
+      "sha256": "8c9177e560752889cd2ddf3f15fda1e4e83f9fd7342319b3266d1dee674b3b3f"
+    },
+    "contracts/vendor/ens-contracts/contracts/registry/ENS.sol": {
+      "bytes": 1824,
+      "sha256": "80f95dfd3aed02adda0c385797a54d14ab845f03a7eba4f32c2839b2f2bd4734"
+    },
+    "contracts/vendor/ens-contracts/contracts/registry/ENSRegistry.sol": {
+      "bytes": 6262,
+      "sha256": "e644a5d232761105ea1cd1a2cec569cdf75d29f08bf4ebe1a8a0c1409e4a5873"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/IMulticallable.sol": {
+      "bytes": 323,
+      "sha256": "6f822dfd3ce52713a1b4eb36b1f64097de0afec3e92cf22a766a46e89ca55af8"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/Multicallable.sol": {
+      "bytes": 1734,
+      "sha256": "d5a1859a3542733fb821e73082547be3fe898d441a9ad3b29f48d3016b8025c5"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/PublicResolver.sol": {
+      "bytes": 4779,
+      "sha256": "ae146725c174e7eeb9cd57ac2a9592647e4e4868be1e98697d55f38aad712911"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/Resolver.sol": {
+      "bytes": 2709,
+      "sha256": "1c23cefe21b5e16a3c49f50edc8284010c58a5042ac4500af45bbad83352690e"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/ResolverBase.sol": {
+      "bytes": 1068,
+      "sha256": "af74166fa7a3662b0e6c2e03409098f2938c04c9e858a2f92f460faa86e0fcd1"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/ResolverFeatures.sol": {
+      "bytes": 468,
+      "sha256": "585601e0697c3ffb463980ed3dd98c66b837809c68ef76a65d24363ea1af0004"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/ABIResolver.sol": {
+      "bytes": 2142,
+      "sha256": "45d33744d44bbc4e3840ea779888b54a64216f9a5d7ddb794c9d64d6c4e84ddb"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/AddrResolver.sol": {
+      "bytes": 3830,
+      "sha256": "bb0418484021fc628e9ff87a961ddd07312e496a9cfa2d555072d2a1de5ee0b8"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/ContentHashResolver.sol": {
+      "bytes": 1305,
+      "sha256": "aa1d19f7b8bbe5efda21aa577c1d1ba5f74259b7fb1f8e6c2eda75947747b860"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/DNSResolver.sol": {
+      "bytes": 7243,
+      "sha256": "9070f27adccab4be99e4a4696e037bfb6104b2161670af2bd57916b602418b01"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/DataResolver.sol": {
+      "bytes": 1801,
+      "sha256": "d190a4ec9ffbc6c6bba2d8341abc5c7d9792367c40f8295d9110ae7c16a3a713"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IABIResolver.sol": {
+      "bytes": 586,
+      "sha256": "6bc22b38c973d814e20b5194a19663b937cf9f53a3420e4a98586523506c2fcc"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IAddrResolver.sol": {
+      "bytes": 411,
+      "sha256": "cf595bc9572470c1eb104ad3e6b46dac2f0c1300989dc1014106a051f91b2ece"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IAddressResolver.sol": {
+      "bytes": 367,
+      "sha256": "c80507fb8be5d2595c5cdb367e1c93e669802696ccaf827f6a00cb9cc847d765"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IContentHashResolver.sol": {
+      "bytes": 383,
+      "sha256": "3053f3ecc60756901895f91388ecde74fd49bc08a4044bc51b1c03598564fdaa"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+      "bytes": 1005,
+      "sha256": "fa73ab23617a9cc0d1a2788b41987de6b85706ac35db20bbd9d526df6543da25"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+      "bytes": 500,
+      "sha256": "8e10797b29fec50f7d2fbbfc4b1d7191f3176c82bee34e9206895d0f80b3958c"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IDataResolver.sol": {
+      "bytes": 722,
+      "sha256": "4dd14261af4dce5a25b45670cd1fee094818f4792ebc963e54d9a33c1588a7fb"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IExtendedResolver.sol": {
+      "bytes": 208,
+      "sha256": "144ca19d092d5f68e36fec76cf94e26ca3803a70db3791aebcca8fe1a9527f8f"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IHasAddressResolver.sol": {
+      "bytes": 433,
+      "sha256": "7863c5393e136c6d4c9b150bc132434baff68284b592963529afea6ff2d96400"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IInterfaceResolver.sol": {
+      "bytes": 967,
+      "sha256": "23f942dc4e53da7f447d91dea315abad7a6d3dfa6a135d662b62f2bc51a5d0bb"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/INameResolver.sol": {
+      "bytes": 398,
+      "sha256": "e7bf7df6a68134f490fd40198a4640e0b18957632e4053b745bf244f13839d19"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IPubkeyResolver.sol": {
+      "bytes": 526,
+      "sha256": "5fc74dd6d865c37ff111befff61d230f0e2765747f55480d61d7ae977d772feb"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/ITextResolver.sol": {
+      "bytes": 536,
+      "sha256": "0c6ee0e17c7415548046411a488662ab905e080b340f75255ef31050867ef788"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/IVersionableResolver.sol": {
+      "bytes": 235,
+      "sha256": "dda44fde980759cf04d172e80036850dc1e5e1010dffbb6fddffd04dadfd8dcd"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/InterfaceResolver.sol": {
+      "bytes": 3110,
+      "sha256": "f3bd9abc3c6496398db545e539f0f8290feb836e3b5b72658b0841b5869f83a7"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/NameResolver.sol": {
+      "bytes": 1270,
+      "sha256": "e9db03ffbe66d83964d1cee3e05d984673698ddb2b1e3a2352e886b6bf103939"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/PubkeyResolver.sol": {
+      "bytes": 1702,
+      "sha256": "bfab8152f1231fadf40d4cd491148ce72b079f245a9b949e0c2cb65d62a5d7aa"
+    },
+    "contracts/vendor/ens-contracts/contracts/resolvers/profiles/TextResolver.sol": {
+      "bytes": 1454,
+      "sha256": "1da924a5fcd7997ae07499edeb74e51f3eaacbe216025a5d8e0d9686ab208526"
+    },
+    "contracts/vendor/ens-contracts/contracts/reverseRegistrar/IDefaultReverseRegistrar.sol": {
+      "bytes": 881,
+      "sha256": "100625cd2d071b1f018446c594c1590967d643947f06d1e6b2a6d270cbc60f17"
+    },
+    "contracts/vendor/ens-contracts/contracts/reverseRegistrar/IReverseRegistrar.sol": {
+      "bytes": 726,
+      "sha256": "adede167498c61c2ea2094e779e4762cc034441515dd7cb2557959c3fb1a3b14"
+    },
+    "contracts/vendor/ens-contracts/contracts/reverseRegistrar/ReverseClaimer.sol": {
+      "bytes": 539,
+      "sha256": "53687e266976b0663ebf8908e623247cff51164fcdbfdb9e1f4b31ed70024444"
+    },
+    "contracts/vendor/ens-contracts/contracts/reverseRegistrar/ReverseRegistrar.sol": {
+      "bytes": 6397,
+      "sha256": "03f9645118f9439cc1fa16aa65ceb7e8cc62e1dab4aa9298c379a8cea6b49425"
+    },
+    "contracts/vendor/ens-contracts/contracts/root/Controllable.sol": {
+      "bytes": 590,
+      "sha256": "bc3ede633224cded6f405157ba496f4998275cb2471bb85bff7e3866395dea7b"
+    },
+    "contracts/vendor/ens-contracts/contracts/universalResolver/AbstractUniversalResolver.sol": {
+      "bytes": 15917,
+      "sha256": "a35829e60400dec0ef15fd49cf431dab3cce9a91af797b2d0b7c4bc0eb136c2c"
+    },
+    "contracts/vendor/ens-contracts/contracts/universalResolver/IUniversalResolver.sol": {
+      "bytes": 3116,
+      "sha256": "2877893d3f38ba5fa51bc44297fd5d3c85b2d05f121be15c7a304fbd85daa754"
+    },
+    "contracts/vendor/ens-contracts/contracts/universalResolver/RegistryUtils.sol": {
+      "bytes": 1433,
+      "sha256": "7244193b63d67c1284e966c2fd68bb64184d41b30176d7a2bd03fb278d058dd6"
+    },
+    "contracts/vendor/ens-contracts/contracts/universalResolver/UniversalResolver.sol": {
+      "bytes": 860,
+      "sha256": "91e0d3fa74a78ee6b13578d146af97b7c57460fd8cda425f50be3cee44d726ff"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/BytesUtils.sol": {
+      "bytes": 11537,
+      "sha256": "0cd3a4ac0b71f360b757fa31109801dca87341ff6419388df45eb600cd017304"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/ENSIP19.sol": {
+      "bytes": 4764,
+      "sha256": "cd5587a42aa185a42efa7ee54e7d43395cf1e828d18e8d6503a6f05adb7116b4"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/ERC20Recoverable.sol": {
+      "bytes": 811,
+      "sha256": "3a399e13eb58ce5571af294c76be2867b03dcba11a797be0fe45d5483bcf9b16"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/HexUtils.sol": {
+      "bytes": 8294,
+      "sha256": "0f5d118c733e62c861edc99b360cf27388970e27f8b3d7723971e176c165321e"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/IERC7996.sol": {
+      "bytes": 446,
+      "sha256": "eca725ee9d5360f3d9c1fe7e8e82fce20f320085eaef740337a7ca9d9497f9b4"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/LibMem/LibMem.sol": {
+      "bytes": 1558,
+      "sha256": "d8d91518009cce4a639d46035d58cc11caa2aefcd80abf7c6c6dab14170b5839"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/NameCoder.sol": {
+      "bytes": 13009,
+      "sha256": "aebca2a946b79a42b4eca06c9fd680773cdb65dec2a5a2b898749ca2bd74a226"
+    },
+    "contracts/vendor/ens-contracts/contracts/utils/StringUtils.sol": {
+      "bytes": 2416,
+      "sha256": "fa99d68dceb846a58983367e46bc2a3ae869f18fb078d759e18c434c6f13d216"
+    },
+    "contracts/vendor/ens-contracts/contracts/wrapper/IMetadataService.sol": {
+      "bytes": 153,
+      "sha256": "ef3d28bd6814c2e9a28793e498ad0f1a694f516ac548e66e9fedd22a08dd432d"
+    },
+    "contracts/vendor/ens-contracts/contracts/wrapper/INameWrapper.sol": {
+      "bytes": 4671,
+      "sha256": "d3fe032d67a754c66462c502d47117e3f4c8750d137244eb9aaf25036ba3e818"
+    },
+    "contracts/vendor/ens-contracts/contracts/wrapper/INameWrapperUpgrade.sol": {
+      "bytes": 300,
+      "sha256": "22647f0c72c173fe11004d6406c19d48a516950f59579064ab77fca9e8b23de7"
+    },
+    "contracts/vendor/notices/openzeppelin-contracts-4.9.6-LICENSE": {
+      "bytes": 1107,
+      "sha256": "0e05b4f45c8769ece14ba2d202bf6f5ed7132600b642c981266f7255e0187ea3"
+    },
+    "web/src/abi.ts": {
+      "bytes": 53966,
+      "sha256": "2122d59f32905e7a8757999897ed268b578259d488186bf7206bef835b9a1ffa"
+    }
+  },
+  "package": {
+    "archiveBytes": 239301,
+    "archiveSha256": "32b6b5c684c48ad0260baeffe61105b74f390115dbdc0d8853c6ceca8a8610bb",
+    "integrity": "sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==",
+    "license": "MIT",
+    "licenseFileGitBlob": "817249a0cd2ec1bb1c3d15ed0166f97903e94557",
+    "licenseFilePresentInNPMPublication": false,
+    "licenseFileSha256": "0e05b4f45c8769ece14ba2d202bf6f5ed7132600b642c981266f7255e0187ea3",
+    "licenseSourceURL": "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/dc44c9f1a4c3b10af99492eed84f83ed244203f6/LICENSE",
+    "name": "@openzeppelin/contracts",
+    "resolved": "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.6.tgz",
+    "version": "4.9.6"
+  },
+  "packageSourcePins": {
+    "@ensdomains/buffer/contracts/Buffer.sol": {
+      "bytes": 8959,
+      "sha256": "86c9d6aba703ccb58b813ad6b28abb7678efeaeab61f2a9a10af5c343c537a06"
+    },
+    "@openzeppelin/contracts-v5/access/Ownable.sol": {
+      "bytes": 3102,
+      "sha256": "38578bd71c0a909840e67202db527cc6b4e6b437e0f39f0c909da32c1e30cb81"
+    },
+    "@openzeppelin/contracts-v5/utils/Context.sol": {
+      "bytes": 963,
+      "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6"
+    },
+    "@openzeppelin/contracts/access/Ownable.sol": {
+      "bytes": 2616,
+      "sha256": "a8e4e1ae19d9bd3e8b0a6d46577eec098c01fbaffd3ec1252fd20d799e73393b"
+    },
+    "@openzeppelin/contracts/token/ERC1155/IERC1155.sol": {
+      "bytes": 4026,
+      "sha256": "11a1673048905dbd7703b3e23c22d612484db9c0b5a629c303ed609c04850f3b"
+    },
+    "@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "bytes": 2737,
+      "sha256": "7ebde70853ccafcf1876900dad458f46eb9444d591d39bfc58e952e2582f5587"
+    },
+    "@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+      "bytes": 17006,
+      "sha256": "7af3ff063370acb5e1f1a2aab125ceca457cd1fa60ff8afa37aabc366349d286"
+    },
+    "@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+      "bytes": 4877,
+      "sha256": "c8d867eda0fd764890040a3644f5ccf5db92f852779879f321ab3ad8b799bf97"
+    },
+    "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+      "bytes": 987,
+      "sha256": "77f0f7340c2da6bb9edbc90ab6e7d3eb8e2ae18194791b827a3e8c0b11a09b43"
+    },
+    "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+      "bytes": 761,
+      "sha256": "f16b861aa1f623ccc5e173f1a82d8cf45b678a7fb81e05478fd17eb2ccb7b37e"
+    },
+    "@openzeppelin/contracts/utils/Address.sol": {
+      "bytes": 9364,
+      "sha256": "8b85a2463eda119c2f42c34fa3d942b61aee65df381f48ed436fe8edb3a7d602"
+    },
+    "@openzeppelin/contracts/utils/Base64.sol": {
+      "bytes": 3890,
+      "sha256": "f2e03a1a5df36e5ac5fe80391ce9c7f5b973c6122df6b82274caad1ef3f3a5f5"
+    },
+    "@openzeppelin/contracts/utils/Context.sol": {
+      "bytes": 962,
+      "sha256": "b2cfee351bcafd0f8f27c72d76c054df9b571b62cfac4781ed12c86354e2a56c"
+    },
+    "@openzeppelin/contracts/utils/Strings.sol": {
+      "bytes": 2780,
+      "sha256": "cb2df477077a5963ab50a52768cb74ec6f32177177a78611ddbbe2c07e2d36de"
+    },
+    "@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "bytes": 987,
+      "sha256": "8806a632d7b656cadb8133ff8f2acae4405b3a64d8709d93b0fa6a216a8a6154"
+    },
+    "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol": {
+      "bytes": 5071,
+      "sha256": "392034d759da4cfd866690b5ca71576a35d79c51055046ef0c591702561b8778"
+    },
+    "@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "bytes": 853,
+      "sha256": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5"
+    },
+    "@openzeppelin/contracts/utils/math/Math.sol": {
+      "bytes": 12785,
+      "sha256": "85a2caf3bd06579fb55236398c1321e15fd524a8fe140dff748c0f73d7a52345"
+    },
+    "@openzeppelin/contracts/utils/math/SignedMath.sol": {
+      "bytes": 1263,
+      "sha256": "420a5a5d8d94611a04b39d6cf5f02492552ed4257ea82aba3c765b1ad52f77f6"
+    }
+  },
+  "schema": 1,
+  "scope": "Tracked source, exact generated outputs and isolated contract controls; independent owner, deployment, platform and complete legal gates remain open.",
+  "version": "4.9.6"
+}
