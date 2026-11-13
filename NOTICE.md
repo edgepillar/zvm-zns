@@ -13,3 +13,14 @@ The source and qualification bindings are described in
 This notice covers that selected 4.x package; complete dependency and output
 notice/license review remains required, including the separate v5 alias and
 Buffer package.
+
+## Selected web build dependencies
+
+The web build selects Vite 7.3.7 (MIT and its bundled notices) and source-map-js
+1.2.2 (BSD-3-Clause). Their original publication license files are retained at
+[`web/public/notices/vite-7.3.7-LICENSE.md`](web/public/notices/vite-7.3.7-LICENSE.md)
+and [`web/public/notices/source-map-js-1.2.2-LICENSE`](web/public/notices/source-map-js-1.2.2-LICENSE).
+The build retains these bytes under `notices/` in the static output. This does
+not establish complete distribution notices or legal acceptance for all other
+packages. See [`docs/WEB_DEPENDENCY_PATCHES.md`](docs/WEB_DEPENDENCY_PATCHES.md)
+for source bindings, selected controls and remaining qualification.

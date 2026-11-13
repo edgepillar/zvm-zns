@@ -123,4 +123,16 @@ jobs:
       - run: npm ci
       # The build refuses to run without its endpoints; the example has them.
       - run: cp ../.env.example ../.env
-      - run: npm run build
+      - name: Qualify selected package bytes, bounded controls and the normal build
+        run: python3 -B ../tools/dependency-review/web_patches.py --output "$RUNNER_TEMP/zns-web-patch-review"
+      - name: Retain bounded web qualification evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-patch-qualification
+          path: |
+            ${{ runner.temp }}/zns-web-patch-review/source-binding.json
+            ${{ runner.temp }}/zns-web-patch-review/report.json
+            ${{ runner.temp }}/zns-web-patch-review/streams/*.txt
+          if-no-files-found: error
+          retention-days: 14
