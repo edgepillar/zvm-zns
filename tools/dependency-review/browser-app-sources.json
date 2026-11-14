@@ -1,0 +1,897 @@
+{
+  "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+  "exampleEnvironmentOnly": true,
+  "fileListSha256": "01a28ec2e149fd787471ec701012c5f39f050887fe737813c0d248598668e958",
+  "files": [
+    {
+      "destinationRelativeToOutput": ".env",
+      "gitBlob": "bae9dd10693bc4b839c906aa3c8c3b770784a62a",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1087,
+        "sha256": "ab90ddd5519484da3e81cb17874a975c242f6a40fcabaac87a0ab66204a6363d"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": ".env.example",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/env.d.ts",
+      "gitBlob": "d1e983a7df1dbc135fbbe2d27e430124a03ee7fd",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 293,
+        "sha256": "79e26ca0096abc20ef8a44db3d92a419222513c0850c4970a89c3dceceeff1a0"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/env.d.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/index.html",
+      "gitBlob": "fcf77565ea946596cfa3b1e22422cf2c8ffeb938",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 900,
+        "sha256": "78a44c8d1e20fc987a6bd470e646c35da3e62dea64302e7da68714ad5661a7ce"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/index.html",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/public/favicon.svg",
+      "gitBlob": "2e66c491ab8f97dad289e2d36481fb14c066fecb",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 745,
+        "sha256": "1191d560d81cecd62238ece5d10be4816f6ed2f562ea89bc8cd1512b32f5ed36"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/public/favicon.svg",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/public/notices/source-map-js-1.2.2-LICENSE",
+      "gitBlob": "ed1b7cf27e97e136918e87ad7bb33baf169f0171",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1526,
+        "sha256": "6cb0631f71c7749763fd3dd1d5bee52dd1070ec17f2edc1710079ad070bd2fbd"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/public/notices/source-map-js-1.2.2-LICENSE",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/public/notices/vite-7.3.8-LICENSE.md",
+      "gitBlob": "c49b2ae8891a1b0f9b8e942369ffdd53d2279b32",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 101176,
+        "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/public/notices/vite-7.3.8-LICENSE.md",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/App.vue",
+      "gitBlob": "40168cfec27907c4c295fc1d72c7944414150ac6",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 7222,
+        "sha256": "589ddb1a127e641a8c9784fa6d8fa5d6290df30e63d5eda45e8190e89cd1d561"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/App.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/abi.ts",
+      "gitBlob": "9e89c97889a5dec177fcb122c6fc5c433617dba0",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 53966,
+        "sha256": "2122d59f32905e7a8757999897ed268b578259d488186bf7206bef835b9a1ffa"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/abi.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Addr.vue",
+      "gitBlob": "d7eadae5fcd635f8413865c019d5df3ec090a0aa",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1664,
+        "sha256": "2d99b1e6bd4834faa1143fc84645b49f1c9578f90e899634fbc7d5fb5f296e59"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Addr.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/AddressInput.vue",
+      "gitBlob": "b4e6b5a1911ab266e0d69fc707a5b2a1cdfc5af1",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1922,
+        "sha256": "e32e1d80229c4216eac65ba9a14c259cfa9f1e3ce9b01d9b9975ebaf1621b53e"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/AddressInput.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Avatar.vue",
+      "gitBlob": "83dc18f2e676b0ce7e42e0239a4599db190d0e89",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1238,
+        "sha256": "9d6d238a9e62bb13b8bbb71245f4d2aed6585218bd73109e47d6716d1aea1e9f"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Avatar.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/CometRing.vue",
+      "gitBlob": "bef83d4bf2519d663216dd91f193d4dcdd6c8438",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 5738,
+        "sha256": "c3f37e0060120f4fa1fbc2a39ea5efc5a3ddba60259ebd27cf2168dc8efbad4c"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/CometRing.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/ConnectButton.vue",
+      "gitBlob": "d6a04fc58d029151ddfa2eca49e57697511c5c12",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 8597,
+        "sha256": "8ac6a4341e740a9db63ccacb4f96915eb87186ab8e2200f5b10a31347ef8f33e"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/ConnectButton.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/HeaderSearch.vue",
+      "gitBlob": "26ee0291cfa2173ea609a8fcc70b61c8de52a8f7",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 938,
+        "sha256": "b7a017ff6a7a2e59531a90b0c067b298bca7d404d0577ffb0550b8561db0f87e"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/HeaderSearch.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Icon.vue",
+      "gitBlob": "30d57b44e41372011aabc14c43450c9448adc182",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 8386,
+        "sha256": "f01ac134100d3fac00ebf636010f1f647a8bda8d47c12c511f22a6ebef5e7beb"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Icon.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/InfoTip.vue",
+      "gitBlob": "f8e6b9f0663558fb85a2a870f24318a34ceb5715",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 4855,
+        "sha256": "6f81ab954ee4a1be8d86e8636f7ca40da9333678047938b5b533bbb8c5dac7d2"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/InfoTip.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Inventory.vue",
+      "gitBlob": "f0170af73b4d7f9d4e75b8ee960dea0108a03504",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 9305,
+        "sha256": "007a30a0e6889fd382b4967e9aee1ace750e0edfbf3d9e5bd69a4e0393501d14"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Inventory.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Modal.vue",
+      "gitBlob": "de4a891fdeef54679a3e2116f91e30b4dbaf890c",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2386,
+        "sha256": "00234a7a1d9759dc324e3324cd9d93d1b69607e8a822f918b833a1c8345ff2e6"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Modal.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/MomentumPulse.vue",
+      "gitBlob": "ff243149dafe8e1000b7fb0a8abce1aa33e7c9c7",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2437,
+        "sha256": "d9d376e0aa4c5283e63fdd91264a51fb61fa35cae98303fd73b217abcd5bfcd0"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/MomentumPulse.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/NameArt.vue",
+      "gitBlob": "279a15646e9cdbed03f3b54c7f2e927984dce82d",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 955,
+        "sha256": "be356930ebd458c69961d28dd3f853bdbfa9ff1d7ad8f09df82a0dae4e4e8a49"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/NameArt.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/NameAvatar.vue",
+      "gitBlob": "37fe376d88c29319d69f4d3cdd77df4502955973",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2309,
+        "sha256": "07431aa35ce2d743388d79eddbff21451485574ab6e878e65640b21cf80ee27d"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/NameAvatar.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/NameCard.vue",
+      "gitBlob": "2a472dadd34a0605ee3cb7f5329b24a49a197bed",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 3173,
+        "sha256": "4afa22f65dc2e903927281a73f31cea07e75ec9c18eb5cdc2da9e759fcefc48f"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/NameCard.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/NodePicker.vue",
+      "gitBlob": "df009b804e547453d4a6f253d0ec1403025bbc50",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 7127,
+        "sha256": "3f2590a6f026ddaebb25e25e3280298a726139da0f6464571e55a81515395028"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/NodePicker.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/RegisterPanel.vue",
+      "gitBlob": "a75b1b8cb90f801f31f9323d6d58bfd5a59f73c3",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 9391,
+        "sha256": "b931659048f128131874ef1907a6a95b4c6aa191618790d4a2c95b5313a35009"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/RegisterPanel.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/StepRail.vue",
+      "gitBlob": "a2dacb6fe71748eba52f75c0a531d9f9c1a5d619",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2915,
+        "sha256": "9ee2771b343f3c7738f7351772a7add7f0c08929f4d638c1af54430eede68290"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/StepRail.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/Toasts.vue",
+      "gitBlob": "c2a41c50159f044fea42e622bc7fadad51807df2",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1261,
+        "sha256": "eb98d11d0783aa1c9516b649ad79e10b3b83f66fd5f7779dd6abc4abac3da877"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/Toasts.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/components/ZnsMark.vue",
+      "gitBlob": "f3a25eb66af7f3f7a46f9e8f4c9e216bb84f3df0",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1293,
+        "sha256": "ae2f20bcb386d429565ecbac8b2f504ea75340f6d007f0f52b0fbb6ae4854592"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/components/ZnsMark.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/actions.ts",
+      "gitBlob": "0d50972923f1ab66205e80f13a1f1a51c5e04d40",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 6556,
+        "sha256": "7126ee9f7071fcc5dbf432934e415e14141db49fbbf64aa3163dd96d314b27cc"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/actions.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/art.ts",
+      "gitBlob": "c94e66f3bf15c48a79d33add479f5641c9e9daa7",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2365,
+        "sha256": "7b38a92c5915da2f7941c03aeb87ad9ac0fc4351b1d66ac5b7a14432e272a533"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/art.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/chain.ts",
+      "gitBlob": "afea3a68df5c500d9609e3a9538fe38f0d01b635",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 4117,
+        "sha256": "a49762d07b618ea0d64e1b3a46482f01af86b08fa3351391a2cbda7ed4c1be87"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/chain.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/chains.ts",
+      "gitBlob": "357a8955a064328558c1e89d4817d3afc0770bdc",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 446,
+        "sha256": "4a3102af50154f1947e20ff3d744f481ba709f123ca384e10945a36ff7179ce4"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/chains.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/configure.ts",
+      "gitBlob": "44f80e5ff5c7e80aa9733d7c1e7a949f574a25a6",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 549,
+        "sha256": "9ad862897a46225dd73f94192febeb191a9d7d0fb2a15b1ba5b105951bd91a2d"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/configure.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/deployment.ts",
+      "gitBlob": "0dd33a4eb9062485d64e291bd69eb19adc3788e1",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1634,
+        "sha256": "7d33dc4f3af041e457e803975cb3072c2d01ce3baf6c5a6705efb1b1387ee16e"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/deployment.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/endpoint.ts",
+      "gitBlob": "05fa9afcc27e1dcb0d94e5af66c6600b07db2275",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 9124,
+        "sha256": "0e4b59febd0d787220ba99d7fd6f68cc101ae2fa444ad8e88a3951b302365d5a"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/endpoint.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/format.ts",
+      "gitBlob": "09ea4372729e781422c57eb45ceeeffefe74ffae",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1991,
+        "sha256": "ebb7e20d6dd1350a88676b273a2d4f107a20e75b49c4d3a671baad8f0772988c"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/format.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/index.ts",
+      "gitBlob": "baf2f298ed3c548781cc5eacaeb1aad965ac4f02",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 7762,
+        "sha256": "2009af24bf8bfefc7bf62548b1456211452d2dfb0560f9ad3f0be47c5b32bf8c"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/index.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/links.ts",
+      "gitBlob": "cbfdebb1a3cd7c7fddf18f78d066cbbcc14c0aae",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2380,
+        "sha256": "73eb500dbe7d828ea4ffc4e1ebadc5766f6738411a9ec0a8fd32655a59279efd"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/links.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/names.ts",
+      "gitBlob": "aa9d90c743178c4eed110d18cb11388717e98f3e",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2908,
+        "sha256": "f790fb26e0b1ee0a129c609c0845ebce7eedda7a9010067231193ce4ba81c63a"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/names.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/pixelAvatar.ts",
+      "gitBlob": "e1ac2e2ae4ed8ba7d584ddc82506e6cba2025b67",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 7076,
+        "sha256": "6ce789a549c9244c21c47c59152fcf6d366e65d8fe28eab2c06c5d119d017cfb"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/pixelAvatar.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/register.ts",
+      "gitBlob": "200e8519821a08930b1dc7789d3880430b7e411e",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 7111,
+        "sha256": "9be2759a289cfb98ef67f4a4fa89ee181eb23a982f65c6e5df9e4073e7fbe99a"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/register.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/run.ts",
+      "gitBlob": "2c4312ff6b3509a82734dcd73280bf608e745472",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1526,
+        "sha256": "4e1fe1f0be44944573c4ee6ac0a79e6d08487eb1bd914e859c42f99de4f5f568"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/run.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/toast.ts",
+      "gitBlob": "606cc31bf3b2ddc3d115271aa741fa3adabd4607",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 798,
+        "sha256": "8f022373d776bb7d726f40fcc7752b3db52fa61c5bc091410cf0260a491be930"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/toast.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/tx.ts",
+      "gitBlob": "f7f5d872e45241a6b9f364c5b3207b7e86b1bbd4",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 6107,
+        "sha256": "fe19d6f831ba1b35a80c4fff0daec270a70892d780c5447716d05d491e9ba638"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/tx.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/wallet.ts",
+      "gitBlob": "c258e05159596767d1490f3dac1d334c0fb7c932",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 4828,
+        "sha256": "8f9c9fe12dc3b6ea3a646151182c12c5250b3e4a3b39c9100d5840d53561e0e9"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/wallet.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/core/zns.ts",
+      "gitBlob": "160c9fe279d15dba59f7809c400df6d49546fd04",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 13933,
+        "sha256": "49d7f4e94a0dba9812aa060f864e9945b69893bca2b950bf9fdad71fb89ff616"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/core/zns.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/main.ts",
+      "gitBlob": "1f40051be35a8dcec06ed6d97ce37964ef0fa091",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 239,
+        "sha256": "af8d0f699d64ee1c5ea9fe717b5aa7b1bc61a690d45da0f3d7cc27c77e2686dd"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/main.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/AboutPage.vue",
+      "gitBlob": "ea681d30c3e93d2fb31ee86125627d41f974626f",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 5138,
+        "sha256": "3964e3c9a0c6a2fde3b3cbfb7a7112818cfbb6d41f6479308a4c21f18540f48f"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/AboutPage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/AddressPage.vue",
+      "gitBlob": "def89e2a333403de31f7c81f9781a3745c2ee775",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2862,
+        "sha256": "27591159b51e9861b5021226e742a5eb21097a8f4edabc44b9310c480666f0ac"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/AddressPage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/AdminPage.vue",
+      "gitBlob": "1526e0b44d5a10e9926e6524359db55250797dda",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 3222,
+        "sha256": "32760c58bbe6016afd56a77e6d05ed6d2ed7da767bb21885a02a4faafc775a3c"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/AdminPage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/ExplorePage.vue",
+      "gitBlob": "8004427518477b3f426ae90bb97f265932ffaec4",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 6597,
+        "sha256": "ea9ecf2982b939c08454295f7d091bf571ced8c418b917adeb8ce0ec36763c0e"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/ExplorePage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/HomePage.vue",
+      "gitBlob": "a8d5c08aa0285232349c3a17dcce48abd7604790",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 13952,
+        "sha256": "78a3156d5547b8e597a0b74db344fd25bda79045beb77e5c67ec153e8f3e9f45"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/HomePage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/MyNamesPage.vue",
+      "gitBlob": "8c6a27e0bcfe4ed7b5f2185b184d75595baa4bad",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 524,
+        "sha256": "c2cc36d39edc9b39da149163ec85234523f0f158129106ad804ce13643889dc1"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/MyNamesPage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/NamePage.vue",
+      "gitBlob": "5727a8d5050c1af4d1c04361f73c8fff6ecac6fa",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 28949,
+        "sha256": "d82a7b3e48aafe34e2008029de98c910a4549c7c98f62640d093109f8ba37cd3"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/NamePage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/pages/NotFoundPage.vue",
+      "gitBlob": "4b9a56a24f005b17bdd8bf318e05c2a504581a0b",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 237,
+        "sha256": "a61ee3a188579849eba9eca069c5db06eb2ecb94a9ae5322b26c9e821a1eafad"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/pages/NotFoundPage.vue",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/router.ts",
+      "gitBlob": "35405431de7509278a67c9655bbd1f21ea2cc3de",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1194,
+        "sha256": "acb8a488b181519e687ea961d22c93739241b6de175f513140e28410a41d75e0"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/router.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/src/style.css",
+      "gitBlob": "80e481680ac0cb6a33b250535c811b72b3864936",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 32525,
+        "sha256": "f1c602075b9e18e6a17f2fb814582e01e702ffaed49b1509377c852d4db8ab2b"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/src/style.css",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/tsconfig.json",
+      "gitBlob": "b1bdb877ee670cb79455eabffe8c9cda3f189152",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1053,
+        "sha256": "71d401bb3414ea5c3889f77dc5d10d8b495a93b6ac3f3e1dfe3749f30efcedd2"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/tsconfig.json",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "candidate-web-parent/vite.config.ts",
+      "gitBlob": "0d580769b87da7e6d197007407e7f70605e8b484",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 2471,
+        "sha256": "153068076a63ea6894cfc0007c2d907fba315e39069e7dc0c3a5b0dc537468cb"
+      },
+      "sourceCommit": "30e95476066fe67f48f426b123655cc5cb413852",
+      "sourcePath": "web/vite.config.ts",
+      "sourceRepository": "main"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/address.ts",
+      "gitBlob": "d090508ba4fb14c611cad4e698b4092e502227f3",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 3893,
+        "sha256": "a17186ad2a0bc435ceb8ac1aaa9c82cd3324fd504c78d04aa989bc900743f13b"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/address.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/components/Badge.vue",
+      "gitBlob": "e57a9d486ab2b4e9d519624b7d10b10ef6646587",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 701,
+        "sha256": "2321e880378c5ed5af6455603f9f138b54231f3f364d3d5c5e504644817149ac"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/components/Badge.vue",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/components/Chip.vue",
+      "gitBlob": "151c19c9fa439532ade6cc209b156c15ec31070a",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1510,
+        "sha256": "dbf0923b1f36e6e8716026683106654ab0be9a85dd2a097d7d3cb43e4bcda458"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/components/Chip.vue",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/components/LatticeBackground.vue",
+      "gitBlob": "ce4fc117455acd144ebea00fed83c9fd42bd4159",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 8827,
+        "sha256": "e35b74c068b3910fa0698d8dacf14a835b16b817c9a58649c174ffc333e5893c"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/components/LatticeBackground.vue",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/components/ZenoglyphMark.vue",
+      "gitBlob": "c69e167382e224006da3af0ce0638076cd63ae58",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1117,
+        "sha256": "9bc3d5edcffed8eec973afbad43a16b601fe23714b6deeba2ecd6c4c1fe2939b"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/components/ZenoglyphMark.vue",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/config.ts",
+      "gitBlob": "bd47fd8e6b5bfd96c79d77797569489fff887442",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1471,
+        "sha256": "330d6b0415d3f7f9928e783ff4582c2f61c0dda053fea4848018a21122d018bb"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/config.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/env.d.ts",
+      "gitBlob": "01c751683689fd833283d4d8a51efe07f0b39e7e",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 184,
+        "sha256": "a053ffd84c5ebbeb55c1bd5f2a7178e5faa2e4c77e152ed02eddeb7128126b50"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/env.d.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/evm.ts",
+      "gitBlob": "3138f2abde024e97adfc1f5fd6ef47f512e0cbc1",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 5920,
+        "sha256": "c8d6ee323b9950721cfae67e84b77d27e4e1d7246e90db797bf3ded519f4d010"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/evm.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/format.ts",
+      "gitBlob": "f3c4b1922d338d0cec25b1a0321d9a3271d3895f",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 10966,
+        "sha256": "6bb3c6d0012b8183489a176c137e095690ca8c964dc4f5f1ed1a329826400164"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/format.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/index.ts",
+      "gitBlob": "780a4a5e9e6e725708d293850a3cea920b0b79c1",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 676,
+        "sha256": "8aa09a17f001556a737e7b515ab7a451b0ee97a4644076d8b0f0423aa09ea194"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/index.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/names.ts",
+      "gitBlob": "cee121316514eeb96dee2d7f61d391f88f93c77c",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 4416,
+        "sha256": "43110a62aa6ec086540acda9b57c586310274ad57f0dbc1a7d500945cdb7528c"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/names.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/prices.ts",
+      "gitBlob": "24bc2295029b8d23e501e8fca7d6c9595c52a27c",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 6976,
+        "sha256": "7899d9a3958c89bb4d25ffc3d0c3c9dc0246194c8b611a6127aefa0dd5c179b3"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/prices.ts",
+      "sourceRepository": "core"
+    },
+    {
+      "destinationRelativeToOutput": "zvm-core/web/src/url.ts",
+      "gitBlob": "2c0658b3c7f2302c37832d28de08aea74d86a871",
+      "gitMode": "100644",
+      "pin": {
+        "bytes": 1845,
+        "sha256": "a2367a6b9f0aba45e15ea0f538f155b503a9aca97e46576720263cbf7bd4185d"
+      },
+      "sourceCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
+      "sourcePath": "web/src/url.ts",
+      "sourceRepository": "core"
+    }
+  ],
+  "filesystemCopyOrBuildOrBrowserOrRpcExecution": false,
+  "fixtureChainId": 7340469,
+  "fixtureLaunchTime": 1700000000,
+  "fixtureStartBlock": 1,
+  "fundedVerificationScriptIncluded": false,
+  "mainSourceBase": "30e95476066fe67f48f426b123655cc5cb413852",
+  "productionGate": "NO_GO",
+  "proposedBuildOrApplicationAcceptanceEstablished": false,
+  "schema": 1,
+  "scope": "Exact regular first-party app/config/public-asset/deployment inputs for a separate candidate build. Candidate manifest, lock and installed modules remain the separately verified proposal.",
+  "sourceBytes": 471481,
+  "sourceFiles": 71,
+  "syntheticDeploymentFixture": {
+    "chainId": 7340469,
+    "contracts": {
+      "ENSRegistry": "0x0000000000000000000000000000000000000001",
+      "ExponentialPremiumPriceOracle": "0x0000000000000000000000000000000000000005",
+      "GatewayProvider": "0x0000000000000000000000000000000000000008",
+      "PublicResolver": "0x0000000000000000000000000000000000000007",
+      "ReverseRegistrar": "0x0000000000000000000000000000000000000002",
+      "StaticBulkRenewal": "0x000000000000000000000000000000000000000a",
+      "UniversalResolver": "0x0000000000000000000000000000000000000009",
+      "ZNSController": "0x0000000000000000000000000000000000000006",
+      "ZNSPriceFeed": "0x0000000000000000000000000000000000000004",
+      "ZNSRegistrar": "0x0000000000000000000000000000000000000003"
+    },
+    "launchTime": 1700000000,
+    "owner": "0x00000000000000000000000000000000000000ff",
+    "startBlock": 1,
+    "terms": {
+      "launchMaxLength": 6,
+      "network": "isolated-browser-fixture",
+      "premiumDays": 21,
+      "startPremium": "0"
+    }
+  },
+  "syntheticFixtureIsNotOperatorOrChainEvidence": true,
+  "trackedDeploymentRecords": 0
+}

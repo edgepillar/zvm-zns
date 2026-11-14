@@ -23,6 +23,7 @@ from mapper_size_controls import qualify_mapper_controls
 from node_parser_controls import qualify_parser_controls
 from mapper_rebuild import qualify_rebuild
 from node_consumer_controls import qualify_consumers
+from browser_runtime import qualify_browsers
 
 
 def pin(raw):
@@ -159,9 +160,13 @@ def main():
                 'tools/dependency-review/npm-cache-index.cjs', 'tools/dependency-review/node-consumer-worker.cjs',
                 'tools/dependency-review/node-consumer-formats.cjs',
                 'tools/dependency-review/node-consumer-resolve.mjs', 'tools/dependency-review/node-consumer-plan.json',
-                'tools/dependency-review/profile-source-budgets.json')},
+                'tools/dependency-review/profile-source-budgets.json',
+                'tools/dependency-review/browser-inputs.json', 'tools/dependency-review/browser_archive.py',
+                'tools/dependency-review/browser-app-sources.json', 'tools/dependency-review/browser_staging.py',
+                'tools/dependency-review/browser_runtime.py', 'tools/dependency-review/browser-source-guard.cjs',
+                'tools/dependency-review/browser-fixture.cjs', 'tools/dependency-review/browser-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
-            'browserLiveChainWalletOrDeploymentQualified': False}
+            'fullBrowserMigrationLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
         source_plan_raw = read_input(repo, 'tools/dependency-review/changed-publications.json')
         source_plan = json.loads(source_plan_raw)
@@ -256,6 +261,14 @@ def main():
         report['parentMigrationCandidate'].update(candidateProfileInstallationPerformed=True,
             candidateInstalledProfile='linux/x64/glibc',
             proposedPackageExecutionScope='Existing bounded mapper/parser controls plus actual baseline/raw-candidate Node entry imports and tracked caller defaultArgs in read-only permission profiles. Browser and CDP/protocol handlers were not run.')
+        report['browserRuntimeExecution'] = {}
+        report['parentMigrationCandidate'].update(candidateBrowserBootstrapExecuted=None,
+            proposedPackageExecutionScope='Real paired browser/application execution is being attempted; browser execution-stage and command receipts determine the completed scope.')
+        report['browserRuntime'] = qualify_browsers(repo, web, parent_root, output, env, report['commands'],
+            source_plan, report['browserRuntimeExecution'])
+        report['parentMigrationCandidate'].update(candidateBrowserBootstrapExecuted=True,
+            proposedPackageExecutionScope='Bounded mapper/parser and actual Node controls, followed by paired full Chrome CDP/BiDi sessions and real nominal/synthetic application builds and browser controls. Raw published packages remain unchanged.',
+            migrationAcceptanceEstablished=False)
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()
@@ -285,7 +298,7 @@ def main():
         for notice in plan['retainedNotices']:
             require(distribution['files'][notice['distPath']] == notice['pin'], 'original notice not preserved in build output')
         verify_files(repo, plan['sourcePins'])
-        report.update(status='SELECTED_WEB_PATCH_BYTES_AND_BUILD_QUALIFIED_NO_BROWSER_RUNTIME', profiles=profiles,
+        report.update(status='SELECTED_WEB_PATCHES_AND_PAIRED_BROWSER_FIXTURES_QUALIFIED_MIGRATION_OPEN', profiles=profiles,
             toolchain=toolchain, viteVersion=vite_version, distribution=distribution, originalNoticesInDistributionVerified=True,
             virtualModuleControls={'testCounts': virtual_totals, 'result': virtual_result},
             sourcePinsVerifiedAndUnchanged=True, completeAdvisoryCoverageOrLegalReviewEstablished=False,
@@ -296,7 +309,8 @@ def main():
     finally:
         write_json(output / 'report.json', report)
     print(json.dumps({'status': report['status'], 'profiles': report['profiles'], 'distFiles': distribution['fileCount'],
-        'productionGate': 'NO_GO', 'browserRuntimeQualified': False}))
+        'productionGate': 'NO_GO', 'selectedBrowserProtocolAndSyntheticApplicationControlsQualified': True,
+        'fullBrowserMigrationOrLiveChainQualified': False}))
 
 
 if __name__ == '__main__':
