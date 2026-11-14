@@ -5,7 +5,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-from web_parent_candidate import candidate_manifest, inspect_candidate
+from web_parent_candidate import candidate_inputs, candidate_manifest, inspect_candidate
 from openzeppelin_candidate import sha
 
 
@@ -36,6 +36,17 @@ def fixture():
 
 
 class CandidateBoundaryControls(unittest.TestCase):
+    def test_proposal_binds_the_actual_locked_parent_instead_of_the_declared_minimum(self):
+        source, _, _ = fixture()
+        locked = {'packages': {'node_modules/puppeteer-core': {'version': '25.12.0'}}}
+        raw = json.dumps(locked).encode()
+        proposed, preserved = candidate_inputs(source['web/package.json'], raw)
+        self.assertEqual(preserved, raw)
+        self.assertEqual(json.loads(proposed)['devDependencies']['puppeteer-core'], '25.17.0')
+        for version in ['25.11.0', '25.17.0', '26.0.0']:
+            locked['packages']['node_modules/puppeteer-core']['version'] = version
+            with self.subTest(version=version), self.assertRaises(ValueError): candidate_inputs(source['web/package.json'], json.dumps(locked))
+
     def test_manifest_candidate_preserves_unrelated_source_settings(self):
         source, _, root = fixture()
         before = json.loads(source['web/package.json']); after = json.loads(root.files['package.json'])

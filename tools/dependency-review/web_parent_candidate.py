@@ -15,13 +15,17 @@ def candidate_manifest(package_raw):
     return encoded(package)
 
 
+def candidate_inputs(package_raw, lock_raw):
+    require(json.loads(lock_raw)['packages']['node_modules/puppeteer-core']['version'] == '25.12.0', 'locked parent baseline differs')
+    return candidate_manifest(package_raw), lock_raw
+
+
 def stage_candidate(repo, output):
     package_raw, lock_raw = [read_input(repo, name) for name in ('web/package.json', 'web/package-lock.json')]
-    require(json.loads(lock_raw)['packages']['node_modules/puppeteer-core']['version'] == '25.11.0', 'locked parent baseline differs')
-    proposed_package = candidate_manifest(package_raw)
+    proposed_package, proposed_lock = candidate_inputs(package_raw, lock_raw)
     root = output / 'candidate-web-parent'; root.mkdir()
     (root / 'package.json').write_bytes(proposed_package)
-    (root / 'package-lock.json').write_bytes(lock_raw)
+    (root / 'package-lock.json').write_bytes(proposed_lock)
     return root, {'packageJsonSha256': sha(package_raw), 'packageLockSha256': sha(lock_raw)}
 
 

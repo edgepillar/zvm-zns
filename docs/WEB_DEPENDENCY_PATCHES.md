@@ -108,7 +108,8 @@ continues independently; its generated contract output pins stay unchanged.
 
 The compiler's separate HTTP and temporary-file dependency update is described
 in [Compiler dependencies](COMPILER_DEPENDENCIES.md). It does not change the web
-application's current Puppeteer 25.11.0 or Zod 3.25.76 selection.
+application's current locked Puppeteer 25.12.0 or Zod 3.25.76 selection. The
+manifest's `^25.11.0` minimum is distinct from that locked parent version.
 
 After the current web build, two additional bounded commands observe npm and
 generate a review-only lock proposal for Puppeteer 25.17.0 and Zod 4.6.7 in a
