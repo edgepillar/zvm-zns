@@ -1,0 +1,24 @@
+{
+  "derived": {
+    "bytes": 25803,
+    "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+  },
+  "embeddedMapperOrValidatorChanged": false,
+  "entry": "out/Default/gen/src/protocol-parser/protocol-parser.js",
+  "kind": "REVIEW_ONLY_DERIVED_NODE_PARSER_TYPE_GUARD",
+  "original": {
+    "bytes": 25754,
+    "sha256": "88948af112f534124e34db5ce0d2697b7ce6dfdda9a09fa4bd78887dd0916d7e"
+  },
+  "productionGate": "NO_GO",
+  "proposalAdopted": false,
+  "publication": {
+    "integrity": "sha512-KJw7IQgqXwxpJgJlEIPg5mr2ZoqA+jkTRtc5EABI7sUJ3bu3cpI7NuEBoj4Gn1AsF78CaT9So5WQWspK3/wYag==",
+    "name": "chromium-bidi",
+    "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-157.0.8090-0.tgz",
+    "version": "157.0.8090-0"
+  },
+  "replacementCount": 1,
+  "schema": 1,
+  "sourcePublicationAndApplicationFilesChanged": false
+}

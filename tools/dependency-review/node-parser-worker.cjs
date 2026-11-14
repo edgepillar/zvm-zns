@@ -19,6 +19,12 @@ const fixture = `(() => {
       inventory.push(route);
       let error;
       try { fn(null); } catch (caught) { error = caught; }
+      if (route === 'Emulation.parseSetGeolocationOverrideParams' && !globalThis.__guard) {
+        if (!(error instanceof TypeError) || error instanceof InvalidArgument) throw new Error('Published geolocation precheck difference not observed');
+        rows.push({route, control: 'null-parameters', success: false, unwrappedTypeErrorObserved: true,
+          protocolErrorPreserved: false, subjectAccepted: false});
+        continue;
+      }
       if (!(error instanceof InvalidArgument) || error.error !== 'invalid argument') throw new Error('Malformed route did not preserve protocol error: ' + route);
       const envelope = error.toErrorResponse(7);
       if (envelope.type !== 'error' || envelope.id !== 7 || envelope.error !== 'invalid argument' || !envelope.message) throw new Error('Malformed protocol error envelope');
@@ -40,7 +46,7 @@ const fixture = `(() => {
     ['DigitalCredentials', 'parseSetVirtualWalletBehaviorParams', {action: 'decline', context: 'context-one'}],
     ['WebModule', 'parseInstallParams', {extensionData: {type: 'path', path: '/controlled/example'}}],
   ];
-  if (globalThis.__profile === 'candidate') samples.push(
+  if (globalThis.__candidate) samples.push(
     ['Emulation', 'parseSetMediaFeaturesOverrideParams', {features: null}],
     ['Emulation', 'parseSetTextLayoutModeOverrideParams', {textLayoutMode: null}],
     ['Emulation', 'parseSetViewportMetaOverrideParams', {viewportMeta: null}],
@@ -50,7 +56,7 @@ const fixture = `(() => {
     const output = parser[namespace][name](parameters);
     if (JSON.stringify(parameters) !== before) throw new Error('Parser mutated input parameters');
     const expected = JSON.parse(before);
-    if (namespace === 'Script' && globalThis.__profile === 'candidate') expected.userActivation = false;
+    if (namespace === 'Script' && globalThis.__candidate) expected.userActivation = false;
     if (JSON.stringify(output) !== JSON.stringify(expected)) throw new Error('Reviewed valid output differs: ' + namespace + '.' + name);
     rows.push({route: namespace + '.' + name, control: 'valid-parameters', success: true, inputUnchanged: true, output});
   }
@@ -62,8 +68,30 @@ const fixture = `(() => {
   try { parser.parseObject({value: 1}, schema); } catch (caught) { error = caught; }
   if (!(error instanceof InvalidArgument) || error.error !== 'invalid argument' || !error.message.includes('"value"')) throw new Error('Direct parser did not retain nested issue path');
   rows.push({route: 'parseObject', control: 'invalid-direct-schema', success: false, protocolError: error.error, nestedIssuePathRetained: true});
+  const geoRoute = 'Emulation.parseSetGeolocationOverrideParams';
+  const geoInput = {coordinates: {latitude: 1, longitude: 2, accuracy: 1,
+    altitude: null, altitudeAccuracy: null, heading: null, speed: null}};
+  const geoBefore = JSON.stringify(geoInput);
+  const geoOutput = parser.Emulation.parseSetGeolocationOverrideParams(geoInput);
+  if (JSON.stringify(geoInput) !== geoBefore || JSON.stringify(geoOutput) !== geoBefore) throw new Error('Valid geolocation behavior changed');
+  rows.push({route: geoRoute, control: 'valid-geolocation', success: true, inputUnchanged: true, output: geoOutput});
+  let conflict;
+  try { parser.Emulation.parseSetGeolocationOverrideParams({coordinates: null, error: {type: 'positionUnavailable'}}); } catch (caught) { conflict = caught; }
+  if (!(conflict instanceof InvalidArgument) || conflict.error !== 'invalid argument') throw new Error('Mutually exclusive geolocation fields were accepted');
+  rows.push({route: geoRoute, control: 'conflicting-geolocation', success: false, protocolError: conflict.error});
+  let scalar;
+  try { parser.Emulation.parseSetGeolocationOverrideParams(7); } catch (caught) { scalar = caught; }
+  if (globalThis.__guard) {
+    if (!(scalar instanceof InvalidArgument) || scalar.error !== 'invalid argument') throw new Error('Guarded scalar did not reach protocol validation');
+    rows.push({route: geoRoute, control: 'scalar-geolocation', success: false, protocolError: scalar.error});
+  } else {
+    if (!(scalar instanceof TypeError) || scalar instanceof InvalidArgument) throw new Error('Published scalar geolocation difference not observed');
+    rows.push({route: geoRoute, control: 'scalar-geolocation', success: false,
+      unwrappedTypeErrorObserved: true, protocolErrorPreserved: false, subjectAccepted: false});
+  }
   return JSON.stringify({profile: globalThis.__profile, inventory: inventory.sort(), controls: rows,
-    validNamespaceCases: samples.length, malformedNamespaceCases: inventory.length, directSchemaCases: 2});
+    validNamespaceCases: samples.length, malformedNamespaceCases: inventory.length, directSchemaCases: 2,
+    targetedGeolocationCases: 3, rawGeolocationErrorContractQualified: Boolean(globalThis.__guard)});
 })()`;
 
 const calibration = `(() => {
@@ -79,14 +107,30 @@ const calibration = `(() => {
     unsupportedOverrideAccepted: false});
 })()`;
 
-async function loadProfile(mapper, zod, mapperPlan, zodPlan, profile, entry) {
+function applyGuard(source, plan) {
+  const raw = Buffer.from(source);
+  assert.deepEqual({bytes: raw.length, sha256: sha(raw)}, plan.original);
+  const before = "if ('coordinates' in params && 'error' in params) {";
+  const after = "if (typeof params === 'object' && params !== null && 'coordinates' in params && 'error' in params) {";
+  assert.equal(source.split(before).length - 1, 1); assert.equal(plan.replacementCount, 1);
+  const derived = source.replace(before, after); const body = Buffer.from(derived);
+  assert.deepEqual({bytes: body.length, sha256: sha(body)}, plan.derived);
+  return derived;
+}
+
+async function loadProfile(mapper, zod, mapperPlan, zodPlan, profile, entry, guardPlan) {
   const context = vm.createContext(Object.create(null), {codeGeneration: {strings: false, wasm: false}});
   const cache = new Map();
+  const executedPins = new Map();
   function moduleFor(packageName, name) {
     nameChecked(name); assert(['mapper', 'zod'].includes(packageName));
     const key = packageName + '/' + name;
     if (cache.has(key)) return cache.get(key);
-    const source = (packageName === 'mapper' ? mapper : zod).read(name);
+    const original = (packageName === 'mapper' ? mapper : zod).read(name);
+    const derived = profile === 'guardCandidate' && packageName === 'mapper' && name === entry;
+    const source = derived ? applyGuard(original, guardPlan) : original;
+    executedPins.set(key, {bytes: Buffer.byteLength(source), sha256: sha(Buffer.from(source)),
+      ...(derived ? {derivedFrom: guardPlan.original, transformation: 'REVIEWED_GEOLOCATION_TYPE_GUARD'} : {})});
     const module = new vm.SourceTextModule(source, {context, identifier: 'https://dependency.invalid/' + key});
     cache.set(key, module); return module;
   }
@@ -106,12 +150,13 @@ async function loadProfile(mapper, zod, mapperPlan, zodPlan, profile, entry) {
   context.__zod = cache.get('zod/index.js').namespace.z;
   context.__invalidArgument = cache.get('mapper/out/Default/gen/src/protocol/ErrorResponse.js').namespace.InvalidArgumentException;
   context.__profile = profile;
+  context.__candidate = profile !== 'baseline';
+  context.__guard = profile === 'guardCandidate';
   const script = profile === 'unsupported-legacy-override' ? calibration : fixture;
   const result = JSON.parse(new vm.Script(script, {filename: 'bounded-node-parser-controls.js'}).runInContext(context, {timeout: 1500}));
   const loaded = [...cache.keys()].sort().map(key => {
     const at = key.indexOf('/'); const packageName = key.slice(0, at); const name = key.slice(at + 1);
-    const selected = packageName === 'mapper' ? mapperPlan : zodPlan;
-    return {package: packageName, name, bytes: selected.members[name].bytes, sha256: selected.members[name].sha256};
+    return {package: packageName, name, ...executedPins.get(key)};
   });
   return {result, loaded};
 }
@@ -132,20 +177,28 @@ async function main() {
   const wrongArchive = structuredClone(plan.fixed); wrongArchive.members['package.json'].sha256 = '0'.repeat(64);
   assert.throws(() => readArchive(wrongArchive).read('package.json'));
   const entry = 'out/Default/gen/src/protocol-parser/protocol-parser.js';
+  assert.equal(plan.guardPatch.entry, entry);
+  const originalParser = mapper.read(entry);
+  const badOriginal = structuredClone(plan.guardPatch); badOriginal.original.sha256 = '0'.repeat(64);
+  assert.throws(() => applyGuard(originalParser, badOriginal));
+  const badDerived = structuredClone(plan.guardPatch); badDerived.derived.sha256 = '0'.repeat(64);
+  assert.throws(() => applyGuard(originalParser, badDerived));
   const baseline = await loadProfile(baselineMapper, baselineZod, plan.baselineMapper, plan.baselineZod, 'baseline', entry);
   const candidate = await loadProfile(mapper, fixed, plan.mapper, plan.fixed, 'candidate', entry);
+  const guardCandidate = await loadProfile(mapper, fixed, plan.mapper, plan.fixed, 'guardCandidate', entry, plan.guardPatch);
   const negative = await loadProfile(baselineMapper, fixed, plan.baselineMapper, plan.fixed, 'unsupported-legacy-override', entry);
   assert.equal(baseline.result.malformedNamespaceCases, 77); assert.equal(baseline.result.validNamespaceCases, 13);
   assert.equal(candidate.result.malformedNamespaceCases, 80); assert.equal(candidate.result.validNamespaceCases, 16);
-  const totalCases = baseline.result.controls.length + candidate.result.controls.length + negative.result.controls;
-  assert.equal(totalCases, 192);
+  const totalCases = baseline.result.controls.length + candidate.result.controls.length + guardCandidate.result.controls.length + negative.result.controls;
+  assert.equal(totalCases, 299);
   const added = candidate.result.inventory.filter(name => !baseline.result.inventory.includes(name));
   const removed = baseline.result.inventory.filter(name => !candidate.result.inventory.includes(name));
   assert.deepEqual(added, ['Emulation.parseSetMediaFeaturesOverrideParams', 'Emulation.parseSetTextLayoutModeOverrideParams', 'Emulation.parseSetViewportMetaOverrideParams']);
   assert.deepEqual(removed, []);
-  process.stdout.write(JSON.stringify({schema: 1, status: 'BOUNDED_NODE_PARSER_API_CONTROLS_QUALIFIED_MIGRATION_REQUIRES_REVIEW',
+  process.stdout.write(JSON.stringify({schema: 1, status: 'NODE_PARSER_OBSERVATIONS_AND_GUARD_CANDIDATE_QUALIFIED_MIGRATION_NOT_ACCEPTED',
     nodeVersion: process.version, nodePlatform: process.platform, nodeArchitecture: process.arch,
-    baseline, candidate, unsupportedLegacyOverride: negative, totalCases, sourceGuardCases: 4,
+    baseline, candidate, guardCandidate, unsupportedLegacyOverride: negative, totalCases, sourceGuardCases: 4, patchGuardCases: 2,
+    derivedParserGuard: plan.guardPatch, originalPublishedGeolocationErrorBehaviorAccepted: false,
     entry, fixtureSha256: sha(Buffer.from(fixture)), calibrationSha256: sha(Buffer.from(calibration)),
     addedNamespaceMethods: added, removedNamespaceMethods: removed,
     currentInstalledBaselineAndExactCandidateMemberSourcesUsed: true,

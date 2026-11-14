@@ -147,7 +147,9 @@ def main():
                 'tools/dependency-review/changed_publications.py', 'tools/dependency-review/changed_source_installation.py',
                 'tools/dependency-review/changed-publications.json', 'tools/dependency-review/mapper_size_controls.py',
                 'tools/dependency-review/mapper-size-worker.cjs', 'tools/dependency-review/verified-package-sources.cjs',
-                'tools/dependency-review/node_parser_controls.py', 'tools/dependency-review/node-parser-worker.cjs')},
+                'tools/dependency-review/node_parser_controls.py', 'tools/dependency-review/node-parser-worker.cjs',
+                'tools/dependency-review/parser_guard.py', 'tools/dependency-review/node-parser-guard.json',
+                'tools/dependency-review/node-parser-guard.patch')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
