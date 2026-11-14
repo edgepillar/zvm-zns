@@ -4,8 +4,10 @@ The tracked contracts lock selects OpenZeppelin Contracts 4.9.6. This updates
 the 4.x package used directly by `ZNSRegistrar` for four `Base64.encode` calls.
 The [upstream advisory](https://github.com/OpenZeppelin/openzeppelin-contracts/security/advisories/GHSA-9vx6-7xxf-x967)
 lists 4.9.6 as a patched version. The v5 alias, compiler 0.8.26, ENS publication,
-local Solidity sources, production settings and other dependency selections are
-unchanged. No deployment or operator state is changed by this source update.
+local Solidity sources and production settings are unchanged. The later
+[compiler dependency review](COMPILER_DEPENDENCIES.md) selects patched HTTP and
+temporary-file tooling without changing this compiler or the generated-output
+pins. No deployment or operator state is changed by this source update.
 
 ## Reviewed comparison before adoption
 
@@ -44,17 +46,23 @@ producer revision, rather than assigning its old source pins to the current tree
 The [current plan](../tools/dependency-review/openzeppelin-current.json) binds the
 tracked inputs, exact generated outputs, selected package, original retained
 license and immutable control sources. The current CI lane creates one fresh
-job-owned profile and one locked test dependency installation. It ignores npm
-lifecycle scripts and uses empty explicit npm configuration files. An import
-fallback preserves ordinary nested resolution. Only the 19 reviewed Solidity
-package files are staged at the original build's fixed paths, after hash checks;
-no dependency tree is copied or linked into a second installation directory.
+job-owned profile, installs the actual application lock and separately installs
+the derived contract-test SDK. Both use one isolated npm cache, ignore lifecycle
+scripts and use empty explicit npm configuration files. The derived SDK keeps
+the frozen control sources and selects the same reviewed compiler dependencies
+as the application. All files of those compiler publications must match in both
+trees. Ordinary nested resolution is preserved. The original build reads its
+19 reviewed Solidity package files from the actual application installation;
+the frozen legacy staging/calibration helper remains unchanged.
 
 The lane rebuilds the original application source and requires byte equality for
 all twelve tracked generated files: ten contract artifacts, the compiler input
 and the frontend ABI module. It then runs the full pinned contract controls and
 291 patched padding cases. Source inputs must stay unchanged, all test totals
 must pass without skips, and every bounded command stream must be complete.
+Five additional compiler dependency events exercise twelve loopback-only
+redirect cases, normal temporary-file/directory APIs and bounded rejection and
+symlink-confinement fixtures. Nonregular fixtures run only in the hosted lane.
 It retains source bindings, the report and explicit streams, without recursively
 packaging caches, profile directories or node_modules. The frozen legacy
 calibration is not repeated by this current-source lane.

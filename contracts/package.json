@@ -17,5 +17,10 @@
     "@openzeppelin/contracts-v5": "npm:@openzeppelin/contracts@5.1.0",
     "solc": "0.8.26",
     "viem": "^2.56.5"
+  },
+  "overrides": {
+    "solc@0.8.26": {
+      "tmp": "0.2.7"
+    }
   }
 }

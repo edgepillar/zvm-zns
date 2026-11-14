@@ -24,3 +24,15 @@ The build retains these bytes under `notices/` in the static output. This does
 not establish complete distribution notices or legal acceptance for all other
 packages. See [`docs/WEB_DEPENDENCY_PATCHES.md`](docs/WEB_DEPENDENCY_PATCHES.md)
 for source bindings, selected controls and remaining qualification.
+
+## Selected compiler runtime dependencies
+
+The unchanged solc 0.8.26 tooling selects follow-redirects 1.16.3 (within its
+declared 1.x range) and tmp 0.2.7 through an explicit override scoped to that
+compiler version. The original MIT notices are retained at
+[`contracts/vendor/notices/follow-redirects-1.16.3-LICENSE`](contracts/vendor/notices/follow-redirects-1.16.3-LICENSE)
+and [`contracts/vendor/notices/tmp-0.2.7-LICENSE`](contracts/vendor/notices/tmp-0.2.7-LICENSE).
+These are compiler-tooling selections; complete source/output distribution and
+license obligations still require review. See
+[`docs/COMPILER_DEPENDENCIES.md`](docs/COMPILER_DEPENDENCIES.md) for the override,
+actual application installation, bounded controls and remaining platform gates.

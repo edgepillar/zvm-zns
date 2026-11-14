@@ -10,8 +10,9 @@ import subprocess
 import sys
 
 from lock_review import read_input, require
+from compiler_dependencies import dependency_test_counts, patch_test_compiler_graph, verify_compiler_trees
 from openzeppelin_candidate import (QUALIFICATION_LOADER, check_candidate, checked_name,
-    patch_controls, run_bounded, sha, stage_build_sources, tap_counts, write_json)
+    check_build_source, patch_controls, run_bounded, sha, tap_counts, write_json)
 
 
 def require_output_parity(expected, actual):
@@ -47,6 +48,7 @@ def main():
             'controls': plan['controls'], 'package': plan['package'], 'comparisonEvidence': plan['comparisonEvidence'],
             'codePins': {name: {'bytes': len(read_input(repo, name)), 'sha256': sha(read_input(repo, name))} for name in (
                 'tools/dependency-review/openzeppelin_current.py', 'tools/dependency-review/openzeppelin_candidate.py',
+                'tools/dependency-review/compiler_dependencies.py', 'tools/dependency-review/compiler-dependency-controls.test.mjs',
                 'tools/dependency-review/base64-padding.test.mjs', 'tools/dependency-review/lock_review.py')},
             'pythonVersion': sys.version, 'platform': sys.platform, 'machine': platform.machine(),
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
@@ -56,10 +58,17 @@ def main():
         for name, raw in {**inputs, **controls}.items():
             target = profile / name; target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(raw)
         names = ['contracts/test/package.json', 'contracts/test/package-lock.json']
-        for name, raw in zip(names, patch_controls(*(controls[name] for name in names), plan['package'])):
+        compiler_selected = plan['compilerDependencies']['packages']
+        derived = patch_controls(*(controls[name] for name in names), plan['package'])
+        derived = patch_test_compiler_graph(*derived, compiler_selected)
+        for name, raw in zip(names, derived):
             (profile / name).write_bytes(raw)
         fixture = read_input(repo, 'tools/dependency-review/base64-padding.test.mjs')
         (profile / 'contracts/test/base64-padding.test.mjs').write_bytes(fixture)
+        api_name = 'tools/dependency-review/compiler-dependency-controls.test.mjs'
+        api_fixture = read_input(repo, api_name)
+        require({'bytes': len(api_fixture), 'sha256': sha(api_fixture)} == binding['codePins'][api_name], 'dependency control source changed')
+        (profile / 'compiler-dependency-controls.test.mjs').write_bytes(api_fixture)
         loader = profile / 'qualification-loader.mjs'; loader.write_text(QUALIFICATION_LOADER)
         cache = output / 'npm-cache'; cache.mkdir()
         userconfig, globalconfig = output / 'user.npmrc', output / 'global.npmrc'
@@ -69,17 +78,40 @@ def main():
             'npm_config_cache': str(cache), 'npm_config_userconfig': str(userconfig), 'npm_config_globalconfig': str(globalconfig),
             'npm_config_fetch_retries': '0', 'npm_config_fetch_timeout': '45000', 'ZNS_TEST_OPENZEPPELIN_VERSION': '4.9.6'}
         commands = [('toolchain', ['node', '-p', 'JSON.stringify({node:process.version,versions:process.versions})'], profile),
+            ('package-toolchain', ['npm', '--version'], profile),
+            ('compiler-install', ['npm', 'ci', '--ignore-scripts', '--no-audit', '--no-fund'], profile / 'contracts'),
             ('install', ['npm', 'ci', '--ignore-scripts', '--no-audit', '--no-fund'], profile / 'contracts/test'),
+            ('dependency-controls', ['node', '--test', '--test-concurrency=1', '--test-reporter=tap',
+                'compiler-dependency-controls.test.mjs'], profile),
             ('build', ['node', '--import', str(loader), 'scripts/build.mjs'], profile / 'contracts'),
             ('controls', ['node', '--import', str(loader), '--test', '--test-concurrency=1', '--test-reporter=tap', 'behavior.test.mjs', 'base64-padding.test.mjs'], profile / 'contracts/test')]
         for label, argv, cwd in commands:
+            selected_env = env
+            if label == 'dependency-controls':
+                report['compilerInstalledSourcePins'] = verify_compiler_trees(profile, compiler_selected)
+                fixtures = output / 'compiler-api-fixtures'; fixtures.mkdir()
+                selected_env = {**env, 'TMPDIR': str(fixtures), 'ZNS_COMPILER_API_TMPDIR': str(fixtures),
+                    'ZNS_COMPILER_APPLICATION_ROOT': str(profile / 'contracts')}
             if label == 'build':
-                report['stagedBuildSourcePins'] = stage_build_sources(profile, plan['packageSourcePins'])
-            result = run_bounded(argv, cwd, env, output, 'current-' + label)
+                actual_sources = {}
+                for unit, expected in plan['packageSourcePins'].items():
+                    body = read_input(profile / 'contracts/node_modules', unit)
+                    check_build_source(unit, body, expected); actual_sources[unit] = expected
+                report['stagedBuildSourcePins'] = actual_sources
+                report['buildSourceMode'] = 'ACTUAL_APPLICATION_NPM_CI_TREE'
+            result = run_bounded(argv, cwd, selected_env, output, 'current-' + label)
             report['commands'].append(result)
             require(result['actualExit'] == 0 and result['outputComplete'], 'current ' + label + ' failed or incomplete')
         toolchain = json.loads((output / 'streams/current-toolchain.stdout.txt').read_bytes())
         require(re.fullmatch(r'v22\.\d+\.\d+', toolchain['node']), 'unreviewed Node major')
+        npm_version = (output / 'streams/current-package-toolchain.stdout.txt').read_text().strip()
+        require(re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', npm_version), 'package manager version not observed')
+        dependency_raw = (output / 'streams/current-dependency-controls.stdout.txt').read_bytes()
+        dependency_counts = dependency_test_counts(dependency_raw, plan['compilerDependencies']['expectedTestEvents'])
+        dependency_values = re.findall(rb'^# ZNS_COMPILER_DEPENDENCY_RESULT (.+)$', dependency_raw, re.M)
+        require(len(dependency_values) == 1, 'compiler dependency result missing or ambiguous')
+        dependency_result = json.loads(dependency_values[0])
+        require(dependency_result == plan['compilerDependencies']['expectedControls'], 'compiler dependency control scope differs')
         actual = {name: {'bytes': len(read_input(profile, name)), 'sha256': sha(read_input(profile, name))} for name in plan['generatedOutputPins']}
         require_output_parity(plan['generatedOutputPins'], actual)
         raw = (output / 'streams/current-controls.stdout.txt').read_bytes(); totals = tap_counts(raw)
@@ -91,6 +123,8 @@ def main():
         require(all(read_input(repo, name) == value for name, value in inputs.items()), 'tracked inputs changed during qualification')
         report.update(status='TRACKED_PATCHED_SOURCE_QUALIFIED_NO_DEPLOYMENT', testCounts=totals, padding=padding,
             toolchain=toolchain, generatedOutputPins=actual, all12TrackedGeneratedOutputsExactlyReproduced=True,
+            npmVersion=npm_version, compilerDependencyControls={'testCounts': dependency_counts, 'result': dependency_result},
+            applicationAndDerivedTestSDKInstalledSeparatelyWithSharedCache=True,
             inputPinsVerifiedAndUnchanged=True, syntheticParisMessageFramesOnly=True,
             signingLiveChainReleaseOrDeploymentPerformed=False)
     except Exception as error:

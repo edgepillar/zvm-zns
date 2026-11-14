@@ -15,6 +15,7 @@ from bundled_archive import inspect_archive
 from compiled_labels import canonical_sha256, inspect_labels
 from lock_review import read_input, require
 from openzeppelin_candidate import checked_name, run_bounded, sha, write_json
+from web_parent_candidate import stage_candidate, inspect_candidate
 
 
 def pin(raw):
@@ -109,6 +110,7 @@ def main():
             'codePins': {name: pin(read_input(repo, name)) for name in (
                 'tools/dependency-review/web_patches.py', 'tools/dependency-review/bundled_archive.py',
                 'tools/dependency-review/compiled_labels.py',
+                'tools/dependency-review/web_parent_candidate.py',
                 'tools/dependency-review/lock_review.py', 'tools/dependency-review/openzeppelin_candidate.py',
                 'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs',
                 'web/scripts/vite-virtual-module-controls.test.mjs')},
@@ -132,7 +134,8 @@ def main():
         userconfig, globalconfig = output / 'user.npmrc', output / 'global.npmrc'
         userconfig.write_bytes(b''); globalconfig.write_bytes(b''); cache = output / 'npm-cache'; cache.mkdir()
         env = {'PATH': os.environ['PATH'], 'LANG': 'C', 'TZ': 'UTC', 'CI': 'true',
-            'npm_config_userconfig': str(userconfig), 'npm_config_globalconfig': str(globalconfig), 'npm_config_cache': str(cache)}
+            'npm_config_userconfig': str(userconfig), 'npm_config_globalconfig': str(globalconfig), 'npm_config_cache': str(cache),
+            'npm_config_fetch_retries': '0', 'npm_config_fetch_timeout': '45000', 'npm_config_registry': 'https://registry.npmjs.org/'}
         commands = [('toolchain', ['node', '-p', 'JSON.stringify({node:process.version,versions:process.versions})'], env),
             ('vite-version', ['node', 'node_modules/vite/bin/vite.js', '--version'], env)]
         fixtures = output / 'vite-module-fixtures'; fixtures.mkdir()
@@ -147,6 +150,15 @@ def main():
             result = run_bounded(argv, web, selected_env, output, label)
             report['commands'].append(result)
             require(result['actualExit'] == 0 and result['outputComplete'], label + ' failed or incomplete')
+        parent_root, parent_source_pins = stage_candidate(repo, output)
+        for label, argv in [('parent-package-toolchain', ['npm', '--version']),
+            ('parent-lock-plan', ['npm', 'install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'])]:
+            result = run_bounded(argv, parent_root, env, output, label)
+            report['commands'].append(result)
+            require(result['actualExit'] == 0 and result['outputComplete'], label + ' failed or incomplete')
+        require(not (parent_root / 'node_modules').exists(), 'parent lock planning unexpectedly installed packages')
+        report['parentMigrationCandidate'] = inspect_candidate(repo, parent_root, parent_source_pins, output)
+        report['parentMigrationCandidate']['npmVersion'] = (output / 'streams/parent-package-toolchain.stdout.txt').read_text().strip()
         toolchain = json.loads((output / 'streams/toolchain.stdout.txt').read_bytes())
         require(re.fullmatch(r'v22\.\d+\.\d+', toolchain['node']), 'unreviewed Node major')
         vite_version = plan['packages']['vite']['version']

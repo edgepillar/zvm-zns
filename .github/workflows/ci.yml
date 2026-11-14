@@ -134,5 +134,7 @@ jobs:
             ${{ runner.temp }}/zns-web-patch-review/source-binding.json
             ${{ runner.temp }}/zns-web-patch-review/report.json
             ${{ runner.temp }}/zns-web-patch-review/streams/*.txt
+            ${{ runner.temp }}/zns-web-patch-review/candidate-web-package.json
+            ${{ runner.temp }}/zns-web-patch-review/candidate-web-package-lock.json
           if-no-files-found: error
           retention-days: 14

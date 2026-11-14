@@ -23,6 +23,226 @@
     "runId": 43523367551,
     "testsPerProfile": 33
   },
+  "compilerDependencies": {
+    "expectedControls": {
+      "asynchronousTempCases": 2,
+      "externalNetworkRequestsPerformed": false,
+      "hostedSymlinkFixture": true,
+      "redirectCases": 12,
+      "rejectedOptionCases": 9,
+      "remoteCompilerOrSMTSolverInvoked": false,
+      "symlinkConfinementCases": 3,
+      "synchronousTempCases": 2,
+      "versions": {
+        "follow-redirects": "1.16.3",
+        "solc": "0.8.26",
+        "tmp": "0.2.7"
+      }
+    },
+    "expectedTestEvents": 5,
+    "localNativeFixtureExecutionAllowed": false,
+    "packages": {
+      "follow-redirects": {
+        "lockMetadata": {
+          "engines": {
+            "node": ">=4.0"
+          },
+          "funding": [
+            {
+              "type": "individual",
+              "url": "https://github.com/sponsors/RubenVerborgh"
+            }
+          ],
+          "license": "MIT",
+          "peerDependenciesMeta": {
+            "debug": {
+              "optional": true
+            }
+          }
+        },
+        "publication": {
+          "archiveBytes": 10658,
+          "archiveSha256": "ea2d1bb0fead8ff13ada7b38ed93d3c97225510c52136b45b90572c9763377ab",
+          "filePins": {
+            "LICENSE": {
+              "bytes": 1136,
+              "sha256": "bfa8a54bb952ccda79f0f1889721d108f5b605babbb2b8a3705ffb52f4132eb7"
+            },
+            "README.md": {
+              "bytes": 7734,
+              "sha256": "9f238e86e324671bfa7d2e76fa555b7a907327004f7dcce4d64587c439b5f831"
+            },
+            "debug.js": {
+              "bytes": 315,
+              "sha256": "8dbf7e71a9292be180e3469a6b7a164171d3c39dec79e5dbc4aa1c9f09509faf"
+            },
+            "http.js": {
+              "bytes": 37,
+              "sha256": "754c0078c57625db7b55b4c3fb30ff5c207fc49284a5022742e81d0c595403c5"
+            },
+            "https.js": {
+              "bytes": 38,
+              "sha256": "7a28e323ffd91094e083a8954fe027839c06d948603d7f2719ed17c446885272"
+            },
+            "index.js": {
+              "bytes": 21561,
+              "sha256": "9f694132c5c09a94d6054b83f75460e45ebcc836a1e013c6e639b8961d352163"
+            },
+            "package.json": {
+              "bytes": 1289,
+              "sha256": "6d8de10cff3afbe74c7933a5424a22699ebb9528a792ae0212f8bdf83ed2866e"
+            }
+          },
+          "integrity": "sha512-toOSoqN6d51Wjf1aOFJYcoVv1aND9rj/CwjLU0Vz40oDuSpWDayCeKe4JpL5NL0WdFvoOOCI3BRo69HahjbR1A==",
+          "license": "MIT",
+          "name": "follow-redirects",
+          "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.16.3.tgz",
+          "version": "1.16.3"
+        }
+      },
+      "solc": {
+        "lockMetadata": {},
+        "publication": {
+          "archiveBytes": 6342116,
+          "archiveSha256": "bf0ff5f7e8af867fe6765192dcbc06d30dbd864ce1e2f151634b8b3ed51ca531",
+          "filePins": {
+            "LICENSE": {
+              "bytes": 1067,
+              "sha256": "852bcc033a46c62f99fb5ffd43b3241ba2c0c440c6034aa2114505f2c4f03c4a"
+            },
+            "README.md": {
+              "bytes": 13242,
+              "sha256": "26c706b5c01a77c6f7e4a05b5c7cc9be651b487728caecce938e9b33e3e0a918"
+            },
+            "abi.js": {
+              "bytes": 2830,
+              "sha256": "9430e14232d0f639971c73437ed2cb9bbb45e2757881462586f7481b3d52d163"
+            },
+            "bindings/compile.js": {
+              "bytes": 7228,
+              "sha256": "26085b776f88924d3ad3c5a9a0c1e27215aaa12c5468b6b4de184352531b849f"
+            },
+            "bindings/core.js": {
+              "bytes": 5411,
+              "sha256": "356a6b6a69d88e373a4952e18112db681176d05a2e18a30bcf171193d4bb40e9"
+            },
+            "bindings/helpers.js": {
+              "bytes": 1815,
+              "sha256": "6ea2a194777cef9d450d2fc1188fcb46e3220cbfe5197dd8b79e1b60a7c8a052"
+            },
+            "bindings/index.js": {
+              "bytes": 553,
+              "sha256": "1868e396a4b5264537fff5e41eed7d63af44130ad39bc522f67dd068a27e43fb"
+            },
+            "common/helpers.js": {
+              "bytes": 692,
+              "sha256": "8086fe96c9f4edbf375122311153459502f9cae6708c98b4ae3b6c0e4314334c"
+            },
+            "common/types.js": {
+              "bytes": 77,
+              "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+            },
+            "downloadCurrentVersion.js": {
+              "bytes": 3902,
+              "sha256": "5d06d55f39b3a30bf8189272140dbfc15d37b0a64bc964b4d2f4a5fcf3e94534"
+            },
+            "formatters.js": {
+              "bytes": 483,
+              "sha256": "03d0445abf318665803a29287c66ab858d0eff01183866f58757f4f2f61fbaa3"
+            },
+            "index.js": {
+              "bytes": 301,
+              "sha256": "5621a3a6709de448b29177adc0729bbb3d7fecc3e089b4566270fdb828afe222"
+            },
+            "linker.js": {
+              "bytes": 7392,
+              "sha256": "548965a73525cd10657639ab3563a2657d357fffe9cf0e8958c0e6e6fbd9bd1f"
+            },
+            "package.json": {
+              "bytes": 2715,
+              "sha256": "9494c7edadfabf5324cddf25b183a39de16e801476491c5686ab3a10ff20ea83"
+            },
+            "smtchecker.js": {
+              "bytes": 1297,
+              "sha256": "3e982cf311a5aa5e26be580d35fbd0bf79ee69e3a58a7b646cab4dc0636d01b2"
+            },
+            "smtsolver.js": {
+              "bytes": 3465,
+              "sha256": "209a28c4b3d22b4bb9ea1a1f39efae24ad1fc864575ebe9a732d5874916703da"
+            },
+            "solc.js": {
+              "bytes": 10924,
+              "sha256": "188c3fdca72bbb8ec1c70373427ad4536e117341c48944dae9185f9cf035146f"
+            },
+            "soljson.js": {
+              "bytes": 9056722,
+              "sha256": "35ba6661f3bdaed995fc7af14c405502290cf681b3fd062fe8738cfdf6db14ed"
+            },
+            "translate.js": {
+              "bytes": 6944,
+              "sha256": "5ec4a375482a58b9ce6b75bfec3c1af2c88a542cbd835c348f519da444582b4c"
+            },
+            "verifyVersion.js": {
+              "bytes": 1726,
+              "sha256": "d57c5ec0ab6660f0f6ccaaa8242486362643800bf106fdeb9fd183207e01e387"
+            },
+            "wrapper.js": {
+              "bytes": 6282,
+              "sha256": "eec68ccb2a7bad57950dc56d3ef5b45a8a95b75d85e7ca1012cebeee3774b28a"
+            }
+          },
+          "integrity": "sha512-yiPQNVf5rBFHwN6SIf3TUUvVAFKcQqmSUFeq+fb6pNRCo0ZCgpYOZDi3BVoezCPIAcKrVYd/qXlBLUP9wVrZ9g==",
+          "license": "MIT",
+          "name": "solc",
+          "resolved": "https://registry.npmjs.org/solc/-/solc-0.8.26.tgz",
+          "version": "0.8.26"
+        }
+      },
+      "tmp": {
+        "lockMetadata": {
+          "dependencies": {},
+          "engines": {
+            "node": ">=14.14"
+          },
+          "license": "MIT"
+        },
+        "publication": {
+          "archiveBytes": 11288,
+          "archiveSha256": "e51210588ae5056744ebb9706de5424b98b8f992597af1b35a9a8d9405e4f67f",
+          "filePins": {
+            "LICENSE": {
+              "bytes": 1082,
+              "sha256": "162413c61e0982abe89a06bf7a02ec760dc49a7364d838bd9f01daebb5b95954"
+            },
+            "README.md": {
+              "bytes": 12531,
+              "sha256": "efbc7bd03fbc4a64691689b06f707cded3d20d54bd14f9cb83e69d4e50dd0041"
+            },
+            "lib/tmp.js": {
+              "bytes": 25141,
+              "sha256": "4feb19536bb9994e08382a6a7547d947eecd99defbb4d949791fd705ab848713"
+            },
+            "package.json": {
+              "bytes": 1494,
+              "sha256": "58dddc0fa17fbd6f4329189ffcd66d7c4a6c0487896accaf4e9853ba7462df2c"
+            }
+          },
+          "integrity": "sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==",
+          "license": "MIT",
+          "name": "tmp",
+          "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.2.7.tgz",
+          "version": "0.2.7"
+        }
+      }
+    },
+    "rootApplicationAndDerivedTestSDKMustMatch": true,
+    "scopedOverride": {
+      "solc@0.8.26": {
+        "tmp": "0.2.7"
+      }
+    },
+    "supportedPlatformAcceptanceComplete": false
+  },
   "controls": {
     "files": {
       "contracts/scripts/compiler-input.mjs": {
@@ -109,8 +329,8 @@
   },
   "inputPins": {
     "NOTICE.md": {
-      "bytes": 1561,
-      "sha256": "b35895af3609e09f5953d4cdd70291510a01e0b34998c78bd07e0949a7f82499"
+      "bytes": 2323,
+      "sha256": "6fed69e70692ba086d5fd7b23b60a3188d3918159b5c1761d36aeae9f275379d"
     },
     "contracts/out/ENSRegistry.json": {
       "bytes": 12853,
@@ -157,12 +377,12 @@
       "sha256": "f78e414a4e9abdd02182884aa67ed8d30f1e0268bc06f7797d5bc3723324aa17"
     },
     "contracts/package-lock.json": {
-      "bytes": 12084,
-      "sha256": "3ccca4e1389c319338869a6a3aae012962aa1f356804600da2e2e921dc651c99"
+      "bytes": 11685,
+      "sha256": "3d8d75d76f4b926d1abe009e625a2ef0f02d39a8b131dca21118375559165f44"
     },
     "contracts/package.json": {
-      "bytes": 625,
-      "sha256": "92c6ac69a6383ce0ec80258edd2cbb61910ee06ae5ad2308f765f2d91b4aa8af"
+      "bytes": 695,
+      "sha256": "d5eceac3e523e2b085eefc53e8bdbcf974544d0aebdaae61e3bc7a3ffd4038c0"
     },
     "contracts/scripts/build.mjs": {
       "bytes": 5764,
@@ -182,7 +402,7 @@
     },
     "contracts/vendor/ens-contracts.lock.json": {
       "bytes": 14932,
-      "sha256": "4621477913fe1bd15bec1d5fcf64385b991b38afb6b4915216d0fd3be88951d8"
+      "sha256": "26bae4b40ebf88208442bd8b46197afa67692a722f2d6c3f6f878ce8299080c6"
     },
     "contracts/vendor/ens-contracts/LICENSE.txt": {
       "bytes": 1062,
@@ -456,9 +676,17 @@
       "bytes": 300,
       "sha256": "22647f0c72c173fe11004d6406c19d48a516950f59579064ab77fca9e8b23de7"
     },
+    "contracts/vendor/notices/follow-redirects-1.16.3-LICENSE": {
+      "bytes": 1136,
+      "sha256": "bfa8a54bb952ccda79f0f1889721d108f5b605babbb2b8a3705ffb52f4132eb7"
+    },
     "contracts/vendor/notices/openzeppelin-contracts-4.9.6-LICENSE": {
       "bytes": 1107,
       "sha256": "0e05b4f45c8769ece14ba2d202bf6f5ed7132600b642c981266f7255e0187ea3"
+    },
+    "contracts/vendor/notices/tmp-0.2.7-LICENSE": {
+      "bytes": 1082,
+      "sha256": "162413c61e0982abe89a06bf7a02ec760dc49a7364d838bd9f01daebb5b95954"
     },
     "web/src/abi.ts": {
       "bytes": 53966,

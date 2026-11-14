@@ -106,7 +106,24 @@ continues independently; its generated contract output pins stay unchanged.
 
 ## Remaining acceptance
 
-The previous advisory snapshot's other package findings remain open. A combined
+The compiler's separate HTTP and temporary-file dependency update is described
+in [Compiler dependencies](COMPILER_DEPENDENCIES.md). It does not change the web
+application's current Puppeteer 25.11.0 or Zod 3.25.76 selection.
+
+After the current web build, two additional bounded commands observe npm and
+generate a review-only lock proposal for Puppeteer 25.17.0 and Zod 4.6.7 in a
+new hosted job-owned directory. The lock-only command disables lifecycle scripts,
+audit and funding requests, uses the existing isolated cache and must create no
+`node_modules`. The actual application manifest and lock must stay byte-equal.
+The lane retains `candidate-web-package.json`, `candidate-web-package-lock.json`,
+their declaration inventory and source/stream pins. These ten command records
+cover the existing eight commands plus the two proposal commands. Proposed
+packages are neither installed nor executed. The complete proposed graph,
+source/API and browser/platform compatibility need review before adoption;
+this proposal does not waive or remediate the current Zod finding.
+
+The previous advisory snapshot's remaining package findings stay open until a
+source-bound refresh evaluates the actual new inputs. A combined
 source-bound advisory refresh, real application/bundle reachability, full
 distribution notices and legal review, publisher identity, supported platforms,
 actual browser behavior and independent maintainer/operator acceptance remain

@@ -315,7 +315,7 @@
     }
   },
   "dependencyLock": {
-    "sha256": "3ccca4e1389c319338869a6a3aae012962aa1f356804600da2e2e921dc651c99",
+    "sha256": "3d8d75d76f4b926d1abe009e625a2ef0f02d39a8b131dca21118375559165f44",
     "imports": [
       {
         "prefix": "@ensdomains/buffer",
