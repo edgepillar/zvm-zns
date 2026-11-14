@@ -2,7 +2,9 @@
 //   node scripts/shots.mjs <outdir> [http://localhost:47801/] [path ...]
 import {existsSync, mkdirSync} from 'node:fs'
 import {join} from 'node:path'
-import puppeteer from 'puppeteer-core'
+import {prepareRuntime} from './prepare-runtime.mjs'
+prepareRuntime(undefined, {checkOnly: true})
+const {default: puppeteer} = await import('puppeteer-core')
 
 const out = process.argv[2]
 const app = process.argv[3] ?? 'http://localhost:47801/'

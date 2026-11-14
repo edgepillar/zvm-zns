@@ -6,11 +6,12 @@
   "description": "ZNS: .znn names on the ZVM. Register, renew, point, and name yourself; a static page that reads the chain directly.",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "typecheck": "vue-tsc --noEmit",
-    "preview": "vite preview --port 47801",
-    "verify": "node scripts/verify.mjs"
+    "dev": "node scripts/prepare-runtime.mjs && vite",
+    "build": "node scripts/prepare-runtime.mjs && vue-tsc --noEmit && vite build",
+    "typecheck": "node scripts/prepare-runtime.mjs && vue-tsc --noEmit",
+    "preview": "node scripts/prepare-runtime.mjs --check && vite preview --port 47801",
+    "verify": "node scripts/verify.mjs",
+    "prepare:runtime": "node scripts/prepare-runtime.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
@@ -23,10 +24,11 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^26.6.2",
     "@vitejs/plugin-vue": "^6.0.4",
-    "puppeteer-core": "^25.11.0",
+    "puppeteer-core": "25.17.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.7.3",
     "vite": "^7.3.8",
-    "vue-tsc": "^3.1.1"
+    "vue-tsc": "^3.1.1",
+    "zod": "4.6.7"
   }
 }

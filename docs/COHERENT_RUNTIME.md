@@ -1,5 +1,10 @@
 # Coherent parser and mapper profile
 
+This describes the frozen reference lane. The current adopted application
+installation and its active CI lane are documented in
+[APPLICATION_RUNTIME.md](APPLICATION_RUNTIME.md). Earlier source/artifact pins
+remain historical and are not qualification of the changed application inputs.
+
 This lane installs an explicitly identified local derivative into a new hosted
 Linux profile. It preserves both original published profiles and their source
 archives. It is a qualification candidate, not an adopted application migration

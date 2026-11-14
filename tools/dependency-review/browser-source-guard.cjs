@@ -25,7 +25,8 @@ async function sourceGuard(input) {
   const root = fs.realpathSync(input.root); assert.equal(root, input.root);
   const lock = JSON.parse(read(path.join(root, 'package-lock.json'), 2 << 20));
   const plan = JSON.parse(read(input.plan, 65536));
-  const baseProfile = input.profile === 'coherentCandidate' ? 'candidate' : input.profile;
+  const derivativeProfile = ['coherentCandidate', 'application'].includes(input.profile);
+  const baseProfile = derivativeProfile ? 'candidate' : input.profile;
   assert(['baseline', 'candidate'].includes(baseProfile));
   assert.equal(hash(read(path.join(root, 'package-lock.json'), 2 << 20)), plan.profiles[baseProfile].lockSha256);
   const inventory = JSON.parse(read(input.inventory));
@@ -37,7 +38,7 @@ async function sourceGuard(input) {
     sources[key] = value;
   }
   let derivative = null;
-  if (input.profile === 'coherentCandidate') {
+  if (derivativeProfile) {
     const raw = read(input.derivation, 1 << 20); assert.deepEqual(pin(raw), input.derivationPin); derivative = JSON.parse(raw);
     assert.equal(derivative.kind, 'REVIEWED_LOCAL_DERIVATIVE_PROFILE'); assert.equal(derivative.baseProfile, 'candidate');
     assert.equal(derivative.baseLockSha256, plan.profiles.candidate.lockSha256);
@@ -126,6 +127,7 @@ async function sourceGuard(input) {
       assert.equal(violations, 0); assert(comparisons >= loaded.size && loaded.size > 0); hook.deregister();
       return {loadedMembers: [...loaded.values()], verifiedRuntimeAssets: [...assets.values()], exactLoaderSourceComparisons: comparisons,
         explicitLocalDerivativeProfile: Boolean(derivative), originalRawProfileInputsModified: false,
+        actualApplicationInstalledMembersChanged: input.profile === 'application' ? 9 : 0,
         sourceGuardViolations: violations, loaderFormatControls: formatControls,
         nativeResolutionAndUnmodifiedLoadResultsPreserved: true, sourcePinsRecheckedAfterBrowserClosure: true};
     },

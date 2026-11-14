@@ -1,4 +1,5 @@
 {
+  "applicationDependencyInputsAdopted": true,
   "applicationScriptsExecuted": false,
   "callers": [
     {
@@ -14,8 +15,8 @@
         "--no-sandbox"
       ],
       "sourcePin": {
-        "bytes": 1571,
-        "sha256": "c04cadafebe77cf8cfb9d89a6534ed0513c6fbcaafdf9b216dd2ecf07d3ec3bd"
+        "bytes": 1690,
+        "sha256": "e13465cccb62852daaba079a88cabfe3b1b86055fbdca1c4fe038c20645b32c6"
       }
     },
     {
@@ -33,11 +34,12 @@
         "--disable-gpu"
       ],
       "sourcePin": {
-        "bytes": 17816,
-        "sha256": "442f106e50435ebd660287d864b112f4682957a8cad6776cdf13dfb418b8fb9d"
+        "bytes": 17935,
+        "sha256": "07c3b7de942a24b4c038667db4de4a02c0061e765b02a9753df4fce9b07149f5"
       }
     }
   ],
+  "fullApplicationMigrationAcceptance": false,
   "fundedVerificationAuthorizedByThisPlan": false,
   "productionGate": "NO_GO",
   "profiles": {
@@ -52,5 +54,5 @@
   },
   "proposalAdopted": false,
   "schema": 1,
-  "status": "ACTUAL_NODE_IMPORT_AND_CALLER_OPTION_GATE_BROWSER_NOT_RUN"
+  "status": "REVIEWED_APPLICATION_DEPENDENCY_INPUTS_ADOPTED_CURRENT_RUNTIME_QUALIFICATION_REQUIRED"
 }

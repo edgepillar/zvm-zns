@@ -36,8 +36,9 @@ function profileSize(root) {
 }
 async function main() {
   assert.equal(process.argv.length, 3); const input = JSON.parse(read(process.argv[2], 65536));
-  assert.equal(input.schema, 1); assert(['baseline', 'candidate', 'coherentCandidate'].includes(input.profile));
-  const baseProfile = input.profile === 'coherentCandidate' ? 'candidate' : input.profile;
+  assert.equal(input.schema, 1); assert(['baseline', 'candidate', 'coherentCandidate', 'application'].includes(input.profile));
+  const derivativeProfile = ['coherentCandidate', 'application'].includes(input.profile);
+  const baseProfile = derivativeProfile ? 'candidate' : input.profile;
   partial.profile = input.profile; partial.browserVersion = input.browserVersion;
   assert.equal(process.platform, 'linux'); assert.equal(process.arch, 'x64');
   assert(/^\d+$/.test(input.runId)); assert(process.report.getReport().header.glibcVersionRuntime);
@@ -53,7 +54,7 @@ async function main() {
   assert.deepEqual(Object.keys(tracked).sort(), caller.expectedKeys);
   const source = await sourceGuard(input);
   const viem = await import(source.resolve('viem')); const {default: puppeteer} = await import(source.resolve('puppeteer-core'));
-  const coherentNode = input.profile === 'coherentCandidate' ? await nativeControls(source) : null;
+  const coherentNode = derivativeProfile ? await nativeControls(source) : null;
   partial.coherentNativeNodeControls = coherentNode;
   const server = await fixture(input, viem); const sessions = partial.sessions; const spawns = []; let deniedProcesses = 0;
   partial.fixture = server.report;
@@ -100,7 +101,7 @@ async function main() {
         row.browserClass = browser.constructor.name; assert.equal(row.browserClass, protocol === 'cdp' ? 'CdpBrowser' : 'BidiBrowser');
         row.version = await browser.version(); assert(row.version.includes(input.browserVersion));
         row.userAgent = await browser.userAgent(); row.userAgentEvidence = userAgentEvidence(row.userAgent, input.browserVersion);
-        if (input.profile === 'coherentCandidate' && protocol === 'cdp') {
+        if (derivativeProfile && protocol === 'cdp') {
           row.embeddedMapper = {};
           row.embeddedMapper = await embeddedMapperControls(browser, input, source, row.embeddedMapper);
         }
@@ -187,7 +188,9 @@ async function main() {
     profile: input.profile, browserVersion: input.browserVersion, runId: input.runId, nodeVersion: process.version,
     nodePlatform: process.platform, nodeArchitecture: process.arch, glibc: process.report.getReport().header.glibcVersionRuntime,
     puppeteerVersion: plan.profiles[baseProfile].puppeteer, coherentNativeNodeControls: coherentNode,
-    effectiveLocalDerivativeUsed: input.profile === 'coherentCandidate',
+    effectiveLocalDerivativeUsed: derivativeProfile,
+    actualApplicationDependencyInputsAdopted: input.profile === 'application',
+    actualApplicationInstalledMembersChanged: input.profile === 'application' ? 9 : 0,
     trackedCaller: {path: caller.path, sourcePin: caller.sourcePin,
       expressionSha256: caller.expressionSha256, completeOriginalScriptExecuted: false},
     sessions, sourceGuard: guard, screenshots, distributions: server.distributions, fixture: server.report,
@@ -195,7 +198,7 @@ async function main() {
     deniedChildProcesses: deniedProcesses, realBrowserProtocolSessions: 2, noSandboxFlagFromTrackedCaller: true,
     pageRequestAndSourceObserversAreNotOperatingSystemNetworkOrProcessIsolation: true,
     fundedVerificationWalletSigningLiveChainReleaseOrDeploymentPerformed: false,
-    derivedGuardOrRebuiltMapperInstalled: input.profile === 'coherentCandidate', rawCandidateOrBaselinePackageSourcesModified: false,
+    derivedGuardOrRebuiltMapperInstalled: derivativeProfile, rawCandidateOrBaselinePackageSourcesModified: false,
     fullApplicationMigrationAcceptance: false, productionGate: 'NO_GO'}) + '\n');
 }
 function processEnv(input) {

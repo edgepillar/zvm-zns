@@ -70,13 +70,13 @@ jobs:
           python3 --version
       - name: Check declaration-graph data controls
         run: python3 -B -m unittest discover -s tools/dependency-review -p 'test_*.py' -v
-      - name: Inventory both lock inputs without installing packages
-        run: python3 -B tools/dependency-review/lock_review.py
       - name: Fetch the exact locked bundled publication with a transport cap
         run: |
           archive="$RUNNER_TEMP/oxide-wasm32-wasi-4.3.3.tgz"
           test ! -e "$archive"
           curl --fail --silent --show-error --retry 0 --max-time 90 --max-filesize 33554432 --proto '=https' --output "$archive" https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.3.3.tgz
+      - name: Inventory current locks with the exact reviewed bundled publication
+        run: python3 -B tools/dependency-review/application_lock_review.py --archive "$RUNNER_TEMP/oxide-wasm32-wasi-4.3.3.tgz"
       - name: Inspect bundled manifests and original notice candidates without extracting
         run: python3 -B tools/dependency-review/bundled_archive.py --root web --location node_modules/@tailwindcss/oxide-wasm32-wasi --archive "$RUNNER_TEMP/oxide-wasm32-wasi-4.3.3.tgz"
 
@@ -105,6 +105,8 @@ jobs:
   web:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
     defaults:
       run:
         working-directory: web
@@ -113,44 +115,25 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
-
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-
-      - run: npm ci
-      # The build refuses to run without its endpoints; the example has them.
+      # The controller captures the actual npm ci, first-party preparation and
+      # current build. Frozen reference runs are retained as historical evidence.
       - run: cp ../.env.example ../.env
-      - name: Qualify package bytes, paired browsers and isolated read-only application fixtures
-        run: python3 -B ../tools/dependency-review/web_patches.py --output "$RUNNER_TEMP/zns-web-patch-review"
-      - name: Retain bounded web qualification evidence
+      - name: Qualify actual application dependencies and coherent runtime
+        run: python3 -B ../tools/dependency-review/application_runtime.py --output "$RUNNER_TEMP/zns-web-application-review"
+      - name: Retain bounded application qualification evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-patch-qualification
           path: |
-            ${{ runner.temp }}/zns-web-patch-review/source-binding.json
-            ${{ runner.temp }}/zns-web-patch-review/report.json
-            ${{ runner.temp }}/zns-web-patch-review/streams/*.txt
-            ${{ runner.temp }}/zns-web-patch-review/candidate-web-package.json
-            ${{ runner.temp }}/zns-web-patch-review/candidate-web-package-lock.json
-            ${{ runner.temp }}/zns-web-patch-review/npm-generated-web-package-lock.json
-            ${{ runner.temp }}/zns-web-patch-review/candidate-profile-sources.json
-            ${{ runner.temp }}/zns-web-patch-review/browser-app-builds.json
-            ${{ runner.temp }}/zns-web-patch-review/browser-runtime.json
-            ${{ runner.temp }}/zns-web-patch-review/coherent-profile-source-binding.json
-            ${{ runner.temp }}/zns-web-patch-review/coherent-profile.json
-            ${{ runner.temp }}/zns-web-patch-review/coherent-runtime.json
-            ${{ runner.temp }}/zns-web-patch-review/browser-evidence/*.png
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.map
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.LEGAL.txt
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/metafile.json
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/chromium-bidi/LICENSE
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/zod/LICENSE
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/mitt/LICENSE
-            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/esbuild/LICENSE.md
+            ${{ runner.temp }}/zns-web-application-review/source-binding.json
+            ${{ runner.temp }}/zns-web-application-review/report.json
+            ${{ runner.temp }}/zns-web-application-review/streams/*.txt
+            ${{ runner.temp }}/zns-web-application-review/application-raw-profile-sources.json
+            ${{ runner.temp }}/zns-web-application-review/application-profile-source-binding.json
+            ${{ runner.temp }}/zns-web-application-review/browser-evidence/*.png
           if-no-files-found: error
           retention-days: 14
