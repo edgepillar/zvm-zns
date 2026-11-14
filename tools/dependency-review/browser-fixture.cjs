@@ -6,6 +6,14 @@ const http = require('node:http');
 const path = require('node:path');
 const {read, pin} = require('./browser-source-guard.cjs');
 
+function readOnlyParams(call) {
+  assert(call && call.jsonrpc === '2.0' && (typeof call.id === 'number' || typeof call.id === 'string'));
+  assert(['eth_chainId', 'eth_blockNumber', 'eth_getBlockByNumber', 'eth_getLogs', 'eth_call'].includes(call.method));
+  const parameterless = call.method === 'eth_chainId' || call.method === 'eth_blockNumber';
+  const params = call.params === undefined && parameterless ? [] : call.params;
+  assert(Array.isArray(params)); return params;
+}
+
 // Only synthetic, read-only responses are available. A missing method/function
 // is a failed control, never a plausible default or a forwarded RPC request.
 async function fixture(input, viem) {
@@ -40,9 +48,8 @@ async function fixture(input, viem) {
     visit(root); assert(files['index.html']); distributions[role] = {root, files, bytes};
   }
   function answer(call) {
-    assert(call && call.jsonrpc === '2.0' && (typeof call.id === 'number' || typeof call.id === 'string'));
-    assert(Array.isArray(call.params) && report.rpc.length < 1024);
-    const {method, params} = call; let result; let functionName = null;
+    const params = readOnlyParams(call); assert(report.rpc.length < 1024);
+    const {method} = call; let result; let functionName = null;
     if (method === 'eth_chainId') { assert.equal(params.length, 0); result = hex(7340469); }
     else if (method === 'eth_blockNumber') { assert.equal(params.length, 0); result = '0x10'; }
     else if (method === 'eth_getBlockByNumber') {
@@ -119,4 +126,4 @@ async function fixture(input, viem) {
     async close() { server.closeAllConnections(); await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())); },
     distributions: Object.fromEntries(Object.entries(distributions).map(([role, row]) => [role, {files: row.files, bytes: row.bytes}]))};
 }
-module.exports = {fixture};
+module.exports = {fixture, readOnlyParams};

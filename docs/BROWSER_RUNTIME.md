@@ -39,6 +39,9 @@ and encode its responses. Its finite method, contract and function allowlists
 reject unknown requests. It has no upstream RPC forwarding, wallet provider or
 signing implementation. The funded verification script is excluded. Synthetic
 deployment builds are qualification fixtures, not release artifacts.
+The two parameterless reads accept an omitted `params` field or an empty array,
+consistent with the [JSON-RPC request shape](https://www.jsonrpc.org/specification#request_object).
+Other allowed reads still require explicit positional parameters.
 
 The worker reads the tracked screenshot caller's launch expression, then adds
 explicit hosted profile, protocol, timeout and background-networking options.

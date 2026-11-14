@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import re
 import shutil
 import stat
 import time
@@ -74,13 +75,24 @@ def extract_browser(archive, destination, selected):
 
 
 def qualify_browsers(repo, web, candidate, output, env, commands, source_plan, execution):
-    hosted_only(); execution.update(status='APPLICATION_BUILDS_NOT_YET_ATTEMPTED', browserExecutionAttempted=False)
+    hosted_only(); execution.update(status='READ_ONLY_RPC_REQUEST_SHAPES_ATTEMPTED', browserExecutionAttempted=False)
+    row = run_bounded(['node', '--test', '--test-reporter=tap', str(repo / 'tools/dependency-review/test-browser-request-shapes.cjs')],
+        repo, env, output, 'browser-request-shapes', timeout=30)
+    commands.append(row); execution['lastCommand'] = row
+    require(row['actualExit'] == 0 and row['outputComplete'], 'read-only RPC request-shape controls failed or incomplete')
+    raw = read_input(output, 'streams/browser-request-shapes.stdout.txt'); totals = {}
+    for key in ['tests', 'pass', 'fail', 'cancelled', 'skipped', 'todo']:
+        values = re.findall(rb'^# ' + key.encode() + rb' (\d+)\s*$', raw, re.M)
+        require(len(values) == 1, 'RPC request-shape TAP summary'); totals[key] = int(values[0])
+    require(totals['tests'] == totals['pass'] == 16 and all(totals[key] == 0 for key in ['fail', 'cancelled', 'skipped', 'todo']),
+        'RPC request-shape control scope')
+    execution['status'] = 'APPLICATION_BUILDS_NOT_YET_ATTEMPTED'
     builds, distributions = qualify_application_builds(repo, web, candidate, output, env, commands, source_plan, execution)
     plan_raw = read_input(repo, 'tools/dependency-review/browser-inputs.json'); plan = json.loads(plan_raw)
     require(plan['schema'] == 1 and set(plan['profiles']) == {'baseline', 'candidate'}, 'paired browser input scope')
     root = output / 'browsers'; root.mkdir(mode=0o700)
     evidence = output / 'browser-evidence'; evidence.mkdir(mode=0o700)
-    result = {'schema': 1, 'status': 'BROWSER_QUALIFICATION_INCOMPLETE', 'inputPlanPin': pin(plan_raw),
+    result = {'schema': 1, 'status': 'BROWSER_QUALIFICATION_INCOMPLETE', 'inputPlanPin': pin(plan_raw), 'readOnlyRequestShapeCounts': totals,
         'applicationBuilds': builds, 'profiles': {}, 'productionGate': 'NO_GO'}
     def run(label, argv, cwd, timeout):
         row = run_bounded(argv, cwd, env, output, label, timeout=timeout); commands.append(row); execution['lastCommand'] = row

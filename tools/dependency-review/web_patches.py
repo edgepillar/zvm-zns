@@ -164,6 +164,7 @@ def main():
                 'tools/dependency-review/browser-inputs.json', 'tools/dependency-review/browser_archive.py',
                 'tools/dependency-review/browser-app-sources.json', 'tools/dependency-review/browser_staging.py',
                 'tools/dependency-review/browser_runtime.py', 'tools/dependency-review/browser-source-guard.cjs',
+                'tools/dependency-review/test-browser-request-shapes.cjs',
                 'tools/dependency-review/browser-fixture.cjs', 'tools/dependency-review/browser-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'fullBrowserMigrationLiveChainWalletOrDeploymentQualified': False}
