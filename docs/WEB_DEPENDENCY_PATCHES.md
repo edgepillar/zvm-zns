@@ -117,7 +117,13 @@ new hosted job-owned directory. The lock-only command disables lifecycle scripts
 audit and funding requests, uses the existing isolated cache and must create no
 `node_modules`. The actual application manifest and lock must stay byte-equal.
 The lane retains `candidate-web-package.json`, `candidate-web-package-lock.json`,
-their declaration inventory and source/stream pins. These ten command records
+their strict inventory result or refusal and source/stream pins. A refusal sets
+the proposal's inventory to `NOT_ESTABLISHED`, retains its reason and leaves the
+complete proposed graph unqualified. It is separate from the actual application's
+strict inventory and current-source controls. The observed refusal concerns six
+bundled child records without independent tarball identities; those records need
+their own binding to the selected parent publication before adoption.
+These ten command records
 cover the existing eight commands plus the two proposal commands. Proposed
 packages are neither installed nor executed. The complete proposed graph,
 source/API and browser/platform compatibility need review before adoption;

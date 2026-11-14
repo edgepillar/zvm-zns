@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from web_parent_candidate import candidate_inputs, candidate_manifest, inspect_candidate
 from openzeppelin_candidate import sha
+from lock_review import ReviewError
 
 
 class MemoryPath:
@@ -68,8 +69,25 @@ class CandidateBoundaryControls(unittest.TestCase):
         self.assertFalse(result['applicationInputsChanged'])
         self.assertFalse(result['rootOldZodFindingWaivedOrRemediated'])
         self.assertFalse(result['newPackagesInstalledOrExecuted'])
+        self.assertFalse(result['completeProposedGraphQualified'])
+        self.assertEqual(result['inventoryStatus'], 'DECLARATIONS_INVENTORIED_REVIEW_REQUIRED')
+        self.assertIsNone(result['inventoryRefusal'])
         self.assertEqual(result['status'], 'PROPOSED_PARENT_LOCK_REQUIRES_REVIEW_NOT_APPLIED')
         self.assertEqual(set(outputs.files), {'candidate-web-package.json', 'candidate-web-package-lock.json'})
+
+    def test_proposal_inventory_refusal_is_retained_without_qualifying_or_applying_the_graph(self):
+        source, pins, root = fixture(); outputs = MemoryPath({})
+        with patch('web_parent_candidate.read_input', side_effect=lambda repo, name: source[name]), \
+                patch('web_parent_candidate.inventory', side_effect=ReviewError('bundled graph needs a separate source binding')):
+            result = inspect_candidate(None, root, pins, outputs)
+        self.assertEqual(result['inventoryStatus'], 'NOT_ESTABLISHED')
+        self.assertIsNone(result['inventory'])
+        self.assertEqual(result['inventoryRefusal'], {'type': 'ReviewError', 'reason': 'bundled graph needs a separate source binding'})
+        self.assertEqual(set(outputs.files), {'candidate-web-package.json', 'candidate-web-package-lock.json'})
+        self.assertFalse(result['completeProposedGraphQualified'])
+        self.assertFalse(result['applicationInputsChanged'])
+        self.assertFalse(result['rootOldZodFindingWaivedOrRemediated'])
+        self.assertFalse(result['newPackagesInstalledOrExecuted'])
 
     def test_changed_current_source_cannot_be_bound_to_a_candidate(self):
         source, pins, root = fixture(); source['web/package-lock.json'] += b' '

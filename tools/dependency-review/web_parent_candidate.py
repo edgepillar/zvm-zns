@@ -2,7 +2,7 @@
 
 import json
 
-from lock_review import inventory, read_input, require
+from lock_review import inventory, read_input, require, ReviewError
 from openzeppelin_candidate import encoded, sha
 
 
@@ -46,7 +46,14 @@ def inspect_candidate(repo, root, source_pins, output):
     for name, raw in [('candidate-web-package.json', package_raw), ('candidate-web-package-lock.json', lock_raw)]:
         (output / name).write_bytes(raw)
         outputs[name] = {'bytes': len(raw), 'sha256': sha(raw)}
+    proposed_inventory, inventory_refusal = None, None
+    try:
+        proposed_inventory = inventory(package_raw, lock_raw)
+    except ReviewError as error:
+        inventory_refusal = {'type': type(error).__name__, 'reason': str(error)}
     return {'status': 'PROPOSED_PARENT_LOCK_REQUIRES_REVIEW_NOT_APPLIED', 'sourcePins': source_pins,
-        'outputs': outputs, 'inventory': inventory(package_raw, lock_raw), 'applicationInputsChanged': False,
+        'outputs': outputs, 'inventory': proposed_inventory,
+        'inventoryStatus': 'NOT_ESTABLISHED' if inventory_refusal else 'DECLARATIONS_INVENTORIED_REVIEW_REQUIRED',
+        'inventoryRefusal': inventory_refusal, 'completeProposedGraphQualified': False, 'applicationInputsChanged': False,
         'newPackagesInstalledOrExecuted': False, 'browserRuntimeQualified': False,
         'rootOldZodFindingWaivedOrRemediated': False, 'productionGate': 'NO_GO'}

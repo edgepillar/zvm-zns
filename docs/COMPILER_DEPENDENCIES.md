@@ -84,7 +84,13 @@ proposal. Lifecycle scripts and audit/funding transport are disabled. No propose
 package is installed or executed and the actual application inputs stay equal.
 
 The two proposed manifest/lock files, source hashes, npm version, command streams
-and declaration inventory are retained explicitly. Source/API, complete resolved
+and strict declaration-inventory result or refusal are retained explicitly. The
+observed npm proposal expands six bundled child records without independent
+tarball URLs/integrities. The current manifest reader refuses that representation;
+the proposal records `inventoryStatus: NOT_ESTABLISHED` and the exact refusal.
+The actual application's strict inventory remains its separate required check.
+An unqualified proposal packet preserves review inputs and accepts no migration.
+Source/API, complete resolved
 graph, browser/platform and compatible adoption review must follow before any
 proposal becomes an application update. A proposed clean range or a successful
 lock-only step does not remediate the current Zod finding or accept production.
