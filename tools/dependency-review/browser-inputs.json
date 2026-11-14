@@ -1,0 +1,3175 @@
+{
+  "archiveFilesystemExtractionOrBrowserExecutionQualified": false,
+  "archiveReaderLimits": {
+    "centralDirectoryBytes": 4194304,
+    "expandedBytes": 1073741824,
+    "memberBytes": 536870912,
+    "members": 2048,
+    "rawBytes": 268435456
+  },
+  "browser": "chrome",
+  "inputSourceBase": "30e95476066fe67f48f426b123655cc5cb413852",
+  "platform": "linux64",
+  "productionGate": "NO_GO",
+  "profiles": {
+    "baseline": {
+      "archiveReview": {
+        "archive": {
+          "bytes": 196223440,
+          "sha256": "ceee2972074d441ea7c4ba8bcc0eaab77e7e87680f6653d73d3065851fe10302"
+        },
+        "archiveFilesystemExtractionOrBrowserExecution": false,
+        "archiveMembers": 306,
+        "completeMemberBytesAndCRCRead": true,
+        "directories": [
+          "chrome-linux64/hyphen-data",
+          "chrome-linux64/resources",
+          "chrome-linux64/resources/accessibility",
+          "chrome-linux64/resources/accessibility/reading_mode_gdocs_helper",
+          "chrome-linux64/resources/inspector_overlay"
+        ],
+        "elf": {
+          "class": 64,
+          "encoding": "little-endian",
+          "machine": 62,
+          "type": 3
+        },
+        "expandedBytes": 411698200,
+        "filePinInventorySha256": "9283dac94454df45696608f8cb0f2dbb95c54a4a3c44874f9b78514adf1ca480",
+        "filePins": {
+          "ABOUT": {
+            "bytes": 248,
+            "sha256": "34d078ce3003087a8374e7c6156fda374769b8047d6ddaf419d66414aa48edfb",
+            "unixPermissions": 420
+          },
+          "MEIPreload/manifest.json": {
+            "bytes": 238,
+            "sha256": "44844cf3dde6e80087ae0e6bf0d9326d7ef7d23326d24ac83af0850be26923d2",
+            "unixPermissions": 420
+          },
+          "MEIPreload/preloaded_data.pb": {
+            "bytes": 8254,
+            "sha256": "c6070a157b4e28d16fbccbd233e93846ddb070c85e1a1bc64469b7a5f1424fad",
+            "unixPermissions": 420
+          },
+          "WidevineCdm/LICENSE": {
+            "bytes": 473,
+            "sha256": "20de375707692099b3132084695377ce5fec0aec05813dedcce094b8eda44386",
+            "unixPermissions": 420
+          },
+          "WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so": {
+            "bytes": 21965296,
+            "sha256": "cd250e8177183add7029ccc3057217b978779f9c7af800c45083f3cc0139020e",
+            "unixPermissions": 493
+          },
+          "WidevineCdm/manifest.json": {
+            "bytes": 841,
+            "sha256": "106559aa573088d9436609452fd0ec85d19a4475a500526950d2ef4fae2a7ca4",
+            "unixPermissions": 420
+          },
+          "chrome": {
+            "bytes": 294067520,
+            "sha256": "e528b77a8b250c48a5bbd7aeeabbc2813940c0a2fe39b1b11fbaf1f01fb04f18",
+            "unixPermissions": 493
+          },
+          "chrome-wrapper": {
+            "bytes": 4510,
+            "sha256": "24c1cfddcd206a86281008e7eed38109344ef34cd88d61902a9befd520a5571c",
+            "unixPermissions": 493
+          },
+          "chrome_100_percent.pak": {
+            "bytes": 585624,
+            "sha256": "28f669dc847c41abc8bd565ba068f8f0f49deafe18589d37bf095f79111a2d29",
+            "unixPermissions": 420
+          },
+          "chrome_200_percent.pak": {
+            "bytes": 945438,
+            "sha256": "0f2c85fdd4efad63df40cc02f0e4d25020117b34aa2ac6d4e6e871542291b8c1",
+            "unixPermissions": 420
+          },
+          "chrome_crashpad_handler": {
+            "bytes": 1957824,
+            "sha256": "de7a83d51bcd7f29c97f026e830f80a6f89cff7dcd83eaa512dcc84cc5ab8d5a",
+            "unixPermissions": 493
+          },
+          "chrome_sandbox": {
+            "bytes": 15232,
+            "sha256": "24beb85e4149c65db5bf40fa307721143d0883ab8952e60dde1158606f644dee",
+            "unixPermissions": 493
+          },
+          "deb.deps": {
+            "bytes": 660,
+            "sha256": "a0d27c5efb2337bb3cdc9e5467419ba13f2a6a7137c849f1c000c347ca5d5c94",
+            "unixPermissions": 384
+          },
+          "hyphen-data/hyph-af.hyb": {
+            "bytes": 72640,
+            "sha256": "5487ee44a4cd706d0086522e90c59c76cdf2ac68ce506fd3eae6054b9220c0cf",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-as.hyb": {
+            "bytes": 703,
+            "sha256": "c2784e33158a807135850f7125a7eaabe472b3cfc7afb82c74f02da69ea250fe",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-be.hyb": {
+            "bytes": 6098,
+            "sha256": "25b7cfa039f82ac92990e1789de40988d490db9b613852fb24036b38ff87893c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-bg.hyb": {
+            "bytes": 3467,
+            "sha256": "7593f0395081e3eeb2d8516d10746608afd826cffd4e7e37d53936993d200a13",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-bn.hyb": {
+            "bytes": 703,
+            "sha256": "c2784e33158a807135850f7125a7eaabe472b3cfc7afb82c74f02da69ea250fe",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cs.hyb": {
+            "bytes": 64245,
+            "sha256": "97a4755fe9e653a08969f1933e3db19c712078b227bd5aa6799093abc5a0edc3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cu.hyb": {
+            "bytes": 52842,
+            "sha256": "2baee19d5024ff87dcf3a1b9d0da1b3ac5a1e506adeead3b96a4de5395d0290e",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cy.hyb": {
+            "bytes": 35913,
+            "sha256": "4d0569fe2f4b41b3164cf610310e1d996fd2c553cc39de6062e50f4e033cc207",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-da.hyb": {
+            "bytes": 6967,
+            "sha256": "86fdfc8db62cdaa11f615dad3712da1f4708294e029a4aad0fc285d4ea16c4bd",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-1901.hyb": {
+            "bytes": 121393,
+            "sha256": "8c5fa4b29519d17593e923bc6a9a284df7a6d07fac42f897110b8fb2e0baeef5",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-1996.hyb": {
+            "bytes": 120412,
+            "sha256": "d673805547a0228d2f57a5ad551b8760cfcc521f38c49284ed3976e3515bca49",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-ch-1901.hyb": {
+            "bytes": 120218,
+            "sha256": "8223a912160354e05735522fdb339dc59b353ad5d1e4f4cfa94898dc348e748f",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-el.hyb": {
+            "bytes": 4219,
+            "sha256": "76ae3454fb0045adb83094832578aa4749ce4dc694c4edcf85b419c1e2d9bcd3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-en-gb.hyb": {
+            "bytes": 46607,
+            "sha256": "ae4b78009d18e849d87458677151ee3aad1608ad72ec050dfd2421d22e7d031f",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-en-us.hyb": {
+            "bytes": 59802,
+            "sha256": "03727cd6f4aa71b203c4c74ca6987ac7d87f13037337ac6f4b6996c2a0dc5f8c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-es.hyb": {
+            "bytes": 14995,
+            "sha256": "137461792537a2e56a6475e81e2b9ad7a2bdabf1f4738fae186dca3022357349",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-et.hyb": {
+            "bytes": 21421,
+            "sha256": "10079c66014dd2e6abfef5a018e6553fd5a036afb96bd2a235440a188f88b15e",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-eu.hyb": {
+            "bytes": 665,
+            "sha256": "e2778a4fc7b8f064a32b6a44bc29f10e264d9d6214b8edb8ebd1f5f6d68e2eb2",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-fr.hyb": {
+            "bytes": 8165,
+            "sha256": "00bd8b2d398d77575da2bfbbc5ec641aad7f2a87d4a31186ec169e85a27de5b7",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ga.hyb": {
+            "bytes": 35824,
+            "sha256": "1e3043f395bfb2a4c43d0480ba2f168ed622881cc3482359ca6e99821e983be8",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-gl.hyb": {
+            "bytes": 9289,
+            "sha256": "89d98eff14e2cf1c2314efdf392339e62d7e786f100202a7377bf7b22095a0c5",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-gu.hyb": {
+            "bytes": 655,
+            "sha256": "af0edb67c2219b803c3eb6c1dee6f2d41a3fe00468a9da8be8ef5056d701abf3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hi.hyb": {
+            "bytes": 687,
+            "sha256": "f4df224d459fd111698dd5a13613c5bbf0ed11f04278d60230d028010eac0c42",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hr.hyb": {
+            "bytes": 3031,
+            "sha256": "d5f066a5657f1d7c39d053956df204b7926f40d2fe4f69573af09d909066e26c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hu.hyb": {
+            "bytes": 317251,
+            "sha256": "8b3a16268cc932b226c17ff405b3cfb6eb38a9511a2043d653dc03729efceac1",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hy.hyb": {
+            "bytes": 605,
+            "sha256": "9b34dfca85cb27546829f104f137757efb274934c1e9d4991f55ad564962a76a",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-it.hyb": {
+            "bytes": 2512,
+            "sha256": "f9c027d7fd44b01cd5e1cdf802e20c63560673098af18bea0930ba9af334e0f7",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ka.hyb": {
+            "bytes": 9996,
+            "sha256": "2472271c7955c67e9fdb86d0cd3c5d88f5e598da4f44b6741284b2bbcb2e4d52",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-kn.hyb": {
+            "bytes": 711,
+            "sha256": "2b999d0a152f804601aa8f38ff0d3a6e5949977bf1daa76fa888acae21526287",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-la.hyb": {
+            "bytes": 1839,
+            "sha256": "fd4b6f36135cd3b932e350ec2017dfd89d2e36ac226f54e4c8f2e4bc6db0593d",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-lt.hyb": {
+            "bytes": 7774,
+            "sha256": "6fe2da26a96834fb9aecbe586d40f728df0ef676a4f235450054e66841b9e2ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-lv.hyb": {
+            "bytes": 38602,
+            "sha256": "65962ccb5055e4c693e5ac493d6affdc810ec168eb2942f5705b7f4e464f9993",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ml.hyb": {
+            "bytes": 776,
+            "sha256": "90572db8f49b01ec6a102732cdf14fc3f07d363cbe0d261103e583043164e888",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mn-cyrl.hyb": {
+            "bytes": 5142,
+            "sha256": "0d2731f16aa2c90faec8e63260358cbccede403faf95e3af8c66bc2db0729ca0",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mr.hyb": {
+            "bytes": 687,
+            "sha256": "f4df224d459fd111698dd5a13613c5bbf0ed11f04278d60230d028010eac0c42",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mul-ethi.hyb": {
+            "bytes": 3740,
+            "sha256": "f2fac1bd069ffe5cd1112d94cc31137ed38a1b161093ecd74c9c1688428b688b",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nb.hyb": {
+            "bytes": 145263,
+            "sha256": "c2771fbb1bfff7db5e267dc7a4505a9675c6b98cfe7a8f7ae5686d7a5a2b3dd0",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nl.hyb": {
+            "bytes": 77080,
+            "sha256": "5ebde398944b461cf940f0520c5a49c0882b6f36f9ac5cda0538c8c8b44fb7ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nn.hyb": {
+            "bytes": 145263,
+            "sha256": "5bcbb58eaf65f13f6d039244d942f37c127344e3a0a2e6c32d08236945132809",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-or.hyb": {
+            "bytes": 647,
+            "sha256": "4e9cd302baffc4ea3e9652327ea24072ebf37b5c4fc0719292bdac10aaad665b",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-pa.hyb": {
+            "bytes": 607,
+            "sha256": "470329d28faa484f945d78ffefb176dcb6f2032c753e25bc014106ad24b2c68a",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-pt.hyb": {
+            "bytes": 1414,
+            "sha256": "f6fbf1bcb260cc86256fc494f388f7b27d10865fbf8f61517dee25af4d58d6e8",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ru.hyb": {
+            "bytes": 19886,
+            "sha256": "336ce2048ffd31b7bcaf435e53badfaf0579e405042d49adbc0823f6be5f9614",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sk.hyb": {
+            "bytes": 64103,
+            "sha256": "138c5990961da21993653f54a413ddacb8921d6d70b892b7ca154d6e8ad2028c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sl.hyb": {
+            "bytes": 6631,
+            "sha256": "ad746c68562603ac3b15e89da03c76e081c08e7d9c8d4c9f64763e53d696c77c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sq.hyb": {
+            "bytes": 2013,
+            "sha256": "bc29c9401ce952414cbaebc5c8ee1d27c1706c6f77807b5ff713e2124438b3ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sv.hyb": {
+            "bytes": 72119,
+            "sha256": "56642aa5a37625ff9d034761d16b034d4ba5be74090cbd825956bbce2775ecd1",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ta.hyb": {
+            "bytes": 554,
+            "sha256": "40fda94856a86f065de8baa6184ea63dcdb011ee4ca498a7c1fee44c99314c67",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-te.hyb": {
+            "bytes": 703,
+            "sha256": "516fa9654fa3aeaab480d40eaf6ad78fc039086bd8edc144be3d59525edcac29",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-tk.hyb": {
+            "bytes": 2712,
+            "sha256": "77fdaed29bd842aaa976ab7ef81b617a15c0a2d1ebd1161c1bf26b79a108b5cd",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-uk.hyb": {
+            "bytes": 19417,
+            "sha256": "1c626abe40d43f6d56a01b5b40305d7c7d6481f616eac00a3f3aaaaca8388786",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-und-ethi.hyb": {
+            "bytes": 3484,
+            "sha256": "1de83cb787dfaf53fb7e6e8db3aae5008ad24ebdd28be02031306ea9e9f3e285",
+            "unixPermissions": 420
+          },
+          "hyphen-data/manifest.json": {
+            "bytes": 77,
+            "sha256": "aeb0e502811ddb8d2561e81e2e82a013152d8b49de59e4b0c04669982138d641",
+            "unixPermissions": 420
+          },
+          "icudtl.dat": {
+            "bytes": 10819840,
+            "sha256": "495c45cc7a65562ec461f860c310c6b66e006acd96833f61d1aa31f77fe18cf1",
+            "unixPermissions": 420
+          },
+          "libEGL.so": {
+            "bytes": 229736,
+            "sha256": "228afe7c6f3bc85dcd7bcdcbd5c5fc7830345814558f479f6ff220467d3d8d01",
+            "unixPermissions": 493
+          },
+          "libGLESv2.so": {
+            "bytes": 229736,
+            "sha256": "9fa318b33a178be50b3b6cb62406984c95ba24cc6bbc8ab9b312404d78f8b130",
+            "unixPermissions": 493
+          },
+          "libvk_swiftshader.so": {
+            "bytes": 3978456,
+            "sha256": "4018d890eb9ee7082e6c7ce93fc5bf13ea8ba2dd87683a6e7270e571b2a11efd",
+            "unixPermissions": 493
+          },
+          "libvulkan.so.1": {
+            "bytes": 688352,
+            "sha256": "046d3fbdaf9258dffd482d1a77c6fbba36e45805dd5bd371ad54f77ab3bb7b47",
+            "unixPermissions": 493
+          },
+          "locales/af.pak": {
+            "bytes": 625295,
+            "sha256": "19863d4ab372e4688aadfcdb84b180d9d8938f1dd786590feadabd7c03e67232",
+            "unixPermissions": 420
+          },
+          "locales/af_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/af_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/af_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am.pak": {
+            "bytes": 1012744,
+            "sha256": "a7674f61b3ca96554c8eb2e70e69cde3d866f62ca72965359f04b21c733aaf30",
+            "unixPermissions": 420
+          },
+          "locales/am_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar.pak": {
+            "bytes": 1127019,
+            "sha256": "2f0faecec0e1324712724fa7552e141fefac5f896ee6e3ca4dc24b1ed938a9f4",
+            "unixPermissions": 420
+          },
+          "locales/ar_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg.pak": {
+            "bytes": 1161601,
+            "sha256": "46ce2b8a8ccc6bb33e840dd2ea2273eb1cbac1cdf3655afc0e8915bede0afdd4",
+            "unixPermissions": 420
+          },
+          "locales/bg_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn.pak": {
+            "bytes": 1486734,
+            "sha256": "691dc8fd00d2720a19bdc2b42600ef1191c8000715678d1dbd39002ada25a143",
+            "unixPermissions": 420
+          },
+          "locales/bn_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca.pak": {
+            "bytes": 716216,
+            "sha256": "fd1caf15586d3569be6ba15f4bb0684171e4fdfa42ff131b819605ba732c225c",
+            "unixPermissions": 420
+          },
+          "locales/ca_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs.pak": {
+            "bytes": 736329,
+            "sha256": "839e41f789db591351b7e3bbcb5b4336b7de59985cdec43daf4f7f0ae1785eda",
+            "unixPermissions": 420
+          },
+          "locales/cs_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da.pak": {
+            "bytes": 662330,
+            "sha256": "4eba67ea9b28555e12583e77d9ba87d5f62948cda9cd7565658ccfe392181ae1",
+            "unixPermissions": 420
+          },
+          "locales/da_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de.pak": {
+            "bytes": 717937,
+            "sha256": "0b016c94d0ad17d10b64313f9897dee1085be0255fab5d92f92c521b516b407e",
+            "unixPermissions": 420
+          },
+          "locales/de_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el.pak": {
+            "bytes": 1275631,
+            "sha256": "60b0131068c6fb57e1c0b3499834d84034c8b207e53b68b23306278fd4ce356d",
+            "unixPermissions": 420
+          },
+          "locales/el_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB.pak": {
+            "bytes": 572810,
+            "sha256": "b27b8be6372dbe52eaf544c27ddb9841645b43492d755969a7c63339c447f68e",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US.pak": {
+            "bytes": 580287,
+            "sha256": "cae25f268dd60865e09853683a4d62b7a35181cc4b642acdf3414b9e131231e3",
+            "unixPermissions": 420
+          },
+          "locales/en-US_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419.pak": {
+            "bytes": 702183,
+            "sha256": "3699e346ee4e36e3f08603a58eed5e87f1a8945b7aa1ea5829779f5a55ed7170",
+            "unixPermissions": 420
+          },
+          "locales/es-419_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es.pak": {
+            "bytes": 696099,
+            "sha256": "fd32685baf49716e2cf3bc671862707245f39db1b704c8a31b9d43b16edca47d",
+            "unixPermissions": 420
+          },
+          "locales/es_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et.pak": {
+            "bytes": 637695,
+            "sha256": "46c5a5bfafa721371609690cbfe5702d7571bd6b67b53860ab87369de51a0a88",
+            "unixPermissions": 420
+          },
+          "locales/et_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa.pak": {
+            "bytes": 1050012,
+            "sha256": "652ec425a05570e58cf6b6138484d71f637819943155c0a221c72855a9ca80c0",
+            "unixPermissions": 420
+          },
+          "locales/fa_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi.pak": {
+            "bytes": 648526,
+            "sha256": "9b77aeb1c0bb75c74a1aa4a14ce19c0f0a8988278118567cef1d4782cd0568d4",
+            "unixPermissions": 420
+          },
+          "locales/fi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil.pak": {
+            "bytes": 732923,
+            "sha256": "cbe38976425494a924df60d0fc72e63c7fd31d2ce608d82ea639bdf4248b65c3",
+            "unixPermissions": 420
+          },
+          "locales/fil_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr.pak": {
+            "bytes": 761545,
+            "sha256": "457b3a71a85e4512c80831be83461d4dd4bdf9aa14e882b2ec969a10c057d0ac",
+            "unixPermissions": 420
+          },
+          "locales/fr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu.pak": {
+            "bytes": 1473406,
+            "sha256": "befaa0eb363aa495f5c69be03fcc16a5b6a7fabd7164013bd5473ad7f29e3d4a",
+            "unixPermissions": 420
+          },
+          "locales/gu_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he.pak": {
+            "bytes": 922218,
+            "sha256": "bd2eed54a247130a65857f3f2408c8ebe11dac8b732d02b1627a14e9b9d93465",
+            "unixPermissions": 420
+          },
+          "locales/he_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi.pak": {
+            "bytes": 1571605,
+            "sha256": "fdfc47a5be35662c150b93509b84c5f8913d94e2dd91c76b2fb695ea238fe39c",
+            "unixPermissions": 420
+          },
+          "locales/hi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr.pak": {
+            "bytes": 708239,
+            "sha256": "e95d84a2c9ba5cdb8070579829b30de2ccef2df48dd66e9d59d965908ad18393",
+            "unixPermissions": 420
+          },
+          "locales/hr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu.pak": {
+            "bytes": 757617,
+            "sha256": "c182b742fdd95a8057b4339fb0b9f354b09064b184ea69818adefd5d7f3a8f68",
+            "unixPermissions": 420
+          },
+          "locales/hu_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id.pak": {
+            "bytes": 628648,
+            "sha256": "89f9619a75fea12b3646a4a4a26fe00ce6d0b3afa1fca2b68e87ba8358e9c2c6",
+            "unixPermissions": 420
+          },
+          "locales/id_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it.pak": {
+            "bytes": 692950,
+            "sha256": "0e7d00fd9279eb50acc2bf2297da325c91161ee7cd97be22cfbbc422e5c9b2bc",
+            "unixPermissions": 420
+          },
+          "locales/it_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja.pak": {
+            "bytes": 838280,
+            "sha256": "90afeb7a492344254852f245285b2e7d8a3892aea0b42a995f9ab6303eb0d430",
+            "unixPermissions": 420
+          },
+          "locales/ja_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn.pak": {
+            "bytes": 1689360,
+            "sha256": "8f686390f199fafa80741365625a0dfadfe65bd93b2c647b2050fcaddd10c753",
+            "unixPermissions": 420
+          },
+          "locales/kn_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko.pak": {
+            "bytes": 713783,
+            "sha256": "923003adccd09233dd1d8034e9533149620d02b11b95979e7e6974cab33f8e44",
+            "unixPermissions": 420
+          },
+          "locales/ko_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt.pak": {
+            "bytes": 771914,
+            "sha256": "8f74b00da9998f4728289ba258f40dedf04aaf0652b8b9d6cb43ddfceb4d18b0",
+            "unixPermissions": 420
+          },
+          "locales/lt_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv.pak": {
+            "bytes": 767651,
+            "sha256": "16aefcb9f2ca6f4162d6464a2d042628a83782704723fb258ed0d226b15be5ec",
+            "unixPermissions": 420
+          },
+          "locales/lv_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml.pak": {
+            "bytes": 1734384,
+            "sha256": "8eea191e8406b7926e53322e5d4d80b87718cc54f7223c90cd51de15cb08c7a7",
+            "unixPermissions": 420
+          },
+          "locales/ml_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr.pak": {
+            "bytes": 1439682,
+            "sha256": "eba9812de6569945d5e1d7fa8f595dec9e9cd9a98a780d0b2518ef27863bd1a3",
+            "unixPermissions": 420
+          },
+          "locales/mr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms.pak": {
+            "bytes": 659257,
+            "sha256": "3c9ca883cf38f8dc75081cfe4fdd4144fb2352bcb4583423092f6af2891377c0",
+            "unixPermissions": 420
+          },
+          "locales/ms_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb.pak": {
+            "bytes": 630736,
+            "sha256": "4c9af8f3b980bb1b3275879f31895963f1d6b49b9c9482eb2d5b301c642ba1ec",
+            "unixPermissions": 420
+          },
+          "locales/nb_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl.pak": {
+            "bytes": 657505,
+            "sha256": "f5e57bcaed6ed2b133c487a565264a6c303c1f3cf0000180192da1a4e5202d0a",
+            "unixPermissions": 420
+          },
+          "locales/nl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl.pak": {
+            "bytes": 735937,
+            "sha256": "b643a0f50dfc566eca81036f34c7f1292eab2fc552855a7efbffdca269496dd7",
+            "unixPermissions": 420
+          },
+          "locales/pl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR.pak": {
+            "bytes": 689670,
+            "sha256": "f0bdfe036f2178405aef8dca450d0f08deb7a016b0a4719593a68023db6ab9dd",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT.pak": {
+            "bytes": 693786,
+            "sha256": "eaac46de25ffe77a7de92912f8a546d7b5317ca19a6a1a7cbecfcb38e63464dc",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro.pak": {
+            "bytes": 718985,
+            "sha256": "f18a11b5bd20755347adfbdfe0f02ad1518e65e0ffc790e5c9dfb5cdfcf3e972",
+            "unixPermissions": 420
+          },
+          "locales/ro_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru.pak": {
+            "bytes": 1188184,
+            "sha256": "865c2f6fa3638a0b27d48e496f78e79e3f9fc844c55f4909492aebf38a9849e0",
+            "unixPermissions": 420
+          },
+          "locales/ru_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk.pak": {
+            "bytes": 748380,
+            "sha256": "57c00b5e43e7f8beeabe32d36f5119c0b77e99d60f99de4de2092e40612a868e",
+            "unixPermissions": 420
+          },
+          "locales/sk_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl.pak": {
+            "bytes": 714566,
+            "sha256": "31f5902ee500ce4a0bf99d76b90c253090ecf4b612612f76eb63e3ec5bcb44b4",
+            "unixPermissions": 420
+          },
+          "locales/sl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr.pak": {
+            "bytes": 1097309,
+            "sha256": "3ec898b1cef9f0450bca76915407ba66b826882a7dfb22711f66ac03d411e7d9",
+            "unixPermissions": 420
+          },
+          "locales/sr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv.pak": {
+            "bytes": 640905,
+            "sha256": "a9ce4fc52eac11e1fdcfeb18178edc24a58d82aad5c36696283671e3c286ce1d",
+            "unixPermissions": 420
+          },
+          "locales/sv_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw.pak": {
+            "bytes": 676639,
+            "sha256": "eeab97547af9f99f2c9fb70338d47258c10a64bfd13748461ee5a732cd4355a9",
+            "unixPermissions": 420
+          },
+          "locales/sw_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta.pak": {
+            "bytes": 1727384,
+            "sha256": "090a364ea0a5ba6316774e7a31c5d47ca3a40a246f28f9b0cff86b793d128c14",
+            "unixPermissions": 420
+          },
+          "locales/ta_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te.pak": {
+            "bytes": 1600038,
+            "sha256": "1cf7c81868b32198813dedc0df11f71f11808462677b5ed192f0cd74c3f931af",
+            "unixPermissions": 420
+          },
+          "locales/te_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th.pak": {
+            "bytes": 1340576,
+            "sha256": "7ae0c8a440714c72671fe5d5fb1cab1fddf18b1d14465ee0ac1000be98b6c1e6",
+            "unixPermissions": 420
+          },
+          "locales/th_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr.pak": {
+            "bytes": 690215,
+            "sha256": "631434bdce9cefdce5c63dd605bfb2390f6e5f1e8bcfad53ed97f362c8d4a4da",
+            "unixPermissions": 420
+          },
+          "locales/tr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk.pak": {
+            "bytes": 1196593,
+            "sha256": "6e8cb2d04533f94d5985d9222da672427878064efd0d1a239ba244c6e2c5f015",
+            "unixPermissions": 420
+          },
+          "locales/uk_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur.pak": {
+            "bytes": 1026602,
+            "sha256": "50ed207e7f9cb65bac476fa1d3c2723fedfcc19ad42d2ea88dd9e9f1cf55b171",
+            "unixPermissions": 420
+          },
+          "locales/ur_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi.pak": {
+            "bytes": 819076,
+            "sha256": "f662f7999a919a79270884c8723e91e75c9437b052ad65e2a84f28799e5ff3c5",
+            "unixPermissions": 420
+          },
+          "locales/vi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN.pak": {
+            "bytes": 588533,
+            "sha256": "b2cd7425d1eba82b15a2988ed2baf3fadcc9184a8c1c1db0f08e5a217d02052c",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW.pak": {
+            "bytes": 581898,
+            "sha256": "3b5d15812730c7074ffe7a0386f9d68e16f0d3e6ee49247f856a2e4953e6a1e3",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "product_logo_48.png": {
+            "bytes": 2772,
+            "sha256": "42142312e7fa9221b8ad0790c1ecec86edd35468724ec103ec27e1125a43c8b2",
+            "unixPermissions": 420
+          },
+          "resources.pak": {
+            "bytes": 23545416,
+            "sha256": "579bb04df14f4f96cfad7830af12ede5f36a01ef6bf398efe92cca44aaa6021e",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper/content.js": {
+            "bytes": 439,
+            "sha256": "6c0aeaaf9a71ad68aa45764c111e70bb23aa0fbf406644a375b6b709cbbe4b6e",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper/gdocs_script.js": {
+            "bytes": 1425,
+            "sha256": "d291adabcfcb1a4a4a2ffacdd9d04fdb473ab0d6903556bef7446be9c3646d86",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper_manifest.json": {
+            "bytes": 2375,
+            "sha256": "f9ab25b15ce8ccf562ef2b153fbe50f7b33d46ee1d372e760aa17ee38bb116a7",
+            "unixPermissions": 420
+          },
+          "resources/inspector_overlay/inspector_overlay_resources.grd": {
+            "bytes": 496,
+            "sha256": "5bbd199200f04f0d8d5866ca4faf215cdd49376b8698ac18183ae50046b79f30",
+            "unixPermissions": 420
+          },
+          "resources/inspector_overlay/main.js": {
+            "bytes": 84590,
+            "sha256": "fc5a5874a492b6f5c89024790c018b72704e3c0cbdd8f856260d01c8ddd523ff",
+            "unixPermissions": 420
+          },
+          "rpm.deps": {
+            "bytes": 2760,
+            "sha256": "760d6a93ff8f0dbad7c8031551d5f6cb6755fc72f5dd70804523611371e55846",
+            "unixPermissions": 384
+          },
+          "v8_context_snapshot.bin": {
+            "bytes": 757576,
+            "sha256": "38a1a9cbbcf5b29bf8200997d4473a138ae70debb7e9c8802351b96d9d02ee9c",
+            "unixPermissions": 420
+          },
+          "vk_swiftshader_icd.json": {
+            "bytes": 107,
+            "sha256": "c9eef28b6b984fec220ef0abfecc40b502d46946706e47bfe97707027cb818bd",
+            "unixPermissions": 420
+          }
+        },
+        "noticeCandidates": [
+          "ABOUT",
+          "WidevineCdm/LICENSE"
+        ],
+        "productionGate": "NO_GO",
+        "publisherSignatureReproducibleBuildOrLegalAcceptanceEstablished": false,
+        "regularFiles": 301,
+        "root": "chrome-linux64",
+        "schema": 1
+      },
+      "generation": "1790040271282437",
+      "officialObjectMetadata": {
+        "bucket": "chrome-for-testing-public",
+        "contentType": "application/zip",
+        "crc32c": "bCV+vQ==",
+        "etag": "CIXCg9SDgZcDEAE=",
+        "generation": "1790040271282437",
+        "md5Hash": "D+qnMtvRxrB1r9bMVeDIrw==",
+        "metageneration": "1",
+        "name": "154.0.8037.57/linux64/chrome-linux64.zip",
+        "size": "196223440",
+        "updated": "2026-09-22T01:24:31.350Z"
+      },
+      "officialVersionMetadata": {
+        "bytes": 2582,
+        "commit": "e027d9a81590898a5e2f7341be370e0ac00c0253",
+        "gitBlob": "03a3f696398f070141aaea6dc9f5b9ee0eface22",
+        "path": "154.0.8037.57.json",
+        "repository": "GoogleChromeLabs/chrome-for-testing",
+        "sha256": "abcaab82429f631a88a1ad004ad97fb82c92dc38f66903438db5fc480d4abb3e"
+      },
+      "resolved": "https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.57/linux64/chrome-linux64.zip",
+      "revisionMember": "lib/puppeteer/revisions.js",
+      "revisionMemberPin": {
+        "bytes": 308,
+        "sha256": "933fb061f8c5f9259061734a14329a8ed0120fd9f18030312bd1fe8a132a319d"
+      },
+      "sdkSelection": {
+        "integrity": "sha512-z6LQUt5SH7jwGtGA+nMtJuEjZIsqPiwQ+EFHCYuVDQrJpvifNmmGuyDvTzAKPyFzihxgHc5f3aMzu2kn8Ps37A==",
+        "name": "puppeteer-core",
+        "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-25.12.0.tgz",
+        "version": "25.12.0"
+      },
+      "vendorMd5": "D+qnMtvRxrB1r9bMVeDIrw==",
+      "version": "154.0.8037.57"
+    },
+    "candidate": {
+      "archiveReview": {
+        "archive": {
+          "bytes": 203527334,
+          "sha256": "d17167bc092eb495a3b768c7467f27e35f625aa03834233a1663af67dcb668c9"
+        },
+        "archiveFilesystemExtractionOrBrowserExecution": false,
+        "archiveMembers": 309,
+        "completeMemberBytesAndCRCRead": true,
+        "directories": [
+          "chrome-linux64/WidevineCdm",
+          "chrome-linux64/WidevineCdm/_platform_specific",
+          "chrome-linux64/WidevineCdm/_platform_specific/linux_x64",
+          "chrome-linux64/hyphen-data",
+          "chrome-linux64/resources",
+          "chrome-linux64/resources/accessibility",
+          "chrome-linux64/resources/accessibility/reading_mode_gdocs_helper",
+          "chrome-linux64/resources/inspector_overlay"
+        ],
+        "elf": {
+          "class": 64,
+          "encoding": "little-endian",
+          "machine": 62,
+          "type": 3
+        },
+        "expandedBytes": 427261066,
+        "filePinInventorySha256": "9106dd71a38cacac8d0efa533dd9c731bbb64885c465a17dc0f9134d93289c65",
+        "filePins": {
+          "ABOUT": {
+            "bytes": 248,
+            "sha256": "34d078ce3003087a8374e7c6156fda374769b8047d6ddaf419d66414aa48edfb",
+            "unixPermissions": 420
+          },
+          "MEIPreload/manifest.json": {
+            "bytes": 238,
+            "sha256": "44844cf3dde6e80087ae0e6bf0d9326d7ef7d23326d24ac83af0850be26923d2",
+            "unixPermissions": 420
+          },
+          "MEIPreload/preloaded_data.pb": {
+            "bytes": 8254,
+            "sha256": "c6070a157b4e28d16fbccbd233e93846ddb070c85e1a1bc64469b7a5f1424fad",
+            "unixPermissions": 420
+          },
+          "WidevineCdm/LICENSE": {
+            "bytes": 473,
+            "sha256": "20de375707692099b3132084695377ce5fec0aec05813dedcce094b8eda44386",
+            "unixPermissions": 420
+          },
+          "WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so": {
+            "bytes": 21965296,
+            "sha256": "cd250e8177183add7029ccc3057217b978779f9c7af800c45083f3cc0139020e",
+            "unixPermissions": 493
+          },
+          "WidevineCdm/manifest.json": {
+            "bytes": 841,
+            "sha256": "106559aa573088d9436609452fd0ec85d19a4475a500526950d2ef4fae2a7ca4",
+            "unixPermissions": 420
+          },
+          "chrome": {
+            "bytes": 306691400,
+            "sha256": "061f752aa63d26ee05581742df728a2f8f5097446e85e04145ebaea49e469e15",
+            "unixPermissions": 493
+          },
+          "chrome-wrapper": {
+            "bytes": 4510,
+            "sha256": "24c1cfddcd206a86281008e7eed38109344ef34cd88d61902a9befd520a5571c",
+            "unixPermissions": 493
+          },
+          "chrome_100_percent.pak": {
+            "bytes": 580671,
+            "sha256": "6e687affa1e7537196c085d7a39b0fedd049ffc811cfbf37c9fba23889616119",
+            "unixPermissions": 420
+          },
+          "chrome_200_percent.pak": {
+            "bytes": 935395,
+            "sha256": "0528eeafd46dc43fda026a0a4a5ba4ba18a72ec7e87297af602562abc4f9e2dc",
+            "unixPermissions": 420
+          },
+          "chrome_crashpad_handler": {
+            "bytes": 1978312,
+            "sha256": "14623bab7a1e5d98377a75b768a9e3f18fcb17d025dbace00d887a63bad5cfba",
+            "unixPermissions": 493
+          },
+          "chrome_sandbox": {
+            "bytes": 15248,
+            "sha256": "8f93aa6b8dbf07073b2baedf2ae7b169515922bc097043de9dca27f6c7905704",
+            "unixPermissions": 493
+          },
+          "deb.deps": {
+            "bytes": 660,
+            "sha256": "6e132d3bfd266a9081eb91e9ca6c13675d89cdbc3a193ccb0471e0821c07d012",
+            "unixPermissions": 384
+          },
+          "hyphen-data/hyph-af.hyb": {
+            "bytes": 72640,
+            "sha256": "5487ee44a4cd706d0086522e90c59c76cdf2ac68ce506fd3eae6054b9220c0cf",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-as.hyb": {
+            "bytes": 703,
+            "sha256": "c2784e33158a807135850f7125a7eaabe472b3cfc7afb82c74f02da69ea250fe",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-be.hyb": {
+            "bytes": 6098,
+            "sha256": "25b7cfa039f82ac92990e1789de40988d490db9b613852fb24036b38ff87893c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-bg.hyb": {
+            "bytes": 3467,
+            "sha256": "7593f0395081e3eeb2d8516d10746608afd826cffd4e7e37d53936993d200a13",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-bn.hyb": {
+            "bytes": 703,
+            "sha256": "c2784e33158a807135850f7125a7eaabe472b3cfc7afb82c74f02da69ea250fe",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cs.hyb": {
+            "bytes": 64245,
+            "sha256": "97a4755fe9e653a08969f1933e3db19c712078b227bd5aa6799093abc5a0edc3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cu.hyb": {
+            "bytes": 52842,
+            "sha256": "2baee19d5024ff87dcf3a1b9d0da1b3ac5a1e506adeead3b96a4de5395d0290e",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-cy.hyb": {
+            "bytes": 35913,
+            "sha256": "4d0569fe2f4b41b3164cf610310e1d996fd2c553cc39de6062e50f4e033cc207",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-da.hyb": {
+            "bytes": 6967,
+            "sha256": "86fdfc8db62cdaa11f615dad3712da1f4708294e029a4aad0fc285d4ea16c4bd",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-1901.hyb": {
+            "bytes": 121393,
+            "sha256": "8c5fa4b29519d17593e923bc6a9a284df7a6d07fac42f897110b8fb2e0baeef5",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-1996.hyb": {
+            "bytes": 120412,
+            "sha256": "d673805547a0228d2f57a5ad551b8760cfcc521f38c49284ed3976e3515bca49",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-de-ch-1901.hyb": {
+            "bytes": 120218,
+            "sha256": "8223a912160354e05735522fdb339dc59b353ad5d1e4f4cfa94898dc348e748f",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-el.hyb": {
+            "bytes": 4219,
+            "sha256": "76ae3454fb0045adb83094832578aa4749ce4dc694c4edcf85b419c1e2d9bcd3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-en-gb.hyb": {
+            "bytes": 46607,
+            "sha256": "ae4b78009d18e849d87458677151ee3aad1608ad72ec050dfd2421d22e7d031f",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-en-us.hyb": {
+            "bytes": 59802,
+            "sha256": "03727cd6f4aa71b203c4c74ca6987ac7d87f13037337ac6f4b6996c2a0dc5f8c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-es.hyb": {
+            "bytes": 14995,
+            "sha256": "137461792537a2e56a6475e81e2b9ad7a2bdabf1f4738fae186dca3022357349",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-et.hyb": {
+            "bytes": 21421,
+            "sha256": "10079c66014dd2e6abfef5a018e6553fd5a036afb96bd2a235440a188f88b15e",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-eu.hyb": {
+            "bytes": 665,
+            "sha256": "e2778a4fc7b8f064a32b6a44bc29f10e264d9d6214b8edb8ebd1f5f6d68e2eb2",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-fr.hyb": {
+            "bytes": 8165,
+            "sha256": "00bd8b2d398d77575da2bfbbc5ec641aad7f2a87d4a31186ec169e85a27de5b7",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ga.hyb": {
+            "bytes": 35824,
+            "sha256": "1e3043f395bfb2a4c43d0480ba2f168ed622881cc3482359ca6e99821e983be8",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-gl.hyb": {
+            "bytes": 9289,
+            "sha256": "89d98eff14e2cf1c2314efdf392339e62d7e786f100202a7377bf7b22095a0c5",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-gu.hyb": {
+            "bytes": 655,
+            "sha256": "af0edb67c2219b803c3eb6c1dee6f2d41a3fe00468a9da8be8ef5056d701abf3",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hi.hyb": {
+            "bytes": 687,
+            "sha256": "f4df224d459fd111698dd5a13613c5bbf0ed11f04278d60230d028010eac0c42",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hr.hyb": {
+            "bytes": 3031,
+            "sha256": "d5f066a5657f1d7c39d053956df204b7926f40d2fe4f69573af09d909066e26c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hu.hyb": {
+            "bytes": 317251,
+            "sha256": "8b3a16268cc932b226c17ff405b3cfb6eb38a9511a2043d653dc03729efceac1",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-hy.hyb": {
+            "bytes": 605,
+            "sha256": "9b34dfca85cb27546829f104f137757efb274934c1e9d4991f55ad564962a76a",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-it.hyb": {
+            "bytes": 2512,
+            "sha256": "f9c027d7fd44b01cd5e1cdf802e20c63560673098af18bea0930ba9af334e0f7",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ka.hyb": {
+            "bytes": 9996,
+            "sha256": "2472271c7955c67e9fdb86d0cd3c5d88f5e598da4f44b6741284b2bbcb2e4d52",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-kn.hyb": {
+            "bytes": 711,
+            "sha256": "2b999d0a152f804601aa8f38ff0d3a6e5949977bf1daa76fa888acae21526287",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-la.hyb": {
+            "bytes": 1839,
+            "sha256": "fd4b6f36135cd3b932e350ec2017dfd89d2e36ac226f54e4c8f2e4bc6db0593d",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-lt.hyb": {
+            "bytes": 7774,
+            "sha256": "6fe2da26a96834fb9aecbe586d40f728df0ef676a4f235450054e66841b9e2ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-lv.hyb": {
+            "bytes": 38602,
+            "sha256": "65962ccb5055e4c693e5ac493d6affdc810ec168eb2942f5705b7f4e464f9993",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ml.hyb": {
+            "bytes": 776,
+            "sha256": "90572db8f49b01ec6a102732cdf14fc3f07d363cbe0d261103e583043164e888",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mn-cyrl.hyb": {
+            "bytes": 5142,
+            "sha256": "0d2731f16aa2c90faec8e63260358cbccede403faf95e3af8c66bc2db0729ca0",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mr.hyb": {
+            "bytes": 687,
+            "sha256": "f4df224d459fd111698dd5a13613c5bbf0ed11f04278d60230d028010eac0c42",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-mul-ethi.hyb": {
+            "bytes": 3740,
+            "sha256": "f2fac1bd069ffe5cd1112d94cc31137ed38a1b161093ecd74c9c1688428b688b",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nb.hyb": {
+            "bytes": 145263,
+            "sha256": "c2771fbb1bfff7db5e267dc7a4505a9675c6b98cfe7a8f7ae5686d7a5a2b3dd0",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nl.hyb": {
+            "bytes": 77080,
+            "sha256": "5ebde398944b461cf940f0520c5a49c0882b6f36f9ac5cda0538c8c8b44fb7ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-nn.hyb": {
+            "bytes": 145263,
+            "sha256": "5bcbb58eaf65f13f6d039244d942f37c127344e3a0a2e6c32d08236945132809",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-or.hyb": {
+            "bytes": 647,
+            "sha256": "4e9cd302baffc4ea3e9652327ea24072ebf37b5c4fc0719292bdac10aaad665b",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-pa.hyb": {
+            "bytes": 607,
+            "sha256": "470329d28faa484f945d78ffefb176dcb6f2032c753e25bc014106ad24b2c68a",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-pt.hyb": {
+            "bytes": 1414,
+            "sha256": "f6fbf1bcb260cc86256fc494f388f7b27d10865fbf8f61517dee25af4d58d6e8",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ru.hyb": {
+            "bytes": 19886,
+            "sha256": "336ce2048ffd31b7bcaf435e53badfaf0579e405042d49adbc0823f6be5f9614",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sk.hyb": {
+            "bytes": 64103,
+            "sha256": "138c5990961da21993653f54a413ddacb8921d6d70b892b7ca154d6e8ad2028c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sl.hyb": {
+            "bytes": 6631,
+            "sha256": "ad746c68562603ac3b15e89da03c76e081c08e7d9c8d4c9f64763e53d696c77c",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sq.hyb": {
+            "bytes": 2013,
+            "sha256": "bc29c9401ce952414cbaebc5c8ee1d27c1706c6f77807b5ff713e2124438b3ca",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-sv.hyb": {
+            "bytes": 72119,
+            "sha256": "56642aa5a37625ff9d034761d16b034d4ba5be74090cbd825956bbce2775ecd1",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-ta.hyb": {
+            "bytes": 554,
+            "sha256": "40fda94856a86f065de8baa6184ea63dcdb011ee4ca498a7c1fee44c99314c67",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-te.hyb": {
+            "bytes": 703,
+            "sha256": "516fa9654fa3aeaab480d40eaf6ad78fc039086bd8edc144be3d59525edcac29",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-tk.hyb": {
+            "bytes": 2712,
+            "sha256": "77fdaed29bd842aaa976ab7ef81b617a15c0a2d1ebd1161c1bf26b79a108b5cd",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-uk.hyb": {
+            "bytes": 19417,
+            "sha256": "1c626abe40d43f6d56a01b5b40305d7c7d6481f616eac00a3f3aaaaca8388786",
+            "unixPermissions": 420
+          },
+          "hyphen-data/hyph-und-ethi.hyb": {
+            "bytes": 3484,
+            "sha256": "1de83cb787dfaf53fb7e6e8db3aae5008ad24ebdd28be02031306ea9e9f3e285",
+            "unixPermissions": 420
+          },
+          "hyphen-data/manifest.json": {
+            "bytes": 77,
+            "sha256": "aeb0e502811ddb8d2561e81e2e82a013152d8b49de59e4b0c04669982138d641",
+            "unixPermissions": 420
+          },
+          "icudtl.dat": {
+            "bytes": 10824576,
+            "sha256": "e1ed8f674bb8449731b79cae956042da59f9ecbd37c8d3f86586a22b4836e5b2",
+            "unixPermissions": 420
+          },
+          "libEGL.so": {
+            "bytes": 234248,
+            "sha256": "e6383638cc11916b4569fbc4f66746ae08a7b0ea6fb35fea050310f85e0c2876",
+            "unixPermissions": 493
+          },
+          "libGLESv2.so": {
+            "bytes": 234248,
+            "sha256": "c4c2eb30a75bd09c3aed937f3aef5d30478a14ed8e8a0670a3dde87168cfaeed",
+            "unixPermissions": 493
+          },
+          "libvk_swiftshader.so": {
+            "bytes": 4042760,
+            "sha256": "302973b58fc4371d24a8d28e463a76cc645ebc3b3a66fad75cb0cacf2d131962",
+            "unixPermissions": 493
+          },
+          "libvulkan.so.1": {
+            "bytes": 693936,
+            "sha256": "301d61d195ce7b1bbedb1675a4334fa82fb5562a6923f7201c4e0dc2896709e2",
+            "unixPermissions": 493
+          },
+          "locales/af.pak": {
+            "bytes": 643100,
+            "sha256": "71f93cda6ff3bc00993c96e8c99ff394a60047bb3be1f10d2ea30ebf17b21ae8",
+            "unixPermissions": 420
+          },
+          "locales/af_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/af_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/af_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am.pak": {
+            "bytes": 1042999,
+            "sha256": "b85b633f0760f7a8f9a6e299982f0dabb4980993ef17fa2af02efd8569942229",
+            "unixPermissions": 420
+          },
+          "locales/am_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/am_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar.pak": {
+            "bytes": 1158759,
+            "sha256": "d97ef6ec6b526169ac64d141fd1d1a57a7f73766c3e5ba3e21a6dc764572f9fd",
+            "unixPermissions": 420
+          },
+          "locales/ar_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ar_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg.pak": {
+            "bytes": 1196336,
+            "sha256": "ef84b59984f779262163f25e1f5d6d5cad216acad5ce2c12af41ecce4f6380c2",
+            "unixPermissions": 420
+          },
+          "locales/bg_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bg_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn.pak": {
+            "bytes": 1530643,
+            "sha256": "6356908e9b66cfa57275decb0592e774d1838b3ea73b70b23f7f0f239cadf1d7",
+            "unixPermissions": 420
+          },
+          "locales/bn_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/bn_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca.pak": {
+            "bytes": 737149,
+            "sha256": "7d89753be14fb737584e9f5bf7009d55d3516780ed4877e30a51203d88eabf58",
+            "unixPermissions": 420
+          },
+          "locales/ca_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ca_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs.pak": {
+            "bytes": 758618,
+            "sha256": "5000585f9513cb4ead8f1ff5d98b93032f27e7788efdc08aaccb1c3f5a5223f2",
+            "unixPermissions": 420
+          },
+          "locales/cs_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/cs_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da.pak": {
+            "bytes": 682404,
+            "sha256": "79e810910b4b65dfa580f2b2f9c3657bd66fa536eb712dd347c97f07ae203c38",
+            "unixPermissions": 420
+          },
+          "locales/da_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/da_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de.pak": {
+            "bytes": 741042,
+            "sha256": "7e16aad8e4e8e2ed5d670bac08075a2db706c25413f575058ef22b1d67d91723",
+            "unixPermissions": 420
+          },
+          "locales/de_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/de_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el.pak": {
+            "bytes": 1314882,
+            "sha256": "dae6eb1f9ecde1f06ac1760c59159abae06737952378051fece12b9f046c0376",
+            "unixPermissions": 420
+          },
+          "locales/el_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/el_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB.pak": {
+            "bytes": 589029,
+            "sha256": "0d4ec613b8606ced08ad1bb7ca3c96e0ca695d5ceac52c8d690fe2907f8c93fa",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-GB_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US.pak": {
+            "bytes": 596533,
+            "sha256": "5bc437d20f4bf78424340b9fd3f1eca72f3101a5c7796bc943197f9066ba9785",
+            "unixPermissions": 420
+          },
+          "locales/en-US_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/en-US_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419.pak": {
+            "bytes": 721989,
+            "sha256": "223388d6a3230f5605249a29122e2a7026713f4e595af8265ee66abe877903fe",
+            "unixPermissions": 420
+          },
+          "locales/es-419_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es-419_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es.pak": {
+            "bytes": 716761,
+            "sha256": "9c71b4208f41406446f8632274d3849eb276fc2d04676769f45248f0a95b7767",
+            "unixPermissions": 420
+          },
+          "locales/es_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/es_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et.pak": {
+            "bytes": 656887,
+            "sha256": "cb6f0a137990c71a14cd07ec8a9824e3ce6ed412fc613b53735ba20f418d966d",
+            "unixPermissions": 420
+          },
+          "locales/et_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/et_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa.pak": {
+            "bytes": 1082741,
+            "sha256": "4a5cfdfe5fc916836ba07302cbe4321df88644780553d871ec0c1cd38223f7ab",
+            "unixPermissions": 420
+          },
+          "locales/fa_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fa_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi.pak": {
+            "bytes": 668011,
+            "sha256": "76dcb14db2df787805cb8709280dc1a19533ffedebd6eaae79067814536bc910",
+            "unixPermissions": 420
+          },
+          "locales/fi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil.pak": {
+            "bytes": 753620,
+            "sha256": "5f9efb909791fa47365697c7f31a1ef88d56c398b1e865c1daf403862bcdd677",
+            "unixPermissions": 420
+          },
+          "locales/fil_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fil_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr.pak": {
+            "bytes": 784253,
+            "sha256": "fe3c1182b12c558888f7118e58955c8b72073ec81fe95066623798c6f8b19bbc",
+            "unixPermissions": 420
+          },
+          "locales/fr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/fr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu.pak": {
+            "bytes": 1516646,
+            "sha256": "a32a772fbc16bbd72da011ca5d15adf2d6cd5375509014924f700ecde4a49c67",
+            "unixPermissions": 420
+          },
+          "locales/gu_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/gu_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he.pak": {
+            "bytes": 950915,
+            "sha256": "0960b0e2a15212ac91edb41cba55d61a62f3f4d379e2560c0017f55c18fe337a",
+            "unixPermissions": 420
+          },
+          "locales/he_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/he_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi.pak": {
+            "bytes": 1620659,
+            "sha256": "c419d20ee76c2b1057154d952bea263443a9b32354bb8d74aa42f95af0f5216f",
+            "unixPermissions": 420
+          },
+          "locales/hi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr.pak": {
+            "bytes": 729730,
+            "sha256": "bacb87a7c0f0881c83e59e5ac444949dd58513008054d95cb113490d7ec1db31",
+            "unixPermissions": 420
+          },
+          "locales/hr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu.pak": {
+            "bytes": 780579,
+            "sha256": "59d2b907030381e3613a815848763f7c338b7711ba2449cc9941e53bc731533b",
+            "unixPermissions": 420
+          },
+          "locales/hu_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/hu_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id.pak": {
+            "bytes": 647632,
+            "sha256": "f2b113db0d1d6f36d24a48e6555ab4a5edf24c4cf684c55542df67f9dde5a25d",
+            "unixPermissions": 420
+          },
+          "locales/id_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/id_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it.pak": {
+            "bytes": 712774,
+            "sha256": "02c59e35c80d8f76b666f88d6144d448cd92251612cccd1ef331dd6cc7c937c8",
+            "unixPermissions": 420
+          },
+          "locales/it_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/it_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja.pak": {
+            "bytes": 862979,
+            "sha256": "ddfbb2b036c50f3a4fb3991efaec202e18a4685623c02cfd95af74d599a4a408",
+            "unixPermissions": 420
+          },
+          "locales/ja_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ja_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn.pak": {
+            "bytes": 1740458,
+            "sha256": "aebc4809cda257d378ce50df5d757c22ab9959b8bc581ffccaf690a40953847b",
+            "unixPermissions": 420
+          },
+          "locales/kn_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/kn_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko.pak": {
+            "bytes": 736199,
+            "sha256": "0127c802d1b2ac8e1b1dfd4d463deb0cfdf698721ef18ef183541122bdffe7b0",
+            "unixPermissions": 420
+          },
+          "locales/ko_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ko_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt.pak": {
+            "bytes": 793125,
+            "sha256": "2943779fdc4d4c933840c35e67097451608de7b04c4b097f48c31d636e456584",
+            "unixPermissions": 420
+          },
+          "locales/lt_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lt_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv.pak": {
+            "bytes": 789679,
+            "sha256": "f552bb944b8faae615ff7f02797ece8dbb24e028dea9345ee3bf567b29f3ee32",
+            "unixPermissions": 420
+          },
+          "locales/lv_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/lv_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml.pak": {
+            "bytes": 1787781,
+            "sha256": "c6b384dcc336e48e646a63530e1b932649db976a534130b5cc6d5e567cdcea5e",
+            "unixPermissions": 420
+          },
+          "locales/ml_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ml_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr.pak": {
+            "bytes": 1484772,
+            "sha256": "b538498e4956c5606fa9b988561ccea0ae889d1db27c97f40ec62c6d93ed3300",
+            "unixPermissions": 420
+          },
+          "locales/mr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/mr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms.pak": {
+            "bytes": 679631,
+            "sha256": "7798ed699159d1c39e6313d62198d0b45d2048b8ce4263e47a59ba38cd6eb6d9",
+            "unixPermissions": 420
+          },
+          "locales/ms_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ms_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb.pak": {
+            "bytes": 648181,
+            "sha256": "f1b84628b3fd0754a9d37befdcce4d79408eec589a15270643da120a33e5a2ba",
+            "unixPermissions": 420
+          },
+          "locales/nb_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nb_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl.pak": {
+            "bytes": 677065,
+            "sha256": "56bae83de8cc04a35b76c27c6bc5a1c703569cd612d29f8693ca06e431416c4d",
+            "unixPermissions": 420
+          },
+          "locales/nl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/nl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl.pak": {
+            "bytes": 758749,
+            "sha256": "c01d536d52084644665dd22236d2771d1fb054e19274887415799a4894e25c50",
+            "unixPermissions": 420
+          },
+          "locales/pl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR.pak": {
+            "bytes": 710552,
+            "sha256": "4f35bc54a36ca2f646e6ecae58e56a307f066da5405e43542aa43190230c6c32",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-BR_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT.pak": {
+            "bytes": 714052,
+            "sha256": "53170d48c2e9350d31f6bf1aea00da309d537017c50cb61792a2540e53838797",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/pt-PT_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro.pak": {
+            "bytes": 738901,
+            "sha256": "e605e0e8a796470b608469ddd72b88961890f3bfa47e8968034770ae5df52cf1",
+            "unixPermissions": 420
+          },
+          "locales/ro_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ro_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru.pak": {
+            "bytes": 1222114,
+            "sha256": "0e05fb43ba4ef810a3f2e69e881dff4b2b34cddb2cad8e59fed8aa8b1b4d3f24",
+            "unixPermissions": 420
+          },
+          "locales/ru_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ru_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk.pak": {
+            "bytes": 771114,
+            "sha256": "100e523c947f5b8385daafb04693e64df9a6b8b0e38546dfd44cc11c5b3ad3c6",
+            "unixPermissions": 420
+          },
+          "locales/sk_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sk_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl.pak": {
+            "bytes": 735476,
+            "sha256": "10e60cc4b11e216ebbe1737bb6ed61c4227ac4ec0c52926ace5349e91ffa8763",
+            "unixPermissions": 420
+          },
+          "locales/sl_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sl_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr.pak": {
+            "bytes": 1129835,
+            "sha256": "002f2054013c974c94ea1227f2f734ce9994f1c72fa642a90b41ca1c10b4b94d",
+            "unixPermissions": 420
+          },
+          "locales/sr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv.pak": {
+            "bytes": 659821,
+            "sha256": "f6f1ab492dd5fb0da0848bed1614775de5eedbc5c4dc5bc42bc49101a3a5fa51",
+            "unixPermissions": 420
+          },
+          "locales/sv_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sv_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw.pak": {
+            "bytes": 697395,
+            "sha256": "73a58d7e54c9de32b04210e19b29a301826ee0682ae2ad238ba7c532d0fcf96c",
+            "unixPermissions": 420
+          },
+          "locales/sw_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/sw_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta.pak": {
+            "bytes": 1781957,
+            "sha256": "dfbaab4af6defe9604b01f73dcfaa612f388b3384d08e29447389269eb8ba13c",
+            "unixPermissions": 420
+          },
+          "locales/ta_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ta_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te.pak": {
+            "bytes": 1651456,
+            "sha256": "f7c35e03c67556fffd07ef76c3632ecc6330ad8bf653a65d8529b6c533173beb",
+            "unixPermissions": 420
+          },
+          "locales/te_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/te_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th.pak": {
+            "bytes": 1381808,
+            "sha256": "9ca423f1aaff697f7654607f0c00b107f249aeb0be39a413d3adb68dbe6ffde6",
+            "unixPermissions": 420
+          },
+          "locales/th_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/th_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr.pak": {
+            "bytes": 711870,
+            "sha256": "826e02b534208dc113f5c2f9a01bb6965cabe20f04ce753f39e53c67c1906af7",
+            "unixPermissions": 420
+          },
+          "locales/tr_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/tr_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk.pak": {
+            "bytes": 1231349,
+            "sha256": "e85a38e77339333ab29f5ba118941813b15bb29dc762f902b4693a0e94e28388",
+            "unixPermissions": 420
+          },
+          "locales/uk_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/uk_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur.pak": {
+            "bytes": 1058242,
+            "sha256": "3e7198dab7368c0b38752d01be7d1bd33462361f04912ff2cae7cb9223dc6384",
+            "unixPermissions": 420
+          },
+          "locales/ur_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/ur_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi.pak": {
+            "bytes": 844832,
+            "sha256": "1c8d6e74dec7cfebfa9d14139b89ff903e8a38059df77820bef42d5aadeb9f85",
+            "unixPermissions": 420
+          },
+          "locales/vi_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/vi_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN.pak": {
+            "bytes": 605364,
+            "sha256": "b3bb77b31545a8ae6c50ff1ac80e6b13c8eca6ac87515696b2b2db45da16448c",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-CN_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW.pak": {
+            "bytes": 599343,
+            "sha256": "13da704b81ed0bf258e3678c4498878bde630bec46754db6f6ff2a7b91e9c912",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_FEMININE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_MASCULINE.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "locales/zh-TW_NEUTER.pak": {
+            "bytes": 18,
+            "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+            "unixPermissions": 420
+          },
+          "product_logo_48.png": {
+            "bytes": 2772,
+            "sha256": "42142312e7fa9221b8ad0790c1ecec86edd35468724ec103ec27e1125a43c8b2",
+            "unixPermissions": 420
+          },
+          "resources.pak": {
+            "bytes": 24896011,
+            "sha256": "067ae51ffb9a265c2285c639a8ae7fc78c8230698572e0ffa62259903d0af17c",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper/content.js": {
+            "bytes": 439,
+            "sha256": "6c0aeaaf9a71ad68aa45764c111e70bb23aa0fbf406644a375b6b709cbbe4b6e",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper/gdocs_script.js": {
+            "bytes": 1425,
+            "sha256": "d291adabcfcb1a4a4a2ffacdd9d04fdb473ab0d6903556bef7446be9c3646d86",
+            "unixPermissions": 420
+          },
+          "resources/accessibility/reading_mode_gdocs_helper_manifest.json": {
+            "bytes": 2375,
+            "sha256": "ed88d96d249bf3352503ccb845b718cd78b02131b5e4702f264985ea86e7400c",
+            "unixPermissions": 420
+          },
+          "resources/inspector_overlay/inspector_overlay_resources.grd": {
+            "bytes": 496,
+            "sha256": "5bbd199200f04f0d8d5866ca4faf215cdd49376b8698ac18183ae50046b79f30",
+            "unixPermissions": 420
+          },
+          "resources/inspector_overlay/main.js": {
+            "bytes": 85709,
+            "sha256": "278cdaaf5ef2344ce2602ff0319d2207851f8a377d8b9a98d4c779bc6a908436",
+            "unixPermissions": 420
+          },
+          "rpm.deps": {
+            "bytes": 2760,
+            "sha256": "760d6a93ff8f0dbad7c8031551d5f6cb6755fc72f5dd70804523611371e55846",
+            "unixPermissions": 384
+          },
+          "v8_context_snapshot.bin": {
+            "bytes": 753328,
+            "sha256": "0cedf179cf64353b66990a996b6ca44b91bcfdbd75e48afe5233355cc60a7ae0",
+            "unixPermissions": 420
+          },
+          "vk_swiftshader_icd.json": {
+            "bytes": 107,
+            "sha256": "c9eef28b6b984fec220ef0abfecc40b502d46946706e47bfe97707027cb818bd",
+            "unixPermissions": 420
+          }
+        },
+        "noticeCandidates": [
+          "ABOUT",
+          "WidevineCdm/LICENSE"
+        ],
+        "productionGate": "NO_GO",
+        "publisherSignatureReproducibleBuildOrLegalAcceptanceEstablished": false,
+        "regularFiles": 301,
+        "root": "chrome-linux64",
+        "schema": 1
+      },
+      "generation": "1794080266284803",
+      "officialObjectMetadata": {
+        "bucket": "chrome-for-testing-public",
+        "contentType": "application/zip",
+        "crc32c": "j27K+A==",
+        "etag": "CIPe4efN9pcDEAE=",
+        "generation": "1794080266284803",
+        "md5Hash": "qCNXOxkwhJ5IwLk16J7iTA==",
+        "metageneration": "1",
+        "name": "157.0.8103.50/linux64/chrome-linux64.zip",
+        "size": "203527334",
+        "updated": "2026-11-07T19:37:46.344Z"
+      },
+      "officialVersionMetadata": {
+        "bytes": 2582,
+        "commit": "e027d9a81590898a5e2f7341be370e0ac00c0253",
+        "gitBlob": "aefa53144c78ee9fdbc81994e4228d2df4816129",
+        "path": "157.0.8103.50.json",
+        "repository": "GoogleChromeLabs/chrome-for-testing",
+        "sha256": "1633b76350c6bc5a9bc0dc3682fbffa4e3e7bf7495a62fdd6bfff46b27d47762"
+      },
+      "resolved": "https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.50/linux64/chrome-linux64.zip",
+      "revisionMember": "lib/puppeteer/revisions.js",
+      "revisionMemberPin": {
+        "bytes": 308,
+        "sha256": "bf1f5f71c9f35b67e926a5a01ce937c0ef55d887f859af2f98693ae49185396b"
+      },
+      "sdkSelection": {
+        "integrity": "sha512-YAgBitkd+K9gxRt+wzBAFTTkGjkC8aC2o4OxofsU8JUy2nnK/RflTCJ9bRCvCMNbq9TPhqFk4Phz98otN9FrGg==",
+        "name": "puppeteer-core",
+        "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-25.17.0.tgz",
+        "version": "25.17.0"
+      },
+      "vendorMd5": "qCNXOxkwhJ5IwLk16J7iTA==",
+      "version": "157.0.8103.50"
+    }
+  },
+  "publisherSignatureReproducibleBuildOrCompleteLegalReviewEstablished": false,
+  "schema": 1
+}
