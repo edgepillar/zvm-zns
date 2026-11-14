@@ -3,29 +3,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const zlib = require('node:zlib');
-const crypto = require('node:crypto');
-const sha = raw => crypto.createHash('sha256').update(raw).digest('hex');
-
-function readArchive(source) {
-  const raw = fs.readFileSync(source.path);
-  assert(raw.length === source.bytes && raw.length <= 8 * 1024 * 1024 && sha(raw) === source.sha256);
-  assert.equal('sha512-' + crypto.createHash('sha512').update(raw).digest('base64'), source.integrity);
-  const expanded = zlib.gunzipSync(raw, {maxOutputLength: 64 * 1024 * 1024});
-  assert(expanded.length === source.expandedBytes && sha(expanded) === source.expandedSha256);
-  assert(Object.keys(source.members).length > 0 && Object.keys(source.members).length <= 8192);
-  const read = name => {
-    assert(Object.hasOwn(source.members, name), 'source member not in reviewed inventory');
-    const member = source.members[name];
-    assert(Number.isSafeInteger(member.offset) && member.offset >= 0 && member.offset % 512 === 0);
-    assert(Number.isSafeInteger(member.bytes) && member.bytes >= 0 && member.bytes <= 16 * 1024 * 1024);
-    assert(member.offset + member.bytes <= expanded.length);
-    const body = expanded.subarray(member.offset, member.offset + member.bytes);
-    assert.equal(sha(body), member.sha256);
-    return body.toString('utf8');
-  };
-  return {read};
-}
+const {readArchive, sha} = require('./verified-package-sources.cjs');
 
 const fixture = `(() => {
   const z = globalThis.__dependencyProbe;

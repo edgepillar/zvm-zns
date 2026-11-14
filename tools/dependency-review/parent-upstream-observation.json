@@ -1,0 +1,107 @@
+{
+  "applicationOrPinnedParentProposalChanged": false,
+  "compatibleOverrideAccepted": false,
+  "completeAbsenceOfUpstreamFixesEstablished": false,
+  "contentPinsAreNotIndependentPublisherAuthentication": true,
+  "latestBiDi": {
+    "declaredByObservedPuppeteer": false,
+    "manifestSha256": "b887449e8a78768e759cce3f921f772dc80d98c3667b851d9a198e359be63e64",
+    "mapPin": {
+      "bytes": 5587941,
+      "sha256": "d44f530a282b6b82b9d6719dde6b32e63b758d8b660f3dcefc9f20e1bdfc92a6"
+    },
+    "mapperLexicalMarkerCounts": {
+      "capSize": 0,
+      "sizeCaps": 0
+    },
+    "mapperPin": {
+      "bytes": 1033272,
+      "sha256": "86a92ee469084c07052d78774d3ad65bd669b1abc32ab133f8703bcff28abc6f"
+    },
+    "mapperVersionObjectCandidates": [
+      [
+        "4",
+        "6",
+        "5"
+      ]
+    ],
+    "nodeParserPin": {
+      "bytes": 26965,
+      "sha256": "63f79566c4400013deb1dad644cd788b518645112fa790956915c47613f394d8"
+    },
+    "publication": {
+      "bytes": 1051763,
+      "integrity": "sha512-MWVyFayKROhPqZgWvUM7xu3uiLdFoMLHsEMnFQ2al9FPonsAZSgxn+v5zQ/Nih1dgI3C/sXG5lpAfoBBB2YIGQ==",
+      "name": "chromium-bidi",
+      "sha256": "2b774f4377351b97920eb76265d743a5e420f7c095a74bd88145a99c4ec42cf5",
+      "url": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-160.0.8161-0.tgz",
+      "version": "160.0.8161-0"
+    },
+    "regularMemberPinsSha256": "73bb72929d4483386548166661f0accdca9310813dadc67d74e50441d56977b7",
+    "regularMembers": 319,
+    "selectedManifest": {
+      "dependencies": {
+        "mitt": "^3.0.1",
+        "zod": "^4.6.5"
+      },
+      "engines": {
+        "node": ">=20.19.0 <22.0.0 || >=22.12.0"
+      },
+      "license": "Apache-2.0",
+      "main": "./out/Default/gen/src/index.js",
+      "peerDependencies": {
+        "devtools-protocol": "*"
+      },
+      "type": "module"
+    },
+    "selection": {
+      "integrity": "sha512-MWVyFayKROhPqZgWvUM7xu3uiLdFoMLHsEMnFQ2al9FPonsAZSgxn+v5zQ/Nih1dgI3C/sXG5lpAfoBBB2YIGQ==",
+      "name": "chromium-bidi",
+      "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-160.0.8161-0.tgz",
+      "version": "160.0.8161-0"
+    },
+    "sourceMapVersionObjects": [
+      {
+        "contentBytes": 70,
+        "contentSha256": "63b38035ff5e2a5a5cfe5665e271af72b0cf9791e770dccf5e99d977064fb96c",
+        "source": "../../../../../../third_party/chromium-bidi/node_modules/zod/v4/core/versions.js",
+        "versionObjectCandidates": [
+          [
+            "4",
+            "6",
+            "5"
+          ]
+        ]
+      }
+    ]
+  },
+  "latestBiDiPackageCodeExecuted": false,
+  "observedAt": "2026-11-14T08:38:39.429550+00:00",
+  "productionGate": "NO_GO",
+  "puppeteer": {
+    "declaredBiDiVersion": "157.0.8090-0",
+    "previouslyRetainedPublicationReused": true,
+    "publication": {
+      "bytes": 1228506,
+      "integrity": "sha512-YAgBitkd+K9gxRt+wzBAFTTkGjkC8aC2o4OxofsU8JUy2nnK/RflTCJ9bRCvCMNbq9TPhqFk4Phz98otN9FrGg==",
+      "name": "puppeteer-core",
+      "sha256": "c62a0c2c9b9ce918c5a0e05adcb6e48978c2408572a8a4d75937cef3a18c1692",
+      "url": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-25.17.0.tgz",
+      "version": "25.17.0"
+    },
+    "selection": {
+      "integrity": "sha512-YAgBitkd+K9gxRt+wzBAFTTkGjkC8aC2o4OxofsU8JUy2nnK/RflTCJ9bRCvCMNbq9TPhqFk4Phz98otN9FrGg==",
+      "name": "puppeteer-core",
+      "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-25.17.0.tgz",
+      "version": "25.17.0"
+    }
+  },
+  "registryVersions": {
+    "chromium-bidi": "160.0.8161-0",
+    "puppeteer-core": "25.17.0",
+    "zod": "4.6.7"
+  },
+  "schema": 1,
+  "sourceVersionOrMarkerObservationIsNotFormalPatchOrRuntimeProof": true,
+  "status": "DATED_UPSTREAM_SOURCE_OBSERVATION_NOT_A_MIGRATION_OR_OVERRIDE_ACCEPTANCE"
+}

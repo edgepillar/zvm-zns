@@ -55,7 +55,9 @@ def indexed_archive(raw, location, lock_row, expected):
         'expandedBytes': len(expanded), 'expandedSha256': sha(expanded), 'members': members}
 
 
-def qualify_mapper_controls(repo, parent_root, output, env, commands, source_plan):
+def qualify_mapper_controls(repo, parent_root, output, env, commands, source_plan, execution=None):
+    execution = {} if execution is None else execution
+    execution.update(status='PREPARING_REVIEWED_INPUTS', selectedPackageCodeExecution=False)
     source_root = output / 'mapper-control-sources'; source_root.mkdir(mode=0o700)
     lock = json.loads(read_input(parent_root, 'package-lock.json'))['packages']
     sources, transport, instrumentation = {}, {}, None
@@ -83,9 +85,12 @@ def qualify_mapper_controls(repo, parent_root, output, env, commands, source_pla
             'integrity': selected['integrity'], 'requests': 1, 'filesystemArchiveExtractions': 0,
             'memberIndexSha256': sha(json.dumps(index['members'], sort_keys=True, separators=(',', ':')).encode())}
     input_path = output / 'mapper-size-input.json'; write_json(input_path, {'schema': 1, **sources})
+    execution.update(status='COMMAND_ATTEMPTED', selectedPackageCodeExecution=None,
+        inputSha256=sha(input_path.read_bytes()))
     command = run_bounded(['node', '--max-old-space-size=128', '--experimental-vm-modules',
         str(repo / 'tools/dependency-review/mapper-size-worker.cjs'), str(input_path)], parent_root, env, output, 'mapper-array-controls', timeout=45)
-    commands.append(command)
+    commands.append(command); execution['command'] = command
+    execution['status'] = 'COMMAND_RETURNED_RESULT_UNQUALIFIED'
     require(command['actualExit'] == 0 and command['outputComplete'], 'bounded mapper controls failed or incomplete')
     result = json.loads((output / 'streams/mapper-array-controls.stdout.txt').read_bytes())
     require(result['status'] == 'BOUNDED_ARRAY_ORDERING_DIFFERENCE_REPRODUCED_NO_MIGRATION_ACCEPTANCE'
@@ -97,6 +102,7 @@ def qualify_mapper_controls(repo, parent_root, output, env, commands, source_pla
     for member in result['fixedLoadedMembers']:
         require(member == {'name': member['name'], **sources['fixed']['members'][member['name']]}, 'loaded fixed-library source pin differs')
     require(not (parent_root / 'node_modules').exists(), 'mapper controls installed the proposal graph')
+    execution.update(status='QUALIFIED_BOUNDED_CONTROLS', selectedPackageCodeExecution=True)
     return {'schema': 1, 'status': result['status'], 'sourceTransport': transport,
         'instrumentation': instrumentation, 'result': result, 'maximumContainerLength': 3,
         'completeCandidateDependencyInstallation': False, 'selectedPublishedPackageCodeExecuted': True,

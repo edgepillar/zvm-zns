@@ -139,10 +139,12 @@ The [version gate](PROPOSAL_VERSION_RANGES.md) adds a further bounded command
 using a pinned SemVer source tree. The separate
 [mapper controls](MAPPER_ARRAY_CONTROLS.md) add one bounded command using two
 exact source archives, with no extracted package tree or candidate installation.
-Twelve command records cover the existing eight commands, two proposal commands,
-range evaluation and mapper controls. Selected proposed mapper declarations and
-root Zod code execute in small VM fixtures; the browser/CDP bootstrap is removed
-explicitly. The complete proposed graph,
+The [Node parser controls](NODE_PARSER_CONTROLS.md) reuse those archives and the
+already verified installed baseline for real parameter-schema/error-path calls.
+Thirteen command records cover the existing eight commands, two proposal
+commands, range evaluation, mapper controls and Node parser controls. Selected
+proposed mapper declarations, root Zod code and Node parser modules execute in
+small VM fixtures; the browser/CDP bootstrap is removed explicitly. The complete proposed graph,
 source/API and browser/platform compatibility need review before adoption;
 this proposal does not waive or remediate the current Zod finding.
 

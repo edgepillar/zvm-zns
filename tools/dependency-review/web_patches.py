@@ -20,6 +20,7 @@ from proposal_range_qualification import qualify_ranges
 from proposal_delta import prepare_platform_candidate
 from changed_source_installation import verify_selected_installation
 from mapper_size_controls import qualify_mapper_controls
+from node_parser_controls import qualify_parser_controls
 
 
 def pin(raw):
@@ -145,7 +146,8 @@ def main():
                 'tools/dependency-review/proposal_range_qualification.py', 'tools/dependency-review/proposal_delta.py',
                 'tools/dependency-review/changed_publications.py', 'tools/dependency-review/changed_source_installation.py',
                 'tools/dependency-review/changed-publications.json', 'tools/dependency-review/mapper_size_controls.py',
-                'tools/dependency-review/mapper-size-worker.cjs')},
+                'tools/dependency-review/mapper-size-worker.cjs', 'tools/dependency-review/verified-package-sources.cjs',
+                'tools/dependency-review/node_parser_controls.py', 'tools/dependency-review/node-parser-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -218,11 +220,20 @@ def main():
         ranges = report['proposalVersionRanges']['versionReview']
         require(ranges['allRecordedVersionCasesEvaluated'] and ranges['allResolvedDependencyRangesSatisfied']
             and ranges['allRecordedEngineRangesSatisfiedForProfile'], 'proposal version or engine constraints require review')
-        report['mapperArrayControls'] = qualify_mapper_controls(repo, parent_root, output, env, report['commands'], source_plan)
-        report['parentMigrationCandidate'].update(newPackagesInstalledOrExecuted=True,
+        # Until a successful bounded result is verified, a failed launch or
+        # partial execution cannot be reported as "no proposed code executed".
+        report['parentMigrationCandidate'].update(newPackagesInstalledOrExecuted=None,
             proposedPackageExecutionScope='Selected generated mapper declarations and pinned Zod library code in bounded array controls only.',
             completeCandidateDependencyInstallation=False, candidateBrowserBootstrapExecuted=False,
             migrationAcceptanceEstablished=False)
+        report['mapperControlExecution'] = {}
+        report['mapperArrayControls'] = qualify_mapper_controls(repo, parent_root, output, env, report['commands'],
+            source_plan, report['mapperControlExecution'])
+        report['parentMigrationCandidate']['newPackagesInstalledOrExecuted'] = True
+        report['parentMigrationCandidate']['proposedPackageExecutionScope'] = 'Bounded generated mapper, root validator and Node protocol-parser module controls only.'
+        report['parserControlExecution'] = {}
+        report['nodeParserControls'] = qualify_parser_controls(repo, web, parent_root, output, env,
+            report['commands'], source_plan, report['parserControlExecution'])
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()

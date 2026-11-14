@@ -58,7 +58,9 @@ The same checker supports a separately qualified candidate installation. This
 lane does not install the proposed application graph. Separate
 [mapper array controls](MAPPER_ARRAY_CONTROLS.md) execute selected generated
 declarations and root-library code without the browser bootstrap. Full candidate
-API and browser controls remain subsequent work. Matching known files does not
+API and browser qualification remain open; separate
+[Node parser controls](NODE_PARSER_CONTROLS.md) now exercise selected real
+parameter/schema/error paths from these sources. Matching known files does not
 authenticate unknown extra installed files or the publisher.
 
 ## Remaining acceptance

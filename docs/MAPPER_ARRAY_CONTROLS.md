@@ -58,6 +58,11 @@ and retains its actual stdout/stderr with the report and source binding. Raw
 source trees and archives are not recursively uploaded. Local cached-source
 results remain separate from each revision's hosted execution.
 
+The subsequent [Node parser controls](NODE_PARSER_CONTROLS.md) reuse both raw
+archives and the already verified baseline installation. They qualify separate
+real parser/schema/error-module calls; they do not execute this mapper bootstrap.
+Their reader also checks the installed baseline members before and after reads.
+
 ## Open gates
 
 The current application still uses Puppeteer `25.12.0` and Zod `3.25.76`.
