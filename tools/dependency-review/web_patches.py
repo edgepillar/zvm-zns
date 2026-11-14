@@ -22,6 +22,7 @@ from changed_source_installation import verify_selected_installation
 from mapper_size_controls import qualify_mapper_controls
 from node_parser_controls import qualify_parser_controls
 from mapper_rebuild import qualify_rebuild
+from node_consumer_controls import qualify_consumers
 
 
 def pin(raw):
@@ -153,7 +154,10 @@ def main():
                 'tools/dependency-review/node-parser-guard.patch',
                 'tools/dependency-review/mapper_rebuild.py', 'tools/dependency-review/mapper_rebuild_plan.py',
                 'tools/dependency-review/mapper_rebuild_map.py', 'tools/dependency-review/mapper-rebuild-sources.json',
-                'tools/dependency-review/rebuilt-mapper-worker.cjs')},
+                'tools/dependency-review/rebuilt-mapper-worker.cjs',
+                'tools/dependency-review/node_consumer_controls.py', 'tools/dependency-review/profile_sources.py',
+                'tools/dependency-review/npm-cache-index.cjs', 'tools/dependency-review/node-consumer-worker.cjs',
+                'tools/dependency-review/node-consumer-resolve.mjs', 'tools/dependency-review/node-consumer-plan.json')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -244,6 +248,12 @@ def main():
         report['mapperRebuild'] = qualify_rebuild(repo, parent_root, output, env, report['commands'],
             source_plan, report['mapperRebuildExecution'])
         report['parentMigrationCandidate']['proposedPackageExecutionScope'] = 'Bounded original mapper, root validator, Node parser and separately rebuilt generated mapper declarations. Original and rebuilt browser bootstraps were not executed.'
+        report['nodeConsumerExecution'] = {}
+        report['nodeConsumerControls'] = qualify_consumers(repo, web, parent_root, output, env, report['commands'],
+            source_plan, report['nodeConsumerExecution'])
+        report['parentMigrationCandidate'].update(candidateProfileInstallationPerformed=True,
+            candidateInstalledProfile='linux/x64/glibc',
+            proposedPackageExecutionScope='Existing bounded mapper/parser controls plus actual baseline/raw-candidate Node entry imports and tracked caller defaultArgs in read-only permission profiles. Browser and CDP/protocol handlers were not run.')
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()

@@ -1,0 +1,56 @@
+{
+  "applicationScriptsExecuted": false,
+  "callers": [
+    {
+      "expectedKeys": [
+        "args",
+        "executablePath",
+        "headless"
+      ],
+      "expressionSha256": "744c1d82ff2220cfa9cb66c04bd9beb9706028a9b269476d1a5433503ae21e2e",
+      "path": "web/scripts/shots.mjs",
+      "protocolTimeout": null,
+      "requiredCallerFlags": [
+        "--no-sandbox"
+      ],
+      "sourcePin": {
+        "bytes": 1571,
+        "sha256": "c04cadafebe77cf8cfb9d89a6534ed0513c6fbcaafdf9b216dd2ecf07d3ec3bd"
+      }
+    },
+    {
+      "expectedKeys": [
+        "args",
+        "executablePath",
+        "headless",
+        "protocolTimeout"
+      ],
+      "expressionSha256": "c2402d7884b28be82c08012b74ad7a1b8444ebe6c9eb15c480f974f43f192315",
+      "path": "web/scripts/verify.mjs",
+      "protocolTimeout": 900000,
+      "requiredCallerFlags": [
+        "--no-sandbox",
+        "--disable-gpu"
+      ],
+      "sourcePin": {
+        "bytes": 17816,
+        "sha256": "442f106e50435ebd660287d864b112f4682957a8cad6776cdf13dfb418b8fb9d"
+      }
+    }
+  ],
+  "fundedVerificationAuthorizedByThisPlan": false,
+  "productionGate": "NO_GO",
+  "profiles": {
+    "baseline": {
+      "lockSha256": "99bca7c08749b9089d997f54c6123edca6a178f2c0babbb77299376f46783f73",
+      "puppeteer": "25.12.0"
+    },
+    "candidate": {
+      "lockSha256": "1c1c2f6518f150d7684997ca222be4368539592f2895c458f2f593c56391d2f5",
+      "puppeteer": "25.17.0"
+    }
+  },
+  "proposalAdopted": false,
+  "schema": 1,
+  "status": "ACTUAL_NODE_IMPORT_AND_CALLER_OPTION_GATE_BROWSER_NOT_RUN"
+}

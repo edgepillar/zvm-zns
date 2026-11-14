@@ -137,6 +137,7 @@ jobs:
             ${{ runner.temp }}/zns-web-patch-review/candidate-web-package.json
             ${{ runner.temp }}/zns-web-patch-review/candidate-web-package-lock.json
             ${{ runner.temp }}/zns-web-patch-review/npm-generated-web-package-lock.json
+            ${{ runner.temp }}/zns-web-patch-review/candidate-profile-sources.json
             ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js
             ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.map
             ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.LEGAL.txt
