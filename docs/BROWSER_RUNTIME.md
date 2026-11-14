@@ -12,6 +12,11 @@ and complete 301-file inventory, and extracted once into a new hosted job-owned
 directory. The source revisions, executable bytes, browser version process,
 actual loaded Node package members, native module resolution, commands, exits,
 served static resource pins and bounded screenshots are retained as evidence.
+The full product version and executable pin establish the selected browser
+revision. User-Agent is retained as a display observation with a matching major
+version: [Chromium reduces its minor/build/patch tokens](https://www.chromium.org/updates/ua-reduction/).
+That string is not a second full-binary identity check. Failed workers retain
+partial session/closure observations with an explicit incomplete status.
 
 The application has no tracked deployment records. The normal baseline and
 candidate builds must display that state. Separate fixture builds use the same

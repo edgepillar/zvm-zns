@@ -9,6 +9,16 @@ const {syncBuiltinESMExports} = require('node:module');
 const {fixture} = require('./browser-fixture.cjs');
 const {sourceGuard, read, pin} = require('./browser-source-guard.cjs');
 
+const partial = {schema: 1, status: 'BROWSER_WORKER_INCOMPLETE_NOT_QUALIFIED', sessions: [], screenshots: [],
+  sourceGuardQualification: 'NOT_COMPLETE', productionGate: 'NO_GO'};
+
+function userAgentEvidence(userAgent, expected) {
+  assert(typeof userAgent === 'string' && userAgent.length <= 1024);
+  const match = /(?:HeadlessChrome|Chrome)\/(\d+\.\d+\.\d+\.\d+)/.exec(userAgent);
+  assert(match && match[1].split('.')[0] === expected.split('.')[0]);
+  return {versionToken: match[1], majorVersionMatches: true, fullBinaryVersionProof: false};
+}
+
 function profileSize(root) {
   let bytes = 0; let files = 0; let links = 0;
   function visit(directory) {
@@ -25,6 +35,7 @@ function profileSize(root) {
 async function main() {
   assert.equal(process.argv.length, 3); const input = JSON.parse(read(process.argv[2], 65536));
   assert.equal(input.schema, 1); assert(['baseline', 'candidate'].includes(input.profile));
+  partial.profile = input.profile; partial.browserVersion = input.browserVersion;
   assert.equal(process.platform, 'linux'); assert.equal(process.arch, 'x64');
   assert(/^\d+$/.test(input.runId)); assert(process.report.getReport().header.glibcVersionRuntime);
   assert.equal(fs.realpathSync(input.executable), input.executable);
@@ -39,7 +50,8 @@ async function main() {
   assert.deepEqual(Object.keys(tracked).sort(), caller.expectedKeys);
   const source = await sourceGuard(input);
   const viem = await import(source.resolve('viem')); const {default: puppeteer} = await import(source.resolve('puppeteer-core'));
-  const server = await fixture(input, viem); const sessions = []; const spawns = []; let deniedProcesses = 0;
+  const server = await fixture(input, viem); const sessions = partial.sessions; const spawns = []; let deniedProcesses = 0;
+  partial.fixture = server.report;
   const originalSpawn = child.spawn;
   child.spawn = function(executable, args, options) {
     if (executable !== input.executable || spawns.length >= 2) { deniedProcesses++; throw new Error('Unreviewed child process'); }
@@ -50,7 +62,7 @@ async function main() {
     child[name] = () => { deniedProcesses++; throw new Error('Unreviewed child process method'); };
   }
   syncBuiltinESMExports();
-  const screenshots = [];
+  const screenshots = partial.screenshots;
   async function screenshot(page, protocol, name) {
     const raw = Buffer.from(await page.screenshot({type: 'png', fullPage: false}));
     assert(raw.length <= 1 << 20 && raw.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])));
@@ -82,7 +94,7 @@ async function main() {
         process = browser.process(); assert(process && spawns.some(row => row.process === process));
         row.browserClass = browser.constructor.name; assert.equal(row.browserClass, protocol === 'cdp' ? 'CdpBrowser' : 'BidiBrowser');
         row.version = await browser.version(); assert(row.version.includes(input.browserVersion));
-        row.userAgent = await browser.userAgent(); assert(row.userAgent.includes(input.browserVersion));
+        row.userAgent = await browser.userAgent(); row.userAgentEvidence = userAgentEvidence(row.userAgent, input.browserVersion);
         const page = await browser.newPage(); page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(15000);
         page.on('pageerror', error => errors.push(String(error.message).slice(0, 1024)));
         await page.setRequestInterception(true);
@@ -179,4 +191,8 @@ function processEnv(input) {
   // Deliberately pass a bounded child environment; no inherited credentials.
   return {PATH: process.env.PATH, LANG: 'C', TZ: 'UTC', TMPDIR: input.output};
 }
-main().catch(error => { process.stderr.write(String(error.stack || error) + '\n'); process.exitCode = 1; });
+main().catch(error => {
+  partial.failure = {type: error.name, reason: 'Qualification incomplete; inspect retained stderr'};
+  process.stdout.write(JSON.stringify(partial) + '\n');
+  process.stderr.write(String(error.stack || error) + '\n'); process.exitCode = 1;
+});
