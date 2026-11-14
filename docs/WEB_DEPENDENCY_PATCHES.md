@@ -128,6 +128,13 @@ from the exact parent archive, preserves the registry-only refusal and rebuilds
 the complete original declaration graph. This source inventory remains separate
 from full graph, source/API, browser and migration acceptance. An explicitly
 requested parent binding is strict and fails if any claim cannot be paired.
+The raw npm lock and the selector-preserved review candidate have separate
+artifact paths and hashes. The
+[platform step](PROPOSAL_PLATFORM_SELECTORS.md) preserves existing missing
+constraints only for exactly identical publications. The
+[changed-source plan](CHANGED_PARENT_SOURCES.md) binds both sides of every
+changed registry location and verifies the baseline members against the
+existing application installation without an extra install or source request.
 The [version gate](PROPOSAL_VERSION_RANGES.md) adds a further bounded command
 using a pinned SemVer source tree. Eleven command records cover the existing
 eight commands, the two proposal commands and this range evaluation. Proposed

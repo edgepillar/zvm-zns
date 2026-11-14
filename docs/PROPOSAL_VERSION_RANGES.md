@@ -4,6 +4,10 @@ The Puppeteer 25.17.0 / BiDi 157.0.8090-0 / Zod 4.6.7 proposal remains separate
 from the application. Its source inventory binds every lock row, including six
 bundled member manifests, before the version checks run. The original strict
 registry reader and the application's current inputs are preserved.
+The version cases use the
+[selector-preserved candidate](PROPOSAL_PLATFORM_SELECTORS.md). The raw npm
+output has its own retained artifact path and hash. Restoring an existing libc
+constraint does not turn a version comparison into platform qualification.
 
 ## Cases and policies
 

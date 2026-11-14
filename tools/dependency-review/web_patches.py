@@ -17,6 +17,8 @@ from lock_review import read_input, require
 from openzeppelin_candidate import checked_name, run_bounded, sha, write_json
 from web_parent_candidate import stage_candidate, inspect_candidate
 from proposal_range_qualification import qualify_ranges
+from proposal_delta import prepare_platform_candidate
+from changed_source_installation import verify_selected_installation
 
 
 def pin(raw):
@@ -139,10 +141,17 @@ def main():
                 'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs',
                 'web/scripts/vite-virtual-module-controls.test.mjs',
                 'tools/dependency-review/proposal_versions.py', 'tools/dependency-review/version_ranges.cjs',
-                'tools/dependency-review/proposal_range_qualification.py')},
+                'tools/dependency-review/proposal_range_qualification.py', 'tools/dependency-review/proposal_delta.py',
+                'tools/dependency-review/changed_publications.py', 'tools/dependency-review/changed_source_installation.py',
+                'tools/dependency-review/changed-publications.json')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
+        source_plan_raw = read_input(repo, 'tools/dependency-review/changed-publications.json')
+        source_plan = json.loads(source_plan_raw)
+        report['changedParentPublicationSources'] = verify_selected_installation(web,
+            read_input(repo, 'web/package-lock.json'), source_plan, 'baseline')
+        report['changedParentPublicationSources']['sourcePlanSha256'] = sha(source_plan_raw)
         report['installedPackagePins'] = {}
         lock = json.loads(read_input(repo, 'web/package-lock.json'))
         for name, selected in plan['packages'].items():
@@ -183,8 +192,11 @@ def main():
             report['commands'].append(result)
             require(result['actualExit'] == 0 and result['outputComplete'], label + ' failed or incomplete')
         require(not (parent_root / 'node_modules').exists(), 'parent lock planning unexpectedly installed packages')
+        report['parentLockPlatformPreservation'] = prepare_platform_candidate(repo, parent_root, output)
         archives, report['parentArchiveTransport'] = proposal_archives(parent_root, plan['proposalArchiveSources'])
         report['parentMigrationCandidate'] = inspect_candidate(repo, parent_root, parent_source_pins, output, archives)
+        require(report['parentMigrationCandidate']['outputs']['candidate-web-package-lock.json']['sha256']
+            == source_plan['candidateLockSha256'], 'parent proposal differs from the reviewed changed-source lock')
         proposed_inventory = report['parentMigrationCandidate']['inventory']
         require(proposed_inventory['sourceInventoryCoversEveryLockRow'] and proposed_inventory['allSelectedBundleManifestsBound'],
             'proposal source inventory incomplete')

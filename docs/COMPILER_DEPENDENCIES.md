@@ -93,6 +93,13 @@ archive bytes and a bijection with the six hashed manifests before inventorying
 those rows. Its original registry-only refusal remains visible in the new report.
 The actual application's strict inventory remains its separate required check.
 An unqualified proposal packet preserves review inputs and accepts no migration.
+The exact raw npm lock is also retained separately. An explicit
+[platform-selector preservation step](PROPOSAL_PLATFORM_SELECTORS.md) carries
+only missing selectors for identical publication identities; the full before,
+after and carry-only deltas remain visible. Both sides of all nine changed
+registry locations have a separate
+[publication-source plan](CHANGED_PARENT_SOURCES.md), and CI checks the reviewed
+baseline files against its existing application installation.
 The separate [version gate](PROPOSAL_VERSION_RANGES.md) then checks every
 resolved range and recorded Node/npm engine constraint using a pinned,
 dependency-free SemVer source tree and explicit policies. Proposed packages
