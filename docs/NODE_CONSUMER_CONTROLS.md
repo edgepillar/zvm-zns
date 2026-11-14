@@ -57,6 +57,11 @@ Puppeteer `defaultArgs` API. It records complete argument arrays, input mutation
 checks and changes across profiles. Neither application script is executed.
 The verification script's funding, signing and registration path is not invoked.
 
+Both reviewed Puppeteer Node publications expose an asynchronous public
+`defaultArgs` method. The worker awaits that public result before checking and
+recording the actual returned array. The selected caller options pass directly
+to the public API; its returned array is checked without normalization.
+
 Four source-reader refusal controls per profile precede package execution.
 Common network entry-point guards record unexpected operations; these guards
 and module hooks are not a security sandbox or complete network confinement.

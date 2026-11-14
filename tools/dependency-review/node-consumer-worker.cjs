@@ -142,14 +142,14 @@ async function main() {
     const inputOptions = new vm.Script('(' + expression + ')', {filename: 'tracked-launch-options.js'}).runInContext(context, {timeout: 100});
     assert.deepEqual(Object.keys(inputOptions).sort(), caller.expectedKeys);
     const before = JSON.stringify(inputOptions);
-    const argv = puppeteer.defaultArgs(inputOptions);
+    const argv = await puppeteer.defaultArgs(inputOptions);
     assert.equal(JSON.stringify(inputOptions), before); assert(Array.isArray(argv) && argv.length <= 256 && argv.every(value => typeof value === 'string' && value.length <= 4096));
     assert(argv.includes('--headless=new'));
     for (const value of caller.requiredCallerFlags) assert(argv.includes(value));
     assert.equal(inputOptions.headless, 'new'); assert.equal(inputOptions.executablePath, '/qualified/browser-not-launched');
     if (caller.protocolTimeout !== null) assert.equal(inputOptions.protocolTimeout, caller.protocolTimeout);
     options.push({path: caller.path, options: JSON.parse(before), argv, inputUnchanged: true,
-      actualPuppeteerDefaultArgsExecuted: true, browserLaunchExecuted: false});
+      actualPuppeteerDefaultArgsExecuted: true, publicDefaultArgsResultAwaited: true, browserLaunchExecuted: false});
   }
   assert.equal(options.length, 2); assert.equal(violations, 0); assert.equal(requestedIO, 0);
   assert(loaded.size > 0 && loaderSourceMatches >= loaded.size);

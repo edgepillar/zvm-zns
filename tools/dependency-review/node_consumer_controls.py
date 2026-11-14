@@ -79,6 +79,8 @@ def qualify_consumers(repo, web, parent_root, output, env, commands, source_plan
             and result['libc'] == 'glibc' and result['actualInstalledPackageCodeExecuted'] and result['actualNodeResolutionPreserved'], 'actual Node execution or source binding differs')
         require(result['loaderFormatControls'] == {'acceptedCases': 4, 'refusedCases': 8, 'nativeLoadResultsModified': False},
             'native loader format controls differ')
+        require(len(result['options']) == 2 and all(case['publicDefaultArgsResultAwaited'] is True for case in result['options']),
+            'public asynchronous default-argument result was not awaited')
         require(result['sourceGuardViolations'] == result['requestedNetworkOrProcessOperations'] == 0
             and not result['browserOrCDPOrProtocolHandlersOrApplicationScriptsExecuted']
             and not result['fundedVerificationOrWalletSigningOrLiveChainExecuted'] and not result['proposalAdopted'], 'Node consumer boundary differs')
