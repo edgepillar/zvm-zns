@@ -87,7 +87,11 @@
     "tools/dependency-review/test_application_runtime.py",
     "tools/dependency-review/application_lock_review.py",
     "tools/dependency-review/bundled_lock.py",
-    ".github/workflows/ci.yml"
+    ".github/workflows/ci.yml",
+    "tools/dependency-review/derivative_notices.py",
+    "tools/dependency-review/test_derivative_notices.py",
+    "tools/dependency-review/runtime-source-map-controls.cjs",
+    "tools/dependency-review/devtools-source-map-controls.cjs"
   ],
   "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
   "inputPins": {
@@ -100,8 +104,8 @@
       "sha256": "44a864b0ad83a95a25be03a0c4acea3f5a289c6bff8cdb65d3974eb5c5fe800a"
     },
     "NOTICE.md": {
-      "bytes": 2323,
-      "sha256": "6fed69e70692ba086d5fd7b23b60a3188d3918159b5c1761d36aeae9f275379d"
+      "bytes": 3673,
+      "sha256": "44850ab75bba8c7f146cf5ea17496cdb71990e6728bb7595a0df40665561cd3f"
     },
     "web/.npmrc": {
       "bytes": 152,
@@ -368,12 +372,12 @@
       "sha256": "71d401bb3414ea5c3889f77dc5d10d8b495a93b6ac3f3e1dfe3749f30efcedd2"
     },
     "web/vendor/chromium-bidi-157-reviewed/NOTICE.md": {
-      "bytes": 854,
-      "sha256": "d9c445b47175f0c977f59b1ced7d4528d60cfe0ddc22ecca95a2a08a94132fd9"
+      "bytes": 1703,
+      "sha256": "23276817a43015b754ea26378f6306b659b237cd00945c48cf5cc158516deb5c"
     },
     "web/vendor/chromium-bidi-157-reviewed/manifest.json": {
-      "bytes": 11213,
-      "sha256": "bafb2dc0a104173521476b1f81af7ed46b8521b17379a8f7164c928532f51a74"
+      "bytes": 16289,
+      "sha256": "81e31fb5f432acd96ea9f1e406dd0655ea53ce44f3442a0a128a4b6b5b5e1f31"
     },
     "web/vendor/chromium-bidi-157-reviewed/payload/notices/chromium-bidi/LICENSE": {
       "bytes": 11357,
@@ -396,20 +400,20 @@
       "sha256": "32ee1946257a1c2e2bd0caac14b21f5b7357b27284aaced583107b614466c60c"
     },
     "web/vendor/chromium-bidi-157-reviewed/payload/out/Default/gen/src/mapperTab.js": {
-      "bytes": 1414804,
-      "sha256": "f821abd39ad1f23a0e3f04502dc7101ca3f5ed05ae9fc2768309c1f5ad57e917"
+      "bytes": 1414969,
+      "sha256": "4a28c2523888aa9ca561e6cb31ac9f1e83fd555e4b49f9d6af40d322055078b7"
     },
     "web/vendor/chromium-bidi-157-reviewed/payload/out/Default/gen/src/mapperTab.js.map": {
-      "bytes": 2598487,
-      "sha256": "9f1fcaddaec2f21963aa58614b1d23974615b4171163a734f4a7a22c56a0d8b8"
+      "bytes": 2598649,
+      "sha256": "51451f12f329fed9a8022ce685e53a8501e7422909c30e905c2bbbf6cdde8404"
     },
     "web/vendor/chromium-bidi-157-reviewed/payload/out/Default/gen/src/protocol-parser/protocol-parser.js": {
-      "bytes": 25803,
-      "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+      "bytes": 25932,
+      "sha256": "fed10b07442b8ee8e1cd7ad6b2452101791051864cea78d50ba32730f2d0092a"
     },
     "web/vendor/chromium-bidi-157-reviewed/payload/out/Default/gen/src/protocol-parser/protocol-parser.js.map": {
-      "bytes": 28883,
-      "sha256": "03f0fafb7deef471de33733a606af2b48bfb7c138a523d297e79dd48f68de4ba"
+      "bytes": 29179,
+      "sha256": "0da6a2353c2f98fc22dcc44247f9369f66d65febb4e39ff064c0015762a8e0f1"
     },
     "web/vite.config.ts": {
       "bytes": 2471,

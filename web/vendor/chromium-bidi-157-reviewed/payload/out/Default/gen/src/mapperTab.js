@@ -1,3 +1,4 @@
+/*! Modified by edgepillar: rebuilt compiled JavaScript with Zod 4.6.7 and the reviewed parser guard; rebased source map. See vendor NOTICE.md and manifest.json. */
 (() => {
   var __defProp = Object.defineProperty;
   var __export = (target, all) => {

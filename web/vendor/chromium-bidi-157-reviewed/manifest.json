@@ -3,43 +3,43 @@
   "bootstrapInspection": {
     "bindings": {
       "BidiParser": {
-        "generatedLine": 35349,
+        "generatedLine": 35350,
         "identifier": "BidiParser",
         "originalLine": 1,
         "source": "node_modules/chromium-bidi/out/Default/gen/src/bidiTab/BidiParser.js"
       },
       "InvalidArgumentException": {
-        "generatedLine": 392,
+        "generatedLine": 393,
         "identifier": "InvalidArgumentException",
         "originalLine": 21,
         "source": "node_modules/chromium-bidi/out/Default/gen/src/protocol/ErrorResponse.js"
       },
       "array": {
-        "generatedLine": 29821,
+        "generatedLine": 29822,
         "identifier": "array",
         "originalLine": 840,
         "source": "node_modules/zod/v4/classic/schemas.js"
       },
       "bootstrap": {
-        "generatedLine": 35803,
+        "generatedLine": 35804,
         "identifier": "",
         "originalLine": 24,
         "source": "node_modules/chromium-bidi/out/Default/gen/src/bidiTab/bidiTab.js"
       },
       "object": {
-        "generatedLine": 29878,
+        "generatedLine": 29879,
         "identifier": "object",
         "originalLine": 899,
         "source": "node_modules/zod/v4/classic/schemas.js"
       },
       "string": {
-        "generatedLine": 29342,
+        "generatedLine": 29343,
         "identifier": "string2",
         "originalLine": 334,
         "source": "node_modules/zod/v4/classic/schemas.js"
       },
       "version": {
-        "generatedLine": 14370,
+        "generatedLine": 14371,
         "identifier": "version",
         "originalLine": 0,
         "source": "node_modules/zod/v4/core/versions.js"
@@ -47,10 +47,142 @@
     },
     "bootstrapRemoved": true,
     "generatedMapper": {
-      "bytes": 1414766,
-      "sha256": "7514e0b1170b29b6b3e8bc5127a52e546b0f672530d609059a1650ab1685c169"
+      "bytes": 1414931,
+      "sha256": "eb36a3142cb98223de8005386b73ddc7505da5dbee2613172f1572de5d07037e"
+    },
+    "noticePrefix": {
+      "bytes": 165,
+      "sha256": "6a78a3e4238a3a41685207a64a0b4747946a95b1ffc5e988e5418914662b13b9"
     }
   },
+  "changeNotices": {
+    "compilerOrPackageManagerExecuted": false,
+    "kind": "EXPLICIT_PER_FILE_DERIVATIVE_NOTICES",
+    "mapProperty": "x_edgepillar_changes",
+    "mapperPrefix": {
+      "bytes": 165,
+      "sha256": "6a78a3e4238a3a41685207a64a0b4747946a95b1ffc5e988e5418914662b13b9"
+    },
+    "modifiedPayloads": [
+      "out/Default/gen/src/mapperTab.js",
+      "out/Default/gen/src/mapperTab.js.map",
+      "out/Default/gen/src/protocol-parser/protocol-parser.js",
+      "out/Default/gen/src/protocol-parser/protocol-parser.js.map"
+    ],
+    "originalCopyrightLicenseAndLegalBytesPreserved": true,
+    "parserPrefix": {
+      "bytes": 129,
+      "sha256": "090325b9f79b0603ae19c91f24f4c9d3e832f82bcf99b78d3f97f4e3d2ca033e"
+    },
+    "priorCommit": "7d204b4d07b09eedcb69931598259a88b1b045d6",
+    "priorManifest": {
+      "bytes": 11213,
+      "sha256": "bafb2dc0a104173521476b1f81af7ed46b8521b17379a8f7164c928532f51a74"
+    },
+    "priorPayloads": {
+      "notices/chromium-bidi/LICENSE": {
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "notices/esbuild/LICENSE.md": {
+        "bytes": 1069,
+        "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+      },
+      "notices/mitt/LICENSE": {
+        "bytes": 1069,
+        "sha256": "1cab22f196264195a4caec8ca5630170fdde76ee8f43346e47021d087332d3b0"
+      },
+      "notices/zod/LICENSE": {
+        "bytes": 1072,
+        "sha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8"
+      },
+      "out/Default/gen/src/mapper.js.LEGAL.txt": {
+        "bytes": 771,
+        "sha256": "32ee1946257a1c2e2bd0caac14b21f5b7357b27284aaced583107b614466c60c"
+      },
+      "out/Default/gen/src/mapperTab.js": {
+        "bytes": 1414804,
+        "sha256": "f821abd39ad1f23a0e3f04502dc7101ca3f5ed05ae9fc2768309c1f5ad57e917"
+      },
+      "out/Default/gen/src/mapperTab.js.map": {
+        "bytes": 2598487,
+        "sha256": "9f1fcaddaec2f21963aa58614b1d23974615b4171163a734f4a7a22c56a0d8b8"
+      },
+      "out/Default/gen/src/protocol-parser/protocol-parser.js": {
+        "bytes": 25803,
+        "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+      },
+      "out/Default/gen/src/protocol-parser/protocol-parser.js.map": {
+        "bytes": 28883,
+        "sha256": "03f0fafb7deef471de33733a606af2b48bfb7c138a523d297e79dd48f68de4ba"
+      }
+    }
+  },
+  "debuggerSamples": [
+    {
+      "binding": "BidiParser",
+      "generatedColumn": 0,
+      "generatedLine": 35350,
+      "originalColumn": 7,
+      "originalLine": 1,
+      "source": "derived-compiled-js/node_modules/chromium-bidi/out/Default/gen/src/bidiTab/BidiParser.js",
+      "sourceIndex": 173
+    },
+    {
+      "binding": "InvalidArgumentException",
+      "generatedColumn": 0,
+      "generatedLine": 393,
+      "originalColumn": 7,
+      "originalLine": 21,
+      "source": "derived-compiled-js/node_modules/chromium-bidi/out/Default/gen/src/protocol/ErrorResponse.js",
+      "sourceIndex": 6
+    },
+    {
+      "binding": "array",
+      "generatedColumn": 0,
+      "generatedLine": 29822,
+      "originalColumn": 7,
+      "originalLine": 840,
+      "source": "derived-compiled-js/node_modules/zod/v4/classic/schemas.js",
+      "sourceIndex": 156
+    },
+    {
+      "binding": "bootstrap",
+      "generatedColumn": 0,
+      "generatedLine": 35804,
+      "originalColumn": 0,
+      "originalLine": 24,
+      "source": "derived-compiled-js/node_modules/chromium-bidi/out/Default/gen/src/bidiTab/bidiTab.js",
+      "sourceIndex": 176
+    },
+    {
+      "binding": "object",
+      "generatedColumn": 0,
+      "generatedLine": 29879,
+      "originalColumn": 7,
+      "originalLine": 899,
+      "source": "derived-compiled-js/node_modules/zod/v4/classic/schemas.js",
+      "sourceIndex": 156
+    },
+    {
+      "binding": "string",
+      "generatedColumn": 0,
+      "generatedLine": 29343,
+      "originalColumn": 7,
+      "originalLine": 334,
+      "source": "derived-compiled-js/node_modules/zod/v4/classic/schemas.js",
+      "sourceIndex": 156
+    },
+    {
+      "binding": "version",
+      "generatedColumn": 0,
+      "generatedLine": 14371,
+      "originalColumn": 7,
+      "originalLine": 0,
+      "source": "derived-compiled-js/node_modules/zod/v4/core/versions.js",
+      "sourceIndex": 82
+    }
+  ],
   "effectiveMembers": {
     "node_modules/chromium-bidi/notices/chromium-bidi/LICENSE": {
       "effective": {
@@ -129,8 +261,8 @@
     },
     "node_modules/chromium-bidi/out/Default/gen/src/mapperTab.js": {
       "effective": {
-        "bytes": 1414804,
-        "sha256": "f821abd39ad1f23a0e3f04502dc7101ca3f5ed05ae9fc2768309c1f5ad57e917"
+        "bytes": 1414969,
+        "sha256": "4a28c2523888aa9ca561e6cb31ac9f1e83fd555e4b49f9d6af40d322055078b7"
       },
       "kind": "REVIEWED_LOCAL_DERIVATIVE",
       "original": {
@@ -141,8 +273,8 @@
     },
     "node_modules/chromium-bidi/out/Default/gen/src/mapperTab.js.map": {
       "effective": {
-        "bytes": 2598487,
-        "sha256": "9f1fcaddaec2f21963aa58614b1d23974615b4171163a734f4a7a22c56a0d8b8"
+        "bytes": 2598649,
+        "sha256": "51451f12f329fed9a8022ce685e53a8501e7422909c30e905c2bbbf6cdde8404"
       },
       "kind": "REVIEWED_LOCAL_DERIVATIVE",
       "original": {
@@ -153,8 +285,8 @@
     },
     "node_modules/chromium-bidi/out/Default/gen/src/protocol-parser/protocol-parser.js": {
       "effective": {
-        "bytes": 25803,
-        "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+        "bytes": 25932,
+        "sha256": "fed10b07442b8ee8e1cd7ad6b2452101791051864cea78d50ba32730f2d0092a"
       },
       "kind": "REVIEWED_LOCAL_DERIVATIVE",
       "original": {
@@ -165,8 +297,8 @@
     },
     "node_modules/chromium-bidi/out/Default/gen/src/protocol-parser/protocol-parser.js.map": {
       "effective": {
-        "bytes": 28883,
-        "sha256": "03f0fafb7deef471de33733a606af2b48bfb7c138a523d297e79dd48f68de4ba"
+        "bytes": 29179,
+        "sha256": "0da6a2353c2f98fc22dcc44247f9369f66d65febb4e39ff064c0015762a8e0f1"
       },
       "kind": "REVIEWED_LOCAL_DERIVATIVE",
       "original": {
@@ -178,6 +310,7 @@
   },
   "kind": "REVIEWED_LOCAL_DERIVATIVE_PAYLOAD_SET",
   "mapperMap": {
+    "generatedLineOffset": 1,
     "kind": "REBASED_COMPILED_JS_MAPPER_MAP",
     "mappedSegments": 152723,
     "mappedSources": 177,
@@ -186,7 +319,11 @@
       "bytes": 2600332,
       "sha256": "b3803d925f9431a647d3bbaef84dd6370249be1e3b4533e55f83dc2e6f6c5b63"
     },
-    "originalTypeScriptMapsReused": false
+    "originalTypeScriptMapsReused": false,
+    "priorMap": {
+      "bytes": 2598487,
+      "sha256": "9f1fcaddaec2f21963aa58614b1d23974615b4171163a734f4a7a22c56a0d8b8"
+    }
   },
   "originalPackageManifest": {
     "bytes": 3293,
@@ -194,10 +331,18 @@
   },
   "parserGuard": {
     "derived": {
+      "bytes": 25932,
+      "sha256": "fed10b07442b8ee8e1cd7ad6b2452101791051864cea78d50ba32730f2d0092a"
+    },
+    "embeddedMapperOrValidatorChanged": false,
+    "guardDerivedBeforeNotice": {
       "bytes": 25803,
       "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
     },
-    "embeddedMapperOrValidatorChanged": false,
+    "noticePrefix": {
+      "bytes": 129,
+      "sha256": "090325b9f79b0603ae19c91f24f4c9d3e832f82bcf99b78d3f97f4e3d2ca033e"
+    },
     "original": {
       "bytes": 25754,
       "sha256": "88948af112f534124e34db5ce0d2697b7ce6dfdda9a09fa4bd78887dd0916d7e"
@@ -208,11 +353,11 @@
   "parserMap": {
     "columnAccurateOriginalTypeScriptMappingClaimed": false,
     "generated": {
-      "bytes": 25803,
-      "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+      "bytes": 25932,
+      "sha256": "fed10b07442b8ee8e1cd7ad6b2452101791051864cea78d50ba32730f2d0092a"
     },
     "kind": "DERIVED_COMPILED_JS_LINE_MAP",
-    "mappedLines": 493,
+    "mappedLines": 494,
     "originalMap": {
       "originalDirectiveSha256": "7cdc3efb03cc46015cd3cdce0913f05930246a53619b5e2185d6af6624d66401",
       "originalMap": "out/Default/gen/src/protocol-parser/protocol-parser.js.map",
@@ -223,9 +368,13 @@
       "originalMapReusedForChangedSource": false
     },
     "originalTypeScriptMapReused": false,
+    "priorDerivedMap": {
+      "bytes": 28883,
+      "sha256": "03f0fafb7deef471de33733a606af2b48bfb7c138a523d297e79dd48f68de4ba"
+    },
     "source": {
-      "bytes": 25760,
-      "sha256": "d279b3a925a5ea64d60993592249dc82a82caa5a665d7d7632003c372a0ab46a"
+      "bytes": 25889,
+      "sha256": "dd570e6416d6e48797d2052f0e2daf2f8b023c97876fe9f287adb08578215f58"
     }
   },
   "payloads": {
@@ -250,26 +399,26 @@
       "sha256": "32ee1946257a1c2e2bd0caac14b21f5b7357b27284aaced583107b614466c60c"
     },
     "out/Default/gen/src/mapperTab.js": {
-      "bytes": 1414804,
-      "sha256": "f821abd39ad1f23a0e3f04502dc7101ca3f5ed05ae9fc2768309c1f5ad57e917"
+      "bytes": 1414969,
+      "sha256": "4a28c2523888aa9ca561e6cb31ac9f1e83fd555e4b49f9d6af40d322055078b7"
     },
     "out/Default/gen/src/mapperTab.js.map": {
-      "bytes": 2598487,
-      "sha256": "9f1fcaddaec2f21963aa58614b1d23974615b4171163a734f4a7a22c56a0d8b8"
+      "bytes": 2598649,
+      "sha256": "51451f12f329fed9a8022ce685e53a8501e7422909c30e905c2bbbf6cdde8404"
     },
     "out/Default/gen/src/protocol-parser/protocol-parser.js": {
-      "bytes": 25803,
-      "sha256": "7c7bb20810545b571f49d8bb49fd76a97477c5d0a62b0a419b71861f4889d785"
+      "bytes": 25932,
+      "sha256": "fed10b07442b8ee8e1cd7ad6b2452101791051864cea78d50ba32730f2d0092a"
     },
     "out/Default/gen/src/protocol-parser/protocol-parser.js.map": {
-      "bytes": 28883,
-      "sha256": "03f0fafb7deef471de33733a606af2b48bfb7c138a523d297e79dd48f68de4ba"
+      "bytes": 29179,
+      "sha256": "0da6a2353c2f98fc22dcc44247f9369f66d65febb4e39ff064c0015762a8e0f1"
     }
   },
   "probe": {
     "base": {
-      "bytes": 1414766,
-      "sha256": "7514e0b1170b29b6b3e8bc5127a52e546b0f672530d609059a1650ab1685c169"
+      "bytes": 1414931,
+      "sha256": "eb36a3142cb98223de8005386b73ddc7505da5dbee2613172f1572de5d07037e"
     },
     "bootstrapRetained": true,
     "capture": {
@@ -277,8 +426,8 @@
       "sha256": "789db5fa8324e6eae6c29f6e5f1d27cfd229240a54d32781ced05c8e50796923"
     },
     "derived": {
-      "bytes": 1414939,
-      "sha256": "1d96d42b5ad9caaadafb911c0f9387cb710d2e5a185338fc1c4871e599c3a470"
+      "bytes": 1415104,
+      "sha256": "1837484fd1568aca5550449a11f746fd882b361d1d7d3302f8960719c8ce7467"
     },
     "installedIntoPackage": false,
     "kind": "SOURCE_MAP_BOUND_FULL_BOOTSTRAP_INSPECTION_COPY",

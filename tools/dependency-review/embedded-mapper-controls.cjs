@@ -3,6 +3,7 @@
 const assert = require('node:assert/strict');
 const {read, pin} = require('./browser-source-guard.cjs');
 const {runControls, validateControls} = require('./coherent-controls.cjs');
+const {openMapperRoute, inspectMapperMap} = require('./devtools-source-map-controls.cjs');
 
 async function embeddedMapperControls(browser, input, guard, progress = {}) {
   const member = 'node_modules/chromium-bidi/out/Default/gen/src/mapperTab.js';
@@ -56,18 +57,28 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
         responseType: response.type, protocolError: response.error ?? null});
       return response.result;
     }
-    let context;
+    let context; let route;
     try {
+      if (!instrumented && manifest.debuggerSamples) {
+        route = await openMapperRoute(source, map, row);
+        await page.goto(route.origin + '/mapper.html', {waitUntil: 'load'});
+      }
       await session.send('Runtime.enable');
       const info = await session.send('Target.getTargetInfo'); const targetId = info.targetInfo.targetId; assert(targetId);
       await root.send('Target.exposeDevToolsProtocol', {targetId, bindingName: 'cdp'});
       await session.send('Runtime.addBinding', {name: 'sendBidiResponse'});
-      let expression = (instrumented ? probe : source).toString('utf8');
-      if (!instrumented) expression += '\n//# sourceMappingURL=data:application/json;base64,' + map.toString('base64') + '\n';
-      expression += '//# sourceURL=coherent-bidi://mapperTab.js\n';
-      assert(Buffer.byteLength(expression) <= 8 << 20); row.executionSource = pin(Buffer.from(expression));
-      const loaded = await session.send('Runtime.evaluate', {expression, awaitPromise: true, returnByValue: true});
-      evaluatedOK(loaded, 'Embedded mapper full payload evaluation');
+      if (route) {
+        row.executionSource = pin(source); row.sourceMapAttachment = 'AUTOMATIC_RELATIVE_FILE_ROUTE';
+        await inspectMapperMap(browser, page, session, targetId, route, source, map, manifest, row);
+      } else {
+        let expression = (instrumented ? probe : source).toString('utf8');
+        if (!instrumented) expression += '\n//# sourceMappingURL=data:application/json;base64,' + map.toString('base64') + '\n';
+        expression += '//# sourceURL=coherent-bidi://mapperTab.js\n';
+        assert(Buffer.byteLength(expression) <= 8 << 20); row.executionSource = pin(Buffer.from(expression));
+        const loaded = await session.send('Runtime.evaluate', {expression, awaitPromise: true, returnByValue: true});
+        evaluatedOK(loaded, 'Embedded mapper full payload evaluation');
+        row.sourceMapAttachment = instrumented ? 'NONE_INSPECTION_COPY' : 'INLINE_DATA';
+      }
       const started = await session.send('Runtime.evaluate', {
         expression: 'window.runMapperInstance(' + JSON.stringify(targetId) + ')', awaitPromise: true, returnByValue: true});
       evaluatedOK(started, 'Embedded mapper bootstrap evaluation'); row.fullBrowserBootstrapExecuted = true;
@@ -99,12 +110,13 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
       for (const item of pending.values()) { clearTimeout(item.timer); item.reject(new Error('Embedded mapper closed')); }
       pending.clear(); session.off('Runtime.bindingCalled', binding);
       await root.detach(); await session.detach(); await page.close(); row.mapperPageClosed = page.isClosed();
+      if (route) { await route.close(); row.mapperRouteClosed = true; }
     }
     assert(row.mapperPageClosed && !row.contextCleanupNotEstablished);
   }
   progress.status = 'INSTALLED_AND_INSPECTED_FULL_BROWSER_MAPPER_BOOTSTRAPS_PASSED';
   return {schema: 1, status: progress.status, bootstraps: 2,
-    nativeChromeProcessReused: true, additionalChromeDownloadsOrProcesses: 0, generatedBrowserDirectCases: 12,
+    nativeChromeProcessReused: true, additionalChromeParentInstances: 0, additionalChromeDownloads: 0, generatedBrowserDirectCases: 12,
     rows, originalPublishedMapperAndMapsPreservedInRawProfile: true, productionGate: 'NO_GO'};
 }
 module.exports = {embeddedMapperControls};

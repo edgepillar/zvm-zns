@@ -193,7 +193,7 @@ def main():
         derivative = {'schema': 1, 'kind': 'REVIEWED_LOCAL_DERIVATIVE_PROFILE', 'baseProfile': 'candidate',
             'baseLockSha256': manifest['baseLockSha256'], 'sourceInventory': report['rawSourceInventory'],
             'publication': manifest['publication'], 'effectiveMembers': manifest['effectiveMembers'],
-            **{key: manifest[key] for key in ['parserGuard', 'parserMap', 'mapperMap', 'probe']},
+            **{key: manifest[key] for key in ['parserGuard', 'parserMap', 'mapperMap', 'probe', 'changeNotices', 'debuggerSamples']},
             'registryArtifactOrPublisherAuthenticationClaimed': False, 'originalRawSourceProfilesModified': False,
             'actualApplicationDependencyInputsAdopted': True, 'productionGate': 'NO_GO'}
         derivative_path = output / 'application-profile-source-binding.json'; write_json(derivative_path, derivative)
@@ -231,6 +231,10 @@ def main():
             and worker['sourceGuard']['sourceGuardViolations'] == 0, 'actual application browser scope differs')
         require(worker['coherentNativeNodeControls']['cases'] == 12 and worker['sessions'][0]['embeddedMapper']['bootstraps'] == 2,
             'actual native and embedded mapper scope differs')
+        require(worker['nativeRuntimeSourceMapControls']['automaticallyLoadedParserMap']
+            and worker['nativeRuntimeSourceMapControls']['mappedErrorStackVerified']
+            and worker['sessions'][0]['embeddedMapper']['rows'][0]['devtoolsSourceMap']['mappedSourcesAndEmbeddedContentsVerified'] == 177,
+            'actual Node and DevTools source-map consumption differs')
         for image in worker['screenshots']:
             require(pin(read_input(output, image['path'])) == {key: image[key] for key in ['bytes', 'sha256']}, 'application image differs')
         verify_inputs(repo, plan['inputPins']); effective_profile(web, manifest)

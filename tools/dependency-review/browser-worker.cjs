@@ -10,6 +10,7 @@ const {fixture} = require('./browser-fixture.cjs');
 const {sourceGuard, read, pin} = require('./browser-source-guard.cjs');
 const {nativeControls} = require('./coherent-controls.cjs');
 const {embeddedMapperControls} = require('./embedded-mapper-controls.cjs');
+const {enableRuntimeMaps, nativeMapControls} = require('./runtime-source-map-controls.cjs');
 
 const partial = {schema: 1, status: 'BROWSER_WORKER_INCOMPLETE_NOT_QUALIFIED', sessions: [], screenshots: [],
   sourceGuardQualification: 'NOT_COMPLETE', productionGate: 'NO_GO'};
@@ -59,10 +60,13 @@ async function main() {
   const context = vm.createContext({chrome: input.executable}, {codeGeneration: {strings: false, wasm: false}});
   const tracked = new vm.Script('(' + matches[0][1] + ')').runInContext(context, {timeout: 100});
   assert.deepEqual(Object.keys(tracked).sort(), caller.expectedKeys);
+  if (input.profile === 'application') enableRuntimeMaps();
   const source = await sourceGuard(input);
   const viem = await import(source.resolve('viem')); const {default: puppeteer} = await import(source.resolve('puppeteer-core'));
   const coherentNode = derivativeProfile ? await nativeControls(source) : null;
   partial.coherentNativeNodeControls = coherentNode;
+  const nativeMaps = input.profile === 'application' ? await nativeMapControls(input, source) : null;
+  partial.nativeRuntimeSourceMapControls = nativeMaps;
   const server = await fixture(input, viem); const sessions = partial.sessions; const spawns = []; let deniedProcesses = 0;
   partial.fixture = server.report;
   const originalSpawn = child.spawn;
@@ -195,6 +199,7 @@ async function main() {
     profile: input.profile, browserVersion: input.browserVersion, runId: input.runId, nodeVersion: process.version,
     nodePlatform: process.platform, nodeArchitecture: process.arch, glibc: process.report.getReport().header.glibcVersionRuntime,
     puppeteerVersion: plan.profiles[baseProfile].puppeteer, coherentNativeNodeControls: coherentNode,
+    nativeRuntimeSourceMapControls: nativeMaps,
     effectiveLocalDerivativeUsed: derivativeProfile,
     actualApplicationDependencyInputsAdopted: input.profile === 'application',
     actualApplicationInstalledMembersChanged: input.profile === 'application' ? 9 : 0,

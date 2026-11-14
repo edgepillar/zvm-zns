@@ -13,3 +13,16 @@ parser map is line-level. The inspection copy is not an installed payload.
 See manifest.json for original/effective hashes and the frozen source revision.
 See docs/APPLICATION_RUNTIME.md for installation and qualification boundaries.
 Retaining notices alone does not establish complete license or legal review.
+
+The two modified JavaScript files now begin with explicit edgepillar change
+notices. Each modified JSON map begins with x_edgepillar_changes. The Node
+parser line map includes its notice line. The mapper's generated positions
+shift by one line; all mapping deltas after that offset and all 177 embedded
+compiled-JavaScript sources are unchanged. The four original license files
+and mapper.js.LEGAL.txt retain their exact bytes. These are developer-tooling
+payloads, outside the static public directory, and are not relicensed as MIT.
+
+The manifest retains the previous payload and manifest pins, original archive
+member pins and earlier compiler/source evidence. The notice-only derivation
+does not invoke a package manager, compiler or browser. Real Node cache/stack
+and bundled Chrome DevTools consumption require new exact-revision CI evidence.

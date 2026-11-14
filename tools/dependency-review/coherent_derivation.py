@@ -67,7 +67,12 @@ def runtime_probe(generated, review):
     capture = 'globalThis.__rebuiltProbe=Object.freeze({' + ','.join(key + ':' + bindings[key]['identifier'] for key in sorted(expected)) + '});\n'
     boundaries = list(BREAK.finditer(text)); offset = len(text[:boundaries[cut - 1].end()].encode('utf8'))
     raw = generated[:offset] + capture.encode() + generated[offset:]
-    require(raw.startswith(b'(() => {\n') and len(raw) <= 4 << 20, 'runtime capture output')
+    prefix = b''
+    if 'noticePrefix' in review:
+        from derivative_notices import MAPPER_NOTICE
+        require(review['noticePrefix'] == pin(MAPPER_NOTICE), 'runtime capture unreviewed notice')
+        prefix = MAPPER_NOTICE
+    require(raw.startswith(prefix + b'(() => {\n') and len(raw) <= 4 << 20, 'runtime capture output')
     return raw, {'kind': 'SOURCE_MAP_BOUND_FULL_BOOTSTRAP_INSPECTION_COPY', 'base': pin(generated), 'derived': pin(raw),
         'capture': pin(capture.encode()), 'bootstrapRetained': True, 'installedIntoPackage': False,
         'unchangedGeneratedSourceMapAttached': False}

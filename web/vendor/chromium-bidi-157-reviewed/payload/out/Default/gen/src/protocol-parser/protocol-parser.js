@@ -1,3 +1,4 @@
+/*! Modified by edgepillar: reviewed parser type guard; compiled-JavaScript line map. See vendor NOTICE.md and manifest.json. */
 /**
  * Copyright 2022 Google LLC.
  * Copyright (c) Microsoft Corporation.

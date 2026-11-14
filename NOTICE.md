@@ -36,3 +36,24 @@ These are compiler-tooling selections; complete source/output distribution and
 license obligations still require review. See
 [`docs/COMPILER_DEPENDENCIES.md`](docs/COMPILER_DEPENDENCIES.md) for the override,
 actual application installation, bounded controls and remaining platform gates.
+
+## Reviewed browser developer tooling derivative
+
+The application development tooling prepares a local chromium-bidi 157.0.8090-0
+derivative rebuilt from published compiled JavaScript, with Zod 4.6.7 and a
+reviewed parser type guard. It is outside `web/public`; the static site build
+does not ship these payloads. The two changed JavaScript files carry explicit
+change notices, and both replacement JSON maps carry `x_edgepillar_changes`.
+Original TypeScript maps are not reused for the changed files.
+
+Original chromium-bidi Apache-2.0, Zod MIT and mitt MIT license texts are retained
+under [`web/vendor/chromium-bidi-157-reviewed/payload/notices/`](web/vendor/chromium-bidi-157-reviewed/payload/notices/).
+That directory also retains the original esbuild MIT compiler notice. The linked
+`mapper.js.LEGAL.txt` and existing upstream copyright/license comments are
+preserved. These materials retain their own licenses; this project's MIT license
+does not replace them. See the
+[`derivative notice`](web/vendor/chromium-bidi-157-reviewed/NOTICE.md),
+[`manifest`](web/vendor/chromium-bidi-157-reviewed/manifest.json) and
+[`runtime qualification boundaries`](docs/APPLICATION_RUNTIME.md).
+Original npm integrity covers original archive bytes, not this local derivative.
+This selected-file review does not establish complete distribution/legal approval.

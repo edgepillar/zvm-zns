@@ -69,6 +69,32 @@ The committed mapper/maps are referenced by exact source pins, not copied into
 another artifact. It preserves a 10 GiB free-space floor plus allocation reserve.
 No wallet, chain, registration, signing, release or deployment action is included.
 
+The changed JavaScript payloads carry prominent change headers; the replacement
+maps begin with `x_edgepillar_changes`. The manifest retains the previous
+payload/manifest pins and original source/compiler evidence. The parser's line
+map includes its header; the mapper's mappings shift by exactly one generated
+line, preserving all 177 embedded compiled-JavaScript sources and existing
+mapping deltas. The five original license/legal payloads remain byte-identical.
+No package manager, compiler or browser is invoked to add these notices.
+
+The current browser worker enables Node source maps for `node_modules` before
+imports. It checks the automatically populated native map cache, every parser
+line, an actual mapped parser error stack and seven mapper declaration samples
+using Node's native `SourceMap` API. These are compiled-JavaScript coordinates,
+not reconstructed original TypeScript coordinates. See the
+[Node source-map API](https://nodejs.org/docs/latest-v22.x/api/module.html#source-map-support).
+
+For the installed embedded mapper, the same CDP Chrome parent opens its own
+bundled DevTools frontend. The script retains its relative map directive and is
+loaded from a finite loopback fixture. DevTools automatically fetches that map;
+its actual debugger model resolves seven declaration samples and all 177 embedded
+source contents. The controller checks the executed script and served map hashes,
+then closes the frontend, target and route. It does not attach a substitute map
+or download another browser. The separate inspection copy still executes its
+full mapper bootstrap without claiming an unchanged attached map. Added renderer
+processes are not counted as extra Chrome parent instances. New exact-head hosted
+evidence is required before claiming these controls passed.
+
 The previous raw baseline/candidate and separately rebuilt-profile qualifications
 remain pinned to commit `1fb99473f5acbed0c41a40f7ae3eb2e2aa474ef8` and their original
 artifacts. The old `web_patches.py` lane must be reproduced at its frozen revision;
