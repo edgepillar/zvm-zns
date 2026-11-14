@@ -90,6 +90,29 @@ def dist_inventory(root):
     return {'files': rows, 'fileCount': len(rows), 'payloadBytes': total, 'browserRuntimeQualified': False}
 
 
+def proposal_archives(root, selected):
+    lock = json.loads(read_input(root, 'package-lock.json'))['packages']
+    require(type(selected) is dict and len(selected) == 1, 'proposal archive source budget')
+    sources, transport = {}, {}
+    for location, publication in selected.items():
+        row = lock[location]
+        require(type(publication['archiveBytes']) is int and 0 < publication['archiveBytes'] <= 8 << 20, 'proposal archive byte budget')
+        require(publication['resolved'] == 'https://registry.npmjs.org/' + publication['name'] + '/-/'
+            + publication['name'].rsplit('/', 1)[-1] + '-' + publication['version'] + '.tgz', 'proposal archive URL differs')
+        require(all(row[key] == publication[key] for key in ('version', 'resolved', 'integrity')), 'proposal parent publication selection differs')
+        request = urllib.request.Request(publication['resolved'], headers={'User-Agent': 'edgepillar-dependency-review'})
+        with urllib.request.urlopen(request, timeout=45) as response:
+            raw = response.read(publication['archiveBytes'] + 1)
+            require(response.status == 200 and response.geturl() == publication['resolved'], 'proposal archive response differs')
+            if response.headers.get('Content-Length') is not None:
+                require(int(response.headers['Content-Length']) == len(raw), 'proposal archive response incomplete')
+        require(pin(raw) == {'bytes': publication['archiveBytes'], 'sha256': publication['archiveSha256']}, 'proposal archive bytes differ')
+        sources[location] = raw
+        transport[location] = {'url': publication['resolved'], 'bytes': len(raw), 'sha256': sha(raw),
+            'integrity': publication['integrity'], 'requests': 1, 'archiveFilesystemExtractions': 0}
+    return sources, transport
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
@@ -110,7 +133,7 @@ def main():
             'codePins': {name: pin(read_input(repo, name)) for name in (
                 'tools/dependency-review/web_patches.py', 'tools/dependency-review/bundled_archive.py',
                 'tools/dependency-review/compiled_labels.py',
-                'tools/dependency-review/web_parent_candidate.py',
+                'tools/dependency-review/web_parent_candidate.py', 'tools/dependency-review/bundled_lock.py',
                 'tools/dependency-review/lock_review.py', 'tools/dependency-review/openzeppelin_candidate.py',
                 'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs',
                 'web/scripts/vite-virtual-module-controls.test.mjs')},
@@ -157,7 +180,18 @@ def main():
             report['commands'].append(result)
             require(result['actualExit'] == 0 and result['outputComplete'], label + ' failed or incomplete')
         require(not (parent_root / 'node_modules').exists(), 'parent lock planning unexpectedly installed packages')
-        report['parentMigrationCandidate'] = inspect_candidate(repo, parent_root, parent_source_pins, output)
+        archives, report['parentArchiveTransport'] = proposal_archives(parent_root, plan['proposalArchiveSources'])
+        report['parentMigrationCandidate'] = inspect_candidate(repo, parent_root, parent_source_pins, output, archives)
+        proposed_inventory = report['parentMigrationCandidate']['inventory']
+        require(proposed_inventory['sourceInventoryCoversEveryLockRow'] and proposed_inventory['allSelectedBundleManifestsBound'],
+            'proposal source inventory incomplete')
+        for location, publication in plan['proposalArchiveSources'].items():
+            observed = proposed_inventory['parentPublications'][location]
+            require(observed['parentManifestSha256'] == publication['parentManifestSha256'], 'proposal parent manifest differs')
+            members = {row['location']: {key: row['sourceBinding'][key] for key in ('name', 'version', 'manifestPath', 'manifestBytes', 'manifestSha256')}
+                for row in proposed_inventory['packageRecords'] if row['sourceKind'] == 'PARENT_PUBLICATION_MEMBER'
+                    and row['sourceBinding']['parentLockLocation'] == location}
+            require(members == publication['memberManifestPins'], 'proposal bundled manifests differ')
         report['parentMigrationCandidate']['npmVersion'] = (output / 'streams/parent-package-toolchain.stdout.txt').read_text().strip()
         toolchain = json.loads((output / 'streams/toolchain.stdout.txt').read_bytes())
         require(re.fullmatch(r'v22\.\d+\.\d+', toolchain['node']), 'unreviewed Node major')

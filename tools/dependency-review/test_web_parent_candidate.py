@@ -8,6 +8,7 @@ from unittest.mock import patch
 from web_parent_candidate import candidate_inputs, candidate_manifest, inspect_candidate
 from openzeppelin_candidate import sha
 from lock_review import ReviewError
+from test_bundled_archive import make_publication
 
 
 class MemoryPath:
@@ -37,6 +38,32 @@ def fixture():
 
 
 class CandidateBoundaryControls(unittest.TestCase):
+    def test_an_archive_binding_request_inventory_includes_the_actual_member(self):
+        source, pins, root = fixture(); raw, selected = make_publication()
+        original = json.loads(source['web/package.json']); original['devDependencies']['a'] = '1.0.0'
+        source['web/package.json'] = json.dumps(original).encode(); pins['packageJsonSha256'] = sha(source['web/package.json'])
+        package = json.loads(root.files['package.json']); package['devDependencies']['a'] = '1.0.0'
+        root.files['package.json'] = json.dumps(package).encode()
+        lock = json.loads(root.files['package-lock.json']); lock['packages']['']['devDependencies']['a'] = '1.0.0'
+        lock['packages']['node_modules/a'] = selected
+        lock['packages']['node_modules/a/node_modules/b'] = {'version': '1.0.1', 'inBundle': True, 'license': 'MIT'}
+        root.files['package-lock.json'] = json.dumps(lock).encode()
+        with patch('web_parent_candidate.read_input', side_effect=lambda repo, name: source[name]):
+            result = inspect_candidate(None, root, pins, MemoryPath({}), {'node_modules/a': raw})
+        self.assertEqual(result['inventoryStatus'], 'LOCK_AND_PARENT_ARCHIVE_MEMBERS_INVENTORIED_REVIEW_REQUIRED')
+        self.assertEqual(result['inventory']['boundArchiveMemberCount'], 1)
+        self.assertIsNone(result['inventoryRefusal'])
+        self.assertEqual(result['registryOnlyInventoryRefusal']['type'], 'ReviewError')
+        self.assertFalse(result['completeProposedGraphQualified'])
+        self.assertFalse(result['rootOldZodFindingWaivedOrRemediated'])
+
+    def test_an_explicit_archive_request_cannot_fall_back_after_a_binding_refusal(self):
+        source, pins, root = fixture()
+        with patch('web_parent_candidate.read_input', side_effect=lambda repo, name: source[name]), \
+                patch('web_parent_candidate.inventory_with_archives', side_effect=ReviewError('parent digest differs')):
+            with self.assertRaisesRegex(ReviewError, 'parent digest differs'):
+                inspect_candidate(None, root, pins, MemoryPath({}), {'node_modules/a': b'untrusted'})
+
     def test_proposal_binds_the_actual_locked_parent_instead_of_the_declared_minimum(self):
         source, _, _ = fixture()
         locked = {'packages': {'node_modules/puppeteer-core': {'version': '25.12.0'}}}

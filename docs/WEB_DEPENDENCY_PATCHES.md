@@ -123,6 +123,11 @@ complete proposed graph unqualified. It is separate from the actual application'
 strict inventory and current-source controls. The observed refusal concerns six
 bundled child records without independent tarball identities; those records need
 their own binding to the selected parent publication before adoption.
+The [bundle-aware source model](BUNDLED_LOCK_RECORDS.md) performs that binding
+from the exact parent archive, preserves the registry-only refusal and rebuilds
+the complete original declaration graph. This source inventory remains separate
+from full graph, source/API, browser and migration acceptance. An explicitly
+requested parent binding is strict and fails if any claim cannot be paired.
 These ten command records
 cover the existing eight commands plus the two proposal commands. Proposed
 packages are neither installed nor executed. The complete proposed graph,

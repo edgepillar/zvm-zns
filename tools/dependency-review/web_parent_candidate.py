@@ -4,6 +4,7 @@ import json
 
 from lock_review import inventory, read_input, require, ReviewError
 from openzeppelin_candidate import encoded, sha
+from bundled_lock import inventory_with_archives
 
 
 def candidate_manifest(package_raw):
@@ -29,7 +30,7 @@ def stage_candidate(repo, output):
     return root, {'packageJsonSha256': sha(package_raw), 'packageLockSha256': sha(lock_raw)}
 
 
-def inspect_candidate(repo, root, source_pins, output):
+def inspect_candidate(repo, root, source_pins, output, archives=None):
     package_raw, lock_raw = [(root / name).read_bytes() for name in ('package.json', 'package-lock.json')]
     require(len(package_raw) <= 64 << 10 and len(lock_raw) <= 2 << 20, 'parent candidate output budget')
     package, lock = json.loads(package_raw), json.loads(lock_raw)
@@ -46,14 +47,22 @@ def inspect_candidate(repo, root, source_pins, output):
     for name, raw in [('candidate-web-package.json', package_raw), ('candidate-web-package-lock.json', lock_raw)]:
         (output / name).write_bytes(raw)
         outputs[name] = {'bytes': len(raw), 'sha256': sha(raw)}
-    proposed_inventory, inventory_refusal = None, None
+    proposed_inventory, inventory_refusal, registry_refusal = None, None, None
     try:
         proposed_inventory = inventory(package_raw, lock_raw)
     except ReviewError as error:
         inventory_refusal = {'type': type(error).__name__, 'reason': str(error)}
+    inventory_status = 'NOT_ESTABLISHED' if inventory_refusal else 'DECLARATIONS_INVENTORIED_REVIEW_REQUIRED'
+    if archives is not None:
+        registry_refusal = inventory_refusal
+        # An explicit archive-binding request is strict. A failed binding cannot
+        # fall back to the earlier unqualified proposal packet.
+        proposed_inventory = inventory_with_archives(package_raw, lock_raw, archives)
+        inventory_refusal = None
+        inventory_status = 'LOCK_AND_PARENT_ARCHIVE_MEMBERS_INVENTORIED_REVIEW_REQUIRED'
     return {'status': 'PROPOSED_PARENT_LOCK_REQUIRES_REVIEW_NOT_APPLIED', 'sourcePins': source_pins,
         'outputs': outputs, 'inventory': proposed_inventory,
-        'inventoryStatus': 'NOT_ESTABLISHED' if inventory_refusal else 'DECLARATIONS_INVENTORIED_REVIEW_REQUIRED',
+        'inventoryStatus': inventory_status, 'registryOnlyInventoryRefusal': registry_refusal,
         'inventoryRefusal': inventory_refusal, 'completeProposedGraphQualified': False, 'applicationInputsChanged': False,
         'newPackagesInstalledOrExecuted': False, 'browserRuntimeQualified': False,
         'rootOldZodFindingWaivedOrRemediated': False, 'productionGate': 'NO_GO'}

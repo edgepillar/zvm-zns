@@ -86,8 +86,11 @@ package is installed or executed and the actual application inputs stay equal.
 The two proposed manifest/lock files, source hashes, npm version, command streams
 and strict declaration-inventory result or refusal are retained explicitly. The
 observed npm proposal expands six bundled child records without independent
-tarball URLs/integrities. The current manifest reader refuses that representation;
-the proposal records `inventoryStatus: NOT_ESTABLISHED` and the exact refusal.
+tarball URLs/integrities. The registry-only reader refuses that representation.
+The original `NOT_ESTABLISHED` packet and exact refusal remain retained. The
+separate [parent publication model](BUNDLED_LOCK_RECORDS.md) now requires actual
+archive bytes and a bijection with the six hashed manifests before inventorying
+those rows. Its original registry-only refusal remains visible in the new report.
 The actual application's strict inventory remains its separate required check.
 An unqualified proposal packet preserves review inputs and accepts no migration.
 Source/API, complete resolved

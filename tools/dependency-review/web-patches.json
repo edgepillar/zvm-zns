@@ -342,6 +342,61 @@
       "version": "7.3.8"
     }
   },
+  "proposalArchiveSources": {
+    "node_modules/@tailwindcss/oxide-wasm32-wasi": {
+      "archiveBytes": 1829808,
+      "archiveSha256": "d5b61fbe10d237f7565032a74b03b5be6c83b309037ee407e2b5b46f24738823",
+      "integrity": "sha512-jx1+rPhY/5Ympkktd656HBWEBLxP7dH06losBLjjf5vgCODXvi9KhtftWcMIwTFIDqBr7cRnQkdLnAG+IOlGvQ==",
+      "memberManifestPins": {
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/@emnapi/core": {
+          "manifestBytes": 1283,
+          "manifestPath": "package/node_modules/@emnapi/core/package.json",
+          "manifestSha256": "ef9b64c17a928e8197624b57df118a8f095cabbebb66e134daebc9d487541266",
+          "name": "@emnapi/core",
+          "version": "1.11.1"
+        },
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/@emnapi/runtime": {
+          "manifestBytes": 1187,
+          "manifestPath": "package/node_modules/@emnapi/runtime/package.json",
+          "manifestSha256": "d67a7be4cce81ade30e27261b34a65af3e72ff69d35b313d14a16c8ba4247d8e",
+          "name": "@emnapi/runtime",
+          "version": "1.11.1"
+        },
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/@emnapi/wasi-threads": {
+          "manifestBytes": 1383,
+          "manifestPath": "package/node_modules/@emnapi/wasi-threads/package.json",
+          "manifestSha256": "d0e6e4255490f8eb9c916a8061c21ef645c6104edf7b88d927b930a588b9a659",
+          "name": "@emnapi/wasi-threads",
+          "version": "1.2.2"
+        },
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/@napi-rs/wasm-runtime": {
+          "manifestBytes": 1673,
+          "manifestPath": "package/node_modules/@napi-rs/wasm-runtime/package.json",
+          "manifestSha256": "5f9db850fde3b2adaf40343485598ad1606d5177748c4cdede5ddc8696940ab1",
+          "name": "@napi-rs/wasm-runtime",
+          "version": "1.1.4"
+        },
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/@tybys/wasm-util": {
+          "manifestBytes": 1527,
+          "manifestPath": "package/node_modules/@tybys/wasm-util/package.json",
+          "manifestSha256": "a7b1718e6616ae2cd235a365d03b8d5b5e8c5d6a27e9f7604a3d51ed20ca9c29",
+          "name": "@tybys/wasm-util",
+          "version": "0.10.2"
+        },
+        "node_modules/@tailwindcss/oxide-wasm32-wasi/node_modules/tslib": {
+          "manifestBytes": 1219,
+          "manifestPath": "package/node_modules/tslib/package.json",
+          "manifestSha256": "f02b4851df316f29bdfcd404aa1eb41e4e216b5859015f81fcd3e91caf8be931",
+          "name": "tslib",
+          "version": "2.8.1"
+        }
+      },
+      "name": "@tailwindcss/oxide-wasm32-wasi",
+      "parentManifestSha256": "992d12fdcbea73c338441142f7d629ac22561c3d25c72fa8ca93768353a5947f",
+      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.3.3.tgz",
+      "version": "4.3.3"
+    }
+  },
   "retainedNotices": [
     {
       "distPath": "notices/vite-7.3.8-LICENSE.md",
