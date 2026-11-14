@@ -78,6 +78,21 @@ class RebuiltMapControls(unittest.TestCase):
         for changed in [code.replace(b'function array', b'function replaced'), code.replace(b'generatePage();', b'runBrowser();')]:
             with self.assertRaises(ReviewError): bind_map(json.dumps(data).encode(), changed, staged, origins, meta)
 
+    def test_unicode_comments_are_preserved_without_moving_mapped_declarations(self):
+        data, code, staged, origins, meta = fixture()
+        comment = '  // Retained Unicode comment: \U0001f600 \u2019\n'.encode('utf8')
+        code = code.replace(b'(() => {\n', b'(() => {\n' + comment)
+        data['mappings'] = ';' + data['mappings']
+        instrumented, review = bind_map(json.dumps(data).encode(), code, staged, origins, meta)
+        self.assertIn(comment, instrumented)
+        self.assertEqual(review['bindings']['array']['generatedLine'], 2)
+        self.assertEqual(review['instrumentedDeclarations'], pin(instrumented))
+
+    def test_invalid_utf8_generated_payload_is_refused_before_capture(self):
+        data, code, staged, origins, meta = fixture()
+        with self.assertRaises(UnicodeError):
+            bind_map(json.dumps(data).encode(), code.replace(b'(() => {\n', b'(() => {\n//\xff\n'), staged, origins, meta)
+
     def test_old_map_directive_removed_without_changing_other_source_bytes(self):
         original = b'export const value = 1;\n//# sourceMappingURL=input.js.map\n'
         result, review = strip_source_map('input.js', original, {'input.js.map': b'{"version":3}'})

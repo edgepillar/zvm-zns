@@ -25,6 +25,11 @@ persistent source/name deltas from [ECMA-426](https://tc39.es/ecma426/). Its
 canonical integer, path and payload restrictions are a selected compiler
 profile, not a general source-map consumer conformance claim.
 
+Generated output is read as strict UTF-8, with UTF-16 mapping columns. The
+compiler's `--charset=ascii` option does not imply an ASCII-only file: Unicode
+can remain in comments and regular expressions. The declaration copy preserves
+these bytes, and the Node worker checks its UTF-8 round trip before execution.
+
 For selected behavior controls only, a memory-only copy of the actual generated
 payload is cut at its mapped browser bootstrap and captures mapped declaration
 identifiers. Eight tiny array controls check upper-bound traversal and overwrite

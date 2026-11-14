@@ -71,7 +71,7 @@ def positions(mappings, source_lines, generated_lines, names):
 
 def bind_map(map_raw, generated_raw, staged, origins, meta):
     require(type(map_raw) is bytes and len(map_raw) <= 16 << 20, 'map payload budget')
-    require(type(generated_raw) is bytes and 0 < len(generated_raw) <= 4 << 20 and generated_raw.isascii(), 'generated ASCII mapper budget')
+    require(type(generated_raw) is bytes and 0 < len(generated_raw) <= 4 << 20, 'generated UTF-8 mapper budget')
     data = json.loads(map_raw)
     require(data.get('version') == 3 and not data.get('sourceRoot') and 'sections' not in data, 'unreviewed source map profile')
     require(data.get('file') in (None, 'mapper.js'), 'map generated file differs')
@@ -91,7 +91,7 @@ def bind_map(map_raw, generated_raw, staged, origins, meta):
             require(len(matches) == 1, 'map target declaration absent or ambiguous: ' + key)
             targets[key] = (index, matches[0])
     require(set(targets) == set(TARGETS), 'map selected declaration scope differs')
-    generated = generated_raw.decode('ascii'); generated_lines = BREAK.split(generated)
+    generated = generated_raw.decode('utf8'); generated_lines = BREAK.split(generated)
     require(generated.startswith('(() => {\n') and re.search(r'\n\}\)\(\);\n(?:/\*![^\x00]{0,256}\*/\n)?\Z', generated), 'generated mapper wrapper differs')
     found = {key: set() for key in TARGETS}; segments = 0
     for source, line, _, generated_line, _ in positions(data['mappings'], lines, generated_lines, names):
@@ -114,7 +114,7 @@ def bind_map(map_raw, generated_raw, staged, origins, meta):
     require(all(value['generatedLine'] < cut for key, value in bindings.items() if key != 'bootstrap'), 'capture crosses mapper bootstrap')
     prefix = '\n'.join(generated_lines[:cut]) + '\n'
     capture = 'globalThis.__rebuiltProbe = Object.freeze({' + ','.join(key + ':' + value['identifier'] for key, value in bindings.items() if key != 'bootstrap') + '});\n})();\n'
-    instrumented = (prefix + capture).encode('ascii')
+    instrumented = (prefix + capture).encode('utf8')
     return instrumented, {'schema': 1, 'generatedMapper': pin(generated_raw), 'sourceMap': pin(map_raw),
         'instrumentedDeclarations': pin(instrumented), 'capture': pin(capture.encode('ascii')),
         'mappedSources': mapped, 'mappedSourceCount': len(mapped), 'mappedSegments': segments,

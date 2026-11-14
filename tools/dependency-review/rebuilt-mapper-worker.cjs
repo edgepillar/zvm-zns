@@ -54,7 +54,9 @@ function main() {
   const raw = fs.readFileSync(plan.path);
   assert.deepEqual({bytes: raw.length, sha256: sha(raw)}, plan.pin);
   const context = vm.createContext(Object.create(null), {codeGeneration: {strings: false, wasm: false}});
-  new vm.Script(raw.toString('ascii'), {filename: 'rebuilt-mapper-declarations.js'}).runInContext(context, {timeout: 2000});
+  const source = raw.toString('utf8');
+  assert.deepEqual(Buffer.from(source, 'utf8'), raw, 'Declarations must be valid UTF-8');
+  new vm.Script(source, {filename: 'rebuilt-mapper-declarations.js'}).runInContext(context, {timeout: 2000});
   const result = JSON.parse(new vm.Script(fixture, {filename: 'rebuilt-mapper-controls.js'}).runInContext(context, {timeout: 2000}));
   assert.deepEqual(result.version, {major: 4, minor: 6, patch: 7});
   assert.equal(result.arrays.length, 8); assert.equal(result.geolocation.length, 4);
