@@ -116,7 +116,7 @@ def qualify_application_builds(repo, web, candidate, output, env, commands, sour
     baseline_copy = copy_sources(repo, output, plan, baseline=True)
     for name in ['package.json', 'package-lock.json']:
         new_file(baseline_root, name, read_input(web, name))
-    inventory = json.loads(read_input(output, 'candidate-profile-sources.json'))
+    inventory = json.loads(read_regular(output, 'candidate-profile-sources.json', 16 << 20))
     package_copy = copy_baseline_packages(web, baseline_root, inventory, source_plan)
     def run(label, root):
         package = json.loads(read_input(root, 'package.json'))
