@@ -21,6 +21,15 @@ from web_patches import dist_inventory
 VENDOR = 'vendor/chromium-bidi-157-reviewed'
 
 
+def temporary_directory(output):
+    # Linux sockaddr_un has a finite byte budget. Leave room for Chrome's
+    # generated singleton directory and socket basename before any install.
+    require(output.is_absolute(), 'browser output must be absolute')
+    result = output / 't'
+    require(len(str(result).encode('utf8')) <= 48, 'owned Chrome temporary path exceeds the reviewed socket budget')
+    return result
+
+
 def verify_inputs(repo, expected):
     require(type(expected) is dict and 0 < len(expected) <= 256, 'application input pin count')
     total = 0
@@ -113,6 +122,7 @@ def main():
     parser = argparse.ArgumentParser(); parser.add_argument('--output', required=True); args = parser.parse_args()
     hosted_only(); require(platform.libc_ver()[0] == 'glibc', 'application qualification requires Linux x64 glibc')
     repo = Path(__file__).resolve().parents[2]; web = repo / 'web'; output = Path(args.output).resolve()
+    temporary = temporary_directory(output)
     require(not output.exists() and not output.is_symlink(), 'application output must be new')
     require(shutil.disk_usage(output.parent).free >= (10 << 30) + (3 << 30), 'application free-space floor and allocation reserve')
     output.mkdir(mode=0o700); (output / 'streams').mkdir(mode=0o700)
@@ -196,7 +206,7 @@ def main():
         selected = json.loads(browser_plan_raw)['profiles']['candidate']
         revisions = read_regular(web, 'node_modules/puppeteer-core/' + selected['revisionMember'], 65536)
         require(pin(revisions) == selected['revisionMemberPin'] and selected['version'].encode() in revisions, 'actual SDK browser revision differs')
-        (output / 'browsers').mkdir(); (output / 'browser-evidence').mkdir()
+        (output / 'browsers').mkdir(); (output / 'browser-evidence').mkdir(); temporary.mkdir(mode=0o700)
         browser = {'inputPlan': pin(browser_plan_raw), 'transport': {}}; report['browser'] = browser
         archive = output / 'browsers/candidate.zip'; browser_root = output / 'browsers/candidate'
         download_browser(selected, archive, browser['transport'])
@@ -210,6 +220,7 @@ def main():
             'plan': str(repo / 'tools/dependency-review/node-consumer-plan.json'), 'resolver': str(repo / 'tools/dependency-review/node-consumer-resolve.mjs'),
             'executable': str(executable), 'executablePin': {key: selected['archiveReview']['filePins']['chrome'][key] for key in ['bytes', 'sha256']},
             'browserVersion': selected['version'], 'abi': str(repo / 'web/src/abi.ts'), 'output': str(output / 'browser-evidence'),
+            'temporaryRoot': str(temporary),
             'runId': os.environ['GITHUB_RUN_ID'], 'distributions': {'normal': str(normal), 'fixture': str(fixture_dist)},
             'derivation': str(derivative_path), 'derivationPin': pin(derivative_path.read_bytes()), 'mapperProbe': str(probe_path)})
         run('browser-application', ['node', '--max-old-space-size=512', '--experimental-import-meta-resolve',

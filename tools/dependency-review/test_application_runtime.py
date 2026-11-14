@@ -4,10 +4,21 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from application_runtime import verify_inputs
+from application_runtime import temporary_directory, verify_inputs
 
 
 class ApplicationInputControls(unittest.TestCase):
+    def test_short_owned_chrome_temp_path_leaves_socket_room(self):
+        root = Path('/home/runner/work/_temp/zns-app')
+        self.assertEqual(temporary_directory(root), root / 't')
+
+    def test_observed_long_output_is_refused_before_install(self):
+        with self.assertRaises(ValueError):
+            temporary_directory(Path('/home/runner/work/_temp/zns-web-application-review'))
+
+    def test_chrome_temp_bound_counts_utf8_bytes(self):
+        with self.assertRaises(ValueError): temporary_directory(Path('/tmp') / ('\u00e9' * 22))
+
     def test_multi_megabyte_map_uses_the_explicit_larger_bound(self):
         raw = b'x' * (3 << 20)
         value = {'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}

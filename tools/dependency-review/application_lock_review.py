@@ -4,8 +4,9 @@ import argparse
 import json
 from pathlib import Path
 
-from bundled_lock import inventory_with_archives
-from lock_review import inventory, read_input, require
+from bundled_archive import inspect_archive
+from bundled_lock import encoded, inventory_with_archives
+from lock_review import inventory, location_name, read_input, require
 from profile_sources import pin, read_regular
 
 
@@ -28,11 +29,19 @@ def main():
         for row in web['packageRecords'] if row['sourceKind'] == 'PARENT_PUBLICATION_MEMBER'
         and row['sourceBinding']['parentLockLocation'] == location}
     require(bound == selected['memberManifestPins'], 'reviewed bundled members differ')
+    # The old archive CLI begins with a registry-only inventory. Current locks
+    # contain real inBundle rows, so inspect notices after the complete bound
+    # inventory above, without that incompatible registry-only precondition.
+    parent_row = json.loads(inputs['web']['package-lock.json'])['packages'][location]
+    notices = inspect_archive(raw, {**parent_row, 'name': parent_row.get('name', location_name(location))})
+    require(pin(encoded(notices['archiveMembers']))['sha256'] == parent['archiveMemberInventorySha256'],
+        'notice inspection and bound source inventory differ')
     contracts = inventory(inputs['contracts']['package.json'], inputs['contracts']['package-lock.json'])
     require(all(read_input(repo, folder + '/' + name) == body for folder, values in inputs.items()
         for name, body in values.items()), 'lock source changed during review')
     print(json.dumps({'schema': 1, 'roots': {'contracts': contracts, 'web': web},
         'reviewedParentArchive': pin(raw), 'actualApplicationInputsInventoried': True,
+        'reviewedParentNoticeInventory': notices,
         'sourceInputsUnchanged': True, 'dependenciesInstalledOrExecuted': False,
         'publisherPlatformAdvisoryLegalOrProductionAcceptance': False}, sort_keys=True))
 

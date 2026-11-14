@@ -45,6 +45,13 @@ async function main() {
   assert.equal(fs.realpathSync(input.executable), input.executable);
   assert.deepEqual(pin(read(input.executable, 512 << 20)), input.executablePin);
   const output = fs.realpathSync(input.output); assert.equal(output, input.output);
+  if (input.temporaryRoot) {
+    const temporary = fs.realpathSync(input.temporaryRoot);
+    assert.equal(temporary, input.temporaryRoot);
+    assert.equal(path.dirname(temporary), path.dirname(output)); assert.equal(path.basename(temporary), 't');
+    assert(fs.lstatSync(temporary).isDirectory() && Buffer.byteLength(temporary) <= 48);
+    partial.hostedTemporaryPathBytes = Buffer.byteLength(temporary);
+  }
   const plan = JSON.parse(read(input.plan, 65536)); const caller = plan.callers.find(row => row.path === 'web/scripts/shots.mjs'); assert(caller);
   const raw = read(path.join(input.repo, caller.path), 65536); assert.deepEqual(pin(raw), caller.sourcePin);
   const matches = [...raw.toString().matchAll(/^const browser = await puppeteer\.launch\((\{[^\r\n]*\})\)\s*$/gm)];
@@ -191,6 +198,7 @@ async function main() {
     effectiveLocalDerivativeUsed: derivativeProfile,
     actualApplicationDependencyInputsAdopted: input.profile === 'application',
     actualApplicationInstalledMembersChanged: input.profile === 'application' ? 9 : 0,
+    hostedTemporaryPathBytes: input.temporaryRoot ? Buffer.byteLength(input.temporaryRoot) : null,
     trackedCaller: {path: caller.path, sourcePin: caller.sourcePin,
       expressionSha256: caller.expressionSha256, completeOriginalScriptExecuted: false},
     sessions, sourceGuard: guard, screenshots, distributions: server.distributions, fixture: server.report,
@@ -203,7 +211,7 @@ async function main() {
 }
 function processEnv(input) {
   // Deliberately pass a bounded child environment; no inherited credentials.
-  return {PATH: process.env.PATH, LANG: 'C', TZ: 'UTC', TMPDIR: input.output};
+  return {PATH: process.env.PATH, LANG: 'C', TZ: 'UTC', TMPDIR: input.temporaryRoot ?? input.output};
 }
 main().catch(error => {
   partial.failure = {type: error.name, reason: 'Qualification incomplete; inspect retained stderr'};

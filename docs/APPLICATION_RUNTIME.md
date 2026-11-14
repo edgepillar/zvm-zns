@@ -58,6 +58,11 @@ refusals. Source observers return native module resolution/load results unchange
 they are not operating-system isolation. The tracked launch flag `--no-sandbox`
 is unchanged and does not establish a browser sandbox.
 
+Chrome receives a short, physical job-owned temporary directory beside the
+evidence directory. Its UTF-8 path length is checked before installation to
+leave room for Chrome's generated Unix socket path. No socket or link fixture
+is run under local managed scratch.
+
 The controller retains complete bounded command streams, current source binding,
 the raw source inventory, the explicit derivative binding and six PNG payloads.
 The committed mapper/maps are referenced by exact source pins, not copied into
