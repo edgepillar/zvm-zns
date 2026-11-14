@@ -1,0 +1,29 @@
+{
+  "defaultArchiveMembers": 8192,
+  "maximumExplicitArchiveMembers": 32768,
+  "otherArchiveGuardsChanged": false,
+  "overrides": {
+    "sha512-eOV3fHnaMzkIFRefZg1icWztAKvBHg7RMKEH89ywY7hnyq1VxI4s/osXnTBViOsEZ7/LbbxU3w+JaIrbeIXRPQ==": {
+      "filePinInventorySha256": "8dc2448da5059d008f59ad7139012adcc56c3e86567c1de10fd2f7ebe78cf89a",
+      "maxArchiveMembers": 10282,
+      "observedArchiveMembers": 10282,
+      "observedExpandedBytes": 35889152,
+      "observedRegularFiles": 10282,
+      "publication": {
+        "bytes": 3997136,
+        "sha256": "ee9bed934bbe34842c8b0eade63e1c6107ca856e9285db08c81a18bdad0146e1"
+      },
+      "reason": "The complete locked viem publication has 10,282 regular source files. This measured limit retains complete verification of that publication.",
+      "selection": {
+        "integrity": "sha512-eOV3fHnaMzkIFRefZg1icWztAKvBHg7RMKEH89ywY7hnyq1VxI4s/osXnTBViOsEZ7/LbbxU3w+JaIrbeIXRPQ==",
+        "name": "viem",
+        "resolved": "https://registry.npmjs.org/viem/-/viem-2.57.1.tgz",
+        "version": "2.57.1"
+      }
+    }
+  },
+  "productionGate": "NO_GO",
+  "publisherOrBrowserAcceptance": false,
+  "schema": 1,
+  "storagePolicyOrQuotaChange": false
+}

@@ -22,6 +22,14 @@ The cache is an immediate input, not permanent evidence storage. See the
 independently authenticated by these checks. Extra installed files and complete
 publisher, advisory and legal acceptance remain outside this gate.
 
+The default archive-member ceiling is 8,192. The complete locked
+`viem@2.57.1` publication has 10,282 regular files. Its
+[measured source budget](../tools/dependency-review/profile-source-budgets.json)
+allows exactly those 10,282 members only after matching the selected identity,
+raw SHA-512/SHA-256, expanded byte count and complete member-pin inventory hash.
+Other publications retain the default ceiling. File-type, path, expansion,
+per-member and aggregate guards stay in force; this changes no storage quota.
+
 Each profile then runs in a fresh real Node process with filesystem writes,
 child processes and workers disallowed by its permission profile. Native ESM
 resolution uses the selected installation's parent URL and normal import

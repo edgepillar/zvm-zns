@@ -13,7 +13,7 @@ from pathlib import Path
 import stat
 import tarfile
 
-from lock_review import decode, dependencies, require
+from lock_review import ReviewError, decode, dependencies, require
 from openzeppelin_candidate import checked_name, sha
 from proposal_delta import package_table, registry_identity, selector
 
@@ -73,17 +73,18 @@ def select_profile(lock_raw, installed, profile):
     return {'selected': selected, 'excluded': excluded, 'decisions': decisions}
 
 
-def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20):
+def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, member_limit=8192):
     require(type(raw) is bytes and 0 < len(raw) <= 32 << 20, 'profile compressed source budget')
     require(selection['integrity'] == 'sha512-' + base64.b64encode(hashlib.sha512(raw).digest()).decode(), 'profile raw publication integrity differs')
     require(type(expanded_limit) is int and 0 < expanded_limit <= 192 << 20, 'profile expansion limit')
+    require(type(member_limit) is int and 0 < member_limit <= 32768, 'profile archive member limit')
     with gzip.GzipFile(fileobj=io.BytesIO(raw)) as source: expanded = source.read(expanded_limit + 1)
     require(len(expanded) <= expanded_limit and len(expanded) % 512 == 0, 'profile expanded source budget or alignment')
     seen, files, bodies, roots = set(), {}, {}, set()
     with tarfile.open(fileobj=io.BytesIO(expanded), mode='r:') as source:
         count = 0
         for member in source:
-            count += 1; require(count <= 8192, 'profile archive member count')
+            count += 1; require(count <= member_limit, 'profile archive member count')
             name = member.name.rstrip('/') if member.isdir() else member.name
             require(type(name) is str and name.isascii() and not any(ord(char) < 32 or ord(char) == 127 for char in name), 'profile archive name encoding')
             checked_name(name); parts = name.split('/'); roots.add(parts[0])
@@ -106,7 +107,7 @@ def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20):
     for scope in ('dependencies', 'optionalDependencies'):
         require(dependencies(manifest, scope) == dependencies(row, scope), 'profile manifest dependency declarations differ')
     return {'selection': selection, 'publication': pin(raw), 'archiveRoot': next(iter(roots)),
-        'expandedBytes': len(expanded), 'regularPayloadBytes': sum(value['bytes'] for value in files.values()),
+        'archiveMemberCount': count, 'expandedBytes': len(expanded), 'regularPayloadBytes': sum(value['bytes'] for value in files.values()),
         'filePins': files, 'manifestSha256': files['package.json']['sha256'],
         'manifestSelectors': {field: manifest[field] for field in ('os', 'cpu', 'libc') if field in manifest},
         'manifestEngines': manifest.get('engines', {}),
@@ -114,7 +115,29 @@ def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20):
         'publisherAuthenticationOrCompleteLegalReview': False}
 
 
-def verify_profile(root, lock_raw, cache_root, cache_index, profile):
+def inspect_with_budget(raw, selection, row, budgets):
+    require(budgets['schema'] == 1 and budgets['defaultArchiveMembers'] == 8192
+        and budgets['maximumExplicitArchiveMembers'] == 32768, 'profile source budget model differs')
+    overrides = budgets['overrides']
+    require(type(overrides) is dict and len(overrides) <= 16, 'profile explicit budget count')
+    for integrity, value in overrides.items():
+        require(value['selection']['integrity'] == integrity and type(value['maxArchiveMembers']) is int
+            and 0 < value['maxArchiveMembers'] <= 32768 and value['maxArchiveMembers'] == value['observedArchiveMembers'],
+            'profile explicit source budget identity or bound')
+    scoped = overrides.get(selection['integrity'])
+    if scoped is not None:
+        require(scoped['selection'] == selection and scoped['publication'] == pin(raw), 'profile explicit budget raw source differs')
+    observed = inspect_profile_archive(raw, selection, row, member_limit=scoped['maxArchiveMembers'] if scoped else 8192)
+    if scoped is not None:
+        require(observed['archiveMemberCount'] == scoped['observedArchiveMembers']
+            and len(observed['filePins']) == scoped['observedRegularFiles']
+            and observed['expandedBytes'] == scoped['observedExpandedBytes'], 'profile measured source shape differs')
+        inventory_hash = sha(json.dumps(observed['filePins'], sort_keys=True, separators=(',', ':')).encode())
+        require(inventory_hash == scoped['filePinInventorySha256'], 'profile measured source inventory differs')
+    return observed
+
+
+def verify_profile(root, lock_raw, cache_root, cache_index, profile, source_budgets):
     _, rows = package_table(lock_raw); installed = set()
     for location in set(rows) - {''}:
         path = root / location
@@ -131,7 +154,10 @@ def verify_profile(root, lock_raw, cache_root, cache_index, profile):
             cached = cache_index[integrity]; require(type(cached['bytes']) is int and 0 < cached['bytes'] <= 32 << 20, 'cache source size budget')
             raw = read_regular(cache_root, cached['cacheRelative'], 32 << 20)
             require(len(raw) == cached['bytes'], 'cache source changed from API index')
-            observed = inspect_profile_archive(raw, selected, row)
+            try:
+                observed = inspect_with_budget(raw, selected, row, source_budgets)
+            except (ValueError, OSError, EOFError, tarfile.TarError) as error:
+                raise ReviewError('profile publication ' + selected['name'] + '@' + selected['version'] + ': ' + str(error)) from error
             total_raw += len(raw); total_expanded += observed['expandedBytes']; total_files += len(observed['filePins'])
             require(total_raw <= 256 << 20 and total_expanded <= 1 << 30 and total_files <= 32768, 'profile aggregate source budget')
             sources[integrity] = observed
@@ -146,6 +172,7 @@ def verify_profile(root, lock_raw, cache_root, cache_index, profile):
         'decisions': classification['decisions'], 'sources': sources,
         'installedPackageLocations': len(installed), 'uniquePublications': len(sources), 'regularSourceFiles': total_files,
         'compressedSourceBytes': total_raw, 'expandedSourceBytes': total_expanded,
+        'sourceSpecificBudgetsApplied': sorted(set(sources) & set(source_budgets['overrides'])),
         'rawSHA512AndInstalledMemberSHA256Verified': True, 'additionalSourceTransportForVerification': False,
         'historicalCacheAccessOrFilesystemArchiveExtraction': False, 'unknownExtraFilesAuthenticated': False,
         'otherPlatformsOrFullGraphSemanticLegalPublisherAcceptance': False, 'proposalAdopted': False, 'productionGate': 'NO_GO'}

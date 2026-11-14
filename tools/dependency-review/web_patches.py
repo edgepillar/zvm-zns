@@ -157,7 +157,8 @@ def main():
                 'tools/dependency-review/rebuilt-mapper-worker.cjs',
                 'tools/dependency-review/node_consumer_controls.py', 'tools/dependency-review/profile_sources.py',
                 'tools/dependency-review/npm-cache-index.cjs', 'tools/dependency-review/node-consumer-worker.cjs',
-                'tools/dependency-review/node-consumer-resolve.mjs', 'tools/dependency-review/node-consumer-plan.json')},
+                'tools/dependency-review/node-consumer-resolve.mjs', 'tools/dependency-review/node-consumer-plan.json',
+                'tools/dependency-review/profile-source-budgets.json')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)

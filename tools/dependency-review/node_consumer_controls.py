@@ -52,7 +52,9 @@ def qualify_consumers(repo, web, parent_root, output, env, commands, source_plan
     cache_result = json.loads(read_input(output, 'streams/candidate-profile-cache-index.stdout.txt'))
     require(cache_result['npmVersion'] == npm_version and not cache_result['historicalCacheFallbackOrAdditionalTransport']
         and not cache_result['cacheVerifyCleanOrMutationRequested'], 'cache API scope differs')
-    inventory = verify_profile(parent_root, candidate_lock, cache, cache_result['index'], profile)
+    budgets_raw = read_input(repo, 'tools/dependency-review/profile-source-budgets.json'); budgets = json.loads(budgets_raw)
+    inventory = verify_profile(parent_root, candidate_lock, cache, cache_result['index'], profile, budgets)
+    inventory['sourceBudgetPlanPin'] = pin(budgets_raw)
     inventory_path = output / 'candidate-profile-sources.json'; write_json(inventory_path, inventory)
     require(len(inventory_path.read_bytes()) <= 16 << 20, 'profile source inventory artifact budget')
     candidate_changed = verify_selected_installation(parent_root, candidate_lock, source_plan, 'candidate')
@@ -92,6 +94,7 @@ def qualify_consumers(repo, web, parent_root, output, env, commands, source_plan
     execution['status'] = 'ACTUAL_NODE_ENTRIES_AND_TRACKED_OPTIONS_QUALIFIED_APPLICATION_BROWSER_OPEN'
     return {'schema': 1, 'status': execution['status'], 'planPin': pin(plan_raw), 'profile': profile,
         'profileSourceInventory': {'path': 'candidate-profile-sources.json', **pin(inventory_path.read_bytes())},
+        'sourceBudgetPlanPin': pin(budgets_raw), 'sourceSpecificBudgetsApplied': inventory['sourceSpecificBudgetsApplied'],
         'candidateInstalledPackages': inventory['installedPackageLocations'], 'excludedLockRows': len(inventory['excluded']),
         'uniqueCandidatePublications': inventory['uniquePublications'], 'regularCandidateSourceFiles': inventory['regularSourceFiles'],
         'rawCacheSourceBytes': inventory['compressedSourceBytes'], 'currentJobCacheAPITool': {k: cache_result[k] for k in ('npmVersion', 'toolPins', 'API', 'cacheAPIIsNotIndependentNpmToolchainAuthentication')},

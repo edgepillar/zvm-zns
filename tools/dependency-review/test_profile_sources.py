@@ -8,7 +8,7 @@ import tarfile
 import unittest
 
 from lock_review import ReviewError
-from profile_sources import inspect_profile_archive, matches_profile, select_profile
+from profile_sources import inspect_profile_archive, inspect_with_budget, matches_profile, pin, select_profile
 
 PROFILE = {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'}
 
@@ -42,6 +42,15 @@ def table():
 
 
 class ProfileSourceControls(unittest.TestCase):
+    def budget_fixture(self):
+        data, selection, row = publication()
+        observed = inspect_profile_archive(data, selection, row)
+        return data, selection, row, {'schema': 1, 'defaultArchiveMembers': 8192, 'maximumExplicitArchiveMembers': 32768,
+            'overrides': {selection['integrity']: {'selection': selection, 'publication': pin(data),
+                'maxArchiveMembers': observed['archiveMemberCount'], 'observedArchiveMembers': observed['archiveMemberCount'],
+                'observedRegularFiles': len(observed['filePins']), 'observedExpandedBytes': observed['expandedBytes'],
+                'filePinInventorySha256': hashlib.sha256(json.dumps(observed['filePins'], sort_keys=True, separators=(',', ':')).encode()).hexdigest()}}}
+
     def test_regular_archive_and_nonstandard_single_root_bind_manifest_and_members(self):
         for root in ['package', 'types v1.0']:
             data, selection, row = publication(root)
@@ -74,6 +83,31 @@ class ProfileSourceControls(unittest.TestCase):
     def test_archive_expansion_budget_is_explicit(self):
         data, selection, row = publication()
         with self.assertRaisesRegex(ReviewError, 'expanded source budget'): inspect_profile_archive(data, selection, row, expanded_limit=512)
+
+    def test_explicit_member_ceiling_is_bounded_and_preserves_integrity_refusal(self):
+        data, selection, row = publication()
+        with self.assertRaisesRegex(ReviewError, 'member count'): inspect_profile_archive(data, selection, row, member_limit=1)
+        self.assertEqual(inspect_profile_archive(data, selection, row, member_limit=2)['archiveMemberCount'], 2)
+        with self.assertRaisesRegex(ReviewError, 'member limit'): inspect_profile_archive(data, selection, row, member_limit=32769)
+        with self.assertRaisesRegex(ReviewError, 'integrity differs'): inspect_profile_archive(data + b' ', selection, row, member_limit=32768)
+
+    def test_source_specific_budget_requires_exact_measured_source_and_inventory(self):
+        data, selection, row, budgets = self.budget_fixture()
+        self.assertEqual(len(inspect_with_budget(data, selection, row, budgets)['filePins']), 2)
+        import copy
+        for key, value in [('publication', {'bytes': 0, 'sha256': '0' * 64}), ('observedRegularFiles', 3),
+            ('observedExpandedBytes', 0), ('filePinInventorySha256', '0' * 64)]:
+            changed = copy.deepcopy(budgets); changed['overrides'][selection['integrity']][key] = value
+            with self.subTest(key=key), self.assertRaises(ReviewError): inspect_with_budget(data, selection, row, changed)
+
+    def test_invalid_or_cross_identity_budget_cannot_widen_another_publication(self):
+        data, selection, row, budgets = self.budget_fixture()
+        for key, value in [('name', 'other'), ('version', '9.0.0')]:
+            import copy
+            changed = copy.deepcopy(budgets); changed['overrides'][selection['integrity']]['selection'] = {**selection, key: value}
+            with self.subTest(key=key), self.assertRaises(ReviewError): inspect_with_budget(data, selection, row, changed)
+        budgets['overrides'][selection['integrity']]['maxArchiveMembers'] = 32769
+        with self.assertRaises(ReviewError): inspect_with_budget(data, selection, row, budgets)
 
     def test_all_lock_rows_are_classified_including_absent_bundled_descendants(self):
         result = select_profile(raw(table()), {'node_modules/a'}, PROFILE)
