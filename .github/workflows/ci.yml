@@ -137,5 +137,13 @@ jobs:
             ${{ runner.temp }}/zns-web-patch-review/candidate-web-package.json
             ${{ runner.temp }}/zns-web-patch-review/candidate-web-package-lock.json
             ${{ runner.temp }}/zns-web-patch-review/npm-generated-web-package-lock.json
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.map
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.LEGAL.txt
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/metafile.json
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/chromium-bidi/LICENSE
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/zod/LICENSE
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/mitt/LICENSE
+            ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/notices/esbuild/LICENSE.md
           if-no-files-found: error
           retention-days: 14

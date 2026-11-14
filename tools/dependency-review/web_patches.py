@@ -21,6 +21,7 @@ from proposal_delta import prepare_platform_candidate
 from changed_source_installation import verify_selected_installation
 from mapper_size_controls import qualify_mapper_controls
 from node_parser_controls import qualify_parser_controls
+from mapper_rebuild import qualify_rebuild
 
 
 def pin(raw):
@@ -149,7 +150,10 @@ def main():
                 'tools/dependency-review/mapper-size-worker.cjs', 'tools/dependency-review/verified-package-sources.cjs',
                 'tools/dependency-review/node_parser_controls.py', 'tools/dependency-review/node-parser-worker.cjs',
                 'tools/dependency-review/parser_guard.py', 'tools/dependency-review/node-parser-guard.json',
-                'tools/dependency-review/node-parser-guard.patch')},
+                'tools/dependency-review/node-parser-guard.patch',
+                'tools/dependency-review/mapper_rebuild.py', 'tools/dependency-review/mapper_rebuild_plan.py',
+                'tools/dependency-review/mapper_rebuild_map.py', 'tools/dependency-review/mapper-rebuild-sources.json',
+                'tools/dependency-review/rebuilt-mapper-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -236,6 +240,10 @@ def main():
         report['parserControlExecution'] = {}
         report['nodeParserControls'] = qualify_parser_controls(repo, web, parent_root, output, env,
             report['commands'], source_plan, report['parserControlExecution'])
+        report['mapperRebuildExecution'] = {}
+        report['mapperRebuild'] = qualify_rebuild(repo, parent_root, output, env, report['commands'],
+            source_plan, report['mapperRebuildExecution'])
+        report['parentMigrationCandidate']['proposedPackageExecutionScope'] = 'Bounded original mapper, root validator, Node parser and separately rebuilt generated mapper declarations. Original and rebuilt browser bootstraps were not executed.'
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()

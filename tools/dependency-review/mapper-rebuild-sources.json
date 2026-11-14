@@ -1,0 +1,212 @@
+{
+  "browserOrMigrationAcceptance": false,
+  "packageManagerOrLifecycleExecution": false,
+  "packages": {
+    "@esbuild/linux-x64": {
+      "filePins": {
+        "README.md": {
+          "bytes": 141,
+          "sha256": "3b0ebdffe92e5b77c948c4ac0bf4bc4a38803b15405d0425b517705221c27a2f"
+        },
+        "bin/esbuild": {
+          "bytes": 11427952,
+          "sha256": "e1698a3d5c6c0798fee4fd3b5cc816651f460c63d390a7a26ea4beb0b1884100"
+        },
+        "package.json": {
+          "bytes": 372,
+          "sha256": "a3924c1835c7849adeb3d82ac24525da0d4190607b60d05265dc6746bde2ddb8"
+        }
+      },
+      "lockRow": {
+        "cpu": [
+          "x64"
+        ],
+        "dev": true,
+        "engines": {
+          "node": ">=18"
+        },
+        "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
+        "license": "MIT",
+        "optional": true,
+        "os": [
+          "linux"
+        ],
+        "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.2.tgz",
+        "version": "0.28.2"
+      },
+      "publication": {
+        "bytes": 4741809,
+        "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
+        "name": "@esbuild/linux-x64",
+        "sha256": "9573bb2233aab0f9ea7647d5cca9726113cc1768de61d66b17267f4db84488f6",
+        "url": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.2.tgz",
+        "version": "0.28.2"
+      },
+      "selection": {
+        "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
+        "location": "node_modules/@esbuild/linux-x64",
+        "name": "@esbuild/linux-x64",
+        "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.2.tgz",
+        "version": "0.28.2"
+      }
+    },
+    "esbuild": {
+      "filePins": {
+        "LICENSE.md": {
+          "bytes": 1069,
+          "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+        },
+        "README.md": {
+          "bytes": 175,
+          "sha256": "6d481cd60ec3c679e5e395f547ab4221147f35642894f6b95a8df38fd25c87bd"
+        },
+        "bin/esbuild": {
+          "bytes": 9350,
+          "sha256": "183d6ead2dbc3af51aec767d5395f86fe54fbbc2d2aa8e54feb4e31d76a62f7e"
+        },
+        "install.js": {
+          "bytes": 11773,
+          "sha256": "612294e278914443bdcf81cb17f54afec34dbdd2ebd999a6ee187912320cc315"
+        },
+        "lib/main.d.ts": {
+          "bytes": 23551,
+          "sha256": "e078310f23f0ccfa28a6ac81b5fad81f27150e921f92ab6e648caab42e2d9a14"
+        },
+        "lib/main.js": {
+          "bytes": 97463,
+          "sha256": "61ec0ba144ff93f4bf0e96ad6fab6f430ede0aa13e27ace8063ed63ba416b3cd"
+        },
+        "package.json": {
+          "bytes": 3980,
+          "sha256": "9d0bc453f4e791553c4cc2298ba023b409241fd9801e494741666eb0f6051490"
+        }
+      },
+      "lockRow": {
+        "bin": {
+          "esbuild": "bin/esbuild"
+        },
+        "dev": true,
+        "engines": {
+          "node": ">=18"
+        },
+        "hasInstallScript": true,
+        "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
+        "license": "MIT",
+        "optionalDependencies": {
+          "@esbuild/aix-ppc64": "0.28.2",
+          "@esbuild/android-arm": "0.28.2",
+          "@esbuild/android-arm64": "0.28.2",
+          "@esbuild/android-x64": "0.28.2",
+          "@esbuild/darwin-arm64": "0.28.2",
+          "@esbuild/darwin-x64": "0.28.2",
+          "@esbuild/freebsd-arm64": "0.28.2",
+          "@esbuild/freebsd-x64": "0.28.2",
+          "@esbuild/linux-arm": "0.28.2",
+          "@esbuild/linux-arm64": "0.28.2",
+          "@esbuild/linux-ia32": "0.28.2",
+          "@esbuild/linux-loong64": "0.28.2",
+          "@esbuild/linux-mips64el": "0.28.2",
+          "@esbuild/linux-ppc64": "0.28.2",
+          "@esbuild/linux-riscv64": "0.28.2",
+          "@esbuild/linux-s390x": "0.28.2",
+          "@esbuild/linux-x64": "0.28.2",
+          "@esbuild/netbsd-arm64": "0.28.2",
+          "@esbuild/netbsd-x64": "0.28.2",
+          "@esbuild/openbsd-arm64": "0.28.2",
+          "@esbuild/openbsd-x64": "0.28.2",
+          "@esbuild/openharmony-arm64": "0.28.2",
+          "@esbuild/sunos-x64": "0.28.2",
+          "@esbuild/win32-arm64": "0.28.2",
+          "@esbuild/win32-ia32": "0.28.2",
+          "@esbuild/win32-x64": "0.28.2"
+        },
+        "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
+        "version": "0.28.2"
+      },
+      "publication": {
+        "bytes": 34207,
+        "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
+        "name": "esbuild",
+        "sha256": "e045f94c235c7adc50e77ba2a579c7bec41b496b6b47c3a7845f7c1e19959a88",
+        "url": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
+        "version": "0.28.2"
+      },
+      "selection": {
+        "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
+        "location": "node_modules/esbuild",
+        "name": "esbuild",
+        "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
+        "version": "0.28.2"
+      }
+    },
+    "mitt": {
+      "filePins": {
+        "LICENSE": {
+          "bytes": 1069,
+          "sha256": "1cab22f196264195a4caec8ca5630170fdde76ee8f43346e47021d087332d3b0"
+        },
+        "README.md": {
+          "bytes": 6274,
+          "sha256": "9b90f75f1ec4eba847115aa57b53cf46df90398e65e8ade7e3e51a3cc6c52664"
+        },
+        "dist/mitt.js": {
+          "bytes": 349,
+          "sha256": "46769f6cae1b1a216842297ea034dba8e872a46b1122b83623105e63b1c9531b"
+        },
+        "dist/mitt.js.map": {
+          "bytes": 4730,
+          "sha256": "cc183e77d24903b69a7b436200e001ff6c3e72e503aa5e66552402d61e77adff"
+        },
+        "dist/mitt.mjs": {
+          "bytes": 349,
+          "sha256": "7a0c650bc6798bbe422677ef196d66417510a1c5b51f754c680f67cf1c256c50"
+        },
+        "dist/mitt.mjs.map": {
+          "bytes": 4731,
+          "sha256": "448c659fd5c092ea2425ebfea79320ca88593a1e1b10e3e8338e8c08ceb3ba3d"
+        },
+        "dist/mitt.umd.js": {
+          "bytes": 520,
+          "sha256": "1b48d419d5c66d6c39a8a2e2cb69e797989c8cd934f17122abc35d766650a82f"
+        },
+        "dist/mitt.umd.js.map": {
+          "bytes": 4734,
+          "sha256": "366b8ca7c83fcc1c7b20fdb7828593317fbc3376859dc439a2c5fb3bdf4e4740"
+        },
+        "index.d.ts": {
+          "bytes": 1375,
+          "sha256": "980d84ab65a61d1979a22e5cd3322672e75fb148392b6903d08ccef59bbf530c"
+        },
+        "package.json": {
+          "bytes": 2313,
+          "sha256": "99966ad2891dfe56614f039f5d03ada4bda6dba810952272ae57359abb527b91"
+        }
+      },
+      "lockRow": {
+        "dev": true,
+        "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
+        "license": "MIT",
+        "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
+        "version": "3.0.1"
+      },
+      "publication": {
+        "bytes": 6147,
+        "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
+        "name": "mitt",
+        "sha256": "2ef69c669574ad5b86fdb8b30aed8c8c1705931f19a68bc4b1b234c6d26d7306",
+        "url": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
+        "version": "3.0.1"
+      },
+      "selection": {
+        "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
+        "location": "node_modules/mitt",
+        "name": "mitt",
+        "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
+        "version": "3.0.1"
+      }
+    }
+  },
+  "productionGate": "NO_GO",
+  "schema": 1,
+  "status": "LOCK_SELECTED_REBUILD_INPUT_BYTES_BOUND_NOT_PUBLISHER_AUTHENTICATION"
+}
