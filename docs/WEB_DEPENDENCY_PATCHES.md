@@ -2,7 +2,7 @@
 
 The application selects Vite 7.3.7 and source-map-js 1.2.2. Vite's minimum
 declared 7.x version is 7.3.7; the source-map package remains a transitive
-dependency. No major override, other application package version, contract
+dependency. No major override, other application lockfile package version, contract
 source or generated contract output changes for these updates.
 
 The reviewed Vite 7.x patch is listed by the upstream advisories
@@ -24,7 +24,11 @@ regular member has a SHA-256 pin. There are no added or removed files between
 each reviewed pair. Vite has 39 regular files per version: its package manifest
 and bundled Node configuration chunk change. Its public exports, installed
 dependency declarations and engine range stay equal; its bundled editor
-middleware development selection advances to 2.14.2. Source-map-js has 18 regular
+middleware development selection advances to 2.14.2. Its compiled source labels
+also change shell-quote from 1.8.4 to 1.12.0. The
+[compiled dependency inventory](COMPILED_DEPENDENCY_LABELS.md) records those
+additional provenance clues and their separate advisory/reachability scope.
+Source-map-js has 18 regular
 files per version: its version and four library files change. The public entry
 point stays equal. Original licenses are byte-identical across each pair.
 

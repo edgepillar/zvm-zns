@@ -12,6 +12,7 @@ import tarfile
 import urllib.request
 
 from bundled_archive import inspect_archive
+from compiled_labels import canonical_sha256, inspect_labels
 from lock_review import read_input, require
 from openzeppelin_candidate import checked_name, run_bounded, sha, write_json
 
@@ -107,6 +108,7 @@ def main():
             'sourcePins': plan['sourcePins'], 'packages': plan['packages'], 'baselineSourceMap': plan['baselineSourceMap'],
             'codePins': {name: pin(read_input(repo, name)) for name in (
                 'tools/dependency-review/web_patches.py', 'tools/dependency-review/bundled_archive.py',
+                'tools/dependency-review/compiled_labels.py',
                 'tools/dependency-review/lock_review.py', 'tools/dependency-review/openzeppelin_candidate.py',
                 'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
@@ -119,6 +121,11 @@ def main():
             require(entry['version'] == selected['version'] and entry['integrity'] == selected['integrity']
                 and entry['resolved'] == selected['resolved'], 'selected lock identity differs')
             report['installedPackagePins'][name] = verify_files(web / 'node_modules' / name, selected['filePins'])
+        vite_files = {name: read_input(web / 'node_modules/vite', name) for name in plan['packages']['vite']['filePins']}
+        compiled_labels = inspect_labels(vite_files)
+        require(canonical_sha256(compiled_labels) == plan['compiledLabelInventoryExpected']['sha256'], 'compiled Vite inventory drift')
+        require(not compiled_labels['unparsedRegionLabels'], 'compiled Vite region labels need review')
+        report['compiledViteLabels'] = compiled_labels
         baseline, transport = baseline_source(output, plan['baselineSourceMap'])
         report['baselineSourceTransport'] = transport
         userconfig, globalconfig = output / 'user.npmrc', output / 'global.npmrc'

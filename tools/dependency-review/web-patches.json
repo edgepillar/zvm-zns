@@ -82,6 +82,13 @@
     "version": "1.2.1"
   },
   "baselineSourceRef": "f58c708d70b5f7754c95f9ac43e3d19a0a18c740",
+  "compiledLabelInventoryExpected": {
+    "distinctNameVersionPairs": 105,
+    "generatedLabelOccurrences": 239,
+    "scope": "Textual pnpm region labels; not independent npm manifests or runtime reachability.",
+    "sha256": "376b386e3273098dd031b544cbcceacd96f51f065cc7f953bfa55c7cfa56abe0",
+    "unparsedLabels": 0
+  },
   "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
   "packages": {
     "source-map-js": {
