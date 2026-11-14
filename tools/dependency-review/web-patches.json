@@ -86,7 +86,7 @@
     "distinctNameVersionPairs": 105,
     "generatedLabelOccurrences": 239,
     "scope": "Textual pnpm region labels; not independent npm manifests or runtime reachability.",
-    "sha256": "376b386e3273098dd031b544cbcceacd96f51f065cc7f953bfa55c7cfa56abe0",
+    "sha256": "54a3ea290194995665a4d86c5d618a1af502b5ef8190e34f79d5ae438e608db5",
     "unparsedLabels": 0
   },
   "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
@@ -175,8 +175,8 @@
       "version": "1.2.2"
     },
     "vite": {
-      "archiveBytes": 544713,
-      "archiveSha256": "61819c1c5e0b526a012b39b5d4dfb9d10875ced139554f9105a8999990ce7b08",
+      "archiveBytes": 544759,
+      "archiveSha256": "7d8597eab679d0833d9015f0f29ed145fe4fa1a956b7c80371f85bdd056362c3",
       "filePins": {
         "LICENSE.md": {
           "bytes": 101176,
@@ -219,8 +219,8 @@
           "sha256": "4a512edeb87a37abc7fd2574a176dddda623ebd49e041f0b77a8ecd373f91ba5"
         },
         "dist/node/chunks/config.js": {
-          "bytes": 1342444,
-          "sha256": "2e71344450b7c25a7fe0848d5ee474fb7342614d900ab9168588986150cbb9f9"
+          "bytes": 1342678,
+          "sha256": "8e3075d1575ec341b1455beacc73e2531f616e61658875eb15d74a45daf5874a"
         },
         "dist/node/chunks/config2.js": {
           "bytes": 278,
@@ -288,7 +288,7 @@
         },
         "package.json": {
           "bytes": 5158,
-          "sha256": "aae1f593c0e6f320989b60af6e90f8ed4ea5137e5a0b9db663f9b0088333eb3c"
+          "sha256": "4e87f89a19661c197033a55e54dc94790b5a3e28bcc9d2c9ee374ee54eec8dc2"
         },
         "types/customEvent.d.ts": {
           "bytes": 1424,
@@ -335,22 +335,22 @@
           "sha256": "22fe256ab91f03f1e8ddb5182cedf07448ace5ab09c6a73467ca1be3e83beaf4"
         }
       },
-      "integrity": "sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==",
+      "integrity": "sha512-3tTi78MAKhVk9h+YZVXMQ8POmneJuE97QUPAWtJghHzhH7BAyiqQOC2KZh1DWOsu/USB2cRXhznPByaabvYXfw==",
       "license": "MIT",
       "name": "vite",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-7.3.7.tgz",
-      "version": "7.3.7"
+      "resolved": "https://registry.npmjs.org/vite/-/vite-7.3.8.tgz",
+      "version": "7.3.8"
     }
   },
   "retainedNotices": [
     {
-      "distPath": "notices/vite-7.3.7-LICENSE.md",
+      "distPath": "notices/vite-7.3.8-LICENSE.md",
       "name": "vite",
       "pin": {
         "bytes": 101176,
         "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
       },
-      "sourcePath": "web/public/notices/vite-7.3.7-LICENSE.md"
+      "sourcePath": "web/public/notices/vite-7.3.8-LICENSE.md"
     },
     {
       "distPath": "notices/source-map-js-1.2.2-LICENSE",
@@ -375,7 +375,7 @@
     },
     "NOTICE.md": {
       "bytes": 1561,
-      "sha256": "52d96c0e2a8b565406db12ca4af6021bfa2008e7e7ad7db5792153bd40c185f4"
+      "sha256": "b35895af3609e09f5953d4cdd70291510a01e0b34998c78bd07e0949a7f82499"
     },
     "web/env.d.ts": {
       "bytes": 293,
@@ -387,11 +387,11 @@
     },
     "web/package-lock.json": {
       "bytes": 91069,
-      "sha256": "f857749b35f7d166bbd8c36f3d61aa81c4c8125936a16c6acfcb85af98788300"
+      "sha256": "99bca7c08749b9089d997f54c6123edca6a178f2c0babbb77299376f46783f73"
     },
     "web/package.json": {
       "bytes": 922,
-      "sha256": "7fdbdd422d73cc768ffab336653c21eae60f34f19f2776a3291bcc16cbad0c8d"
+      "sha256": "78a5d15aea1d18dc5cc23e08af1daa1f8d6afdd3124f809dbf87d89208903fe9"
     },
     "web/public/favicon.svg": {
       "bytes": 745,
@@ -401,7 +401,7 @@
       "bytes": 1526,
       "sha256": "6cb0631f71c7749763fd3dd1d5bee52dd1070ec17f2edc1710079ad070bd2fbd"
     },
-    "web/public/notices/vite-7.3.7-LICENSE.md": {
+    "web/public/notices/vite-7.3.8-LICENSE.md": {
       "bytes": 101176,
       "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
     },
@@ -420,6 +420,10 @@
     "web/scripts/verify.mjs": {
       "bytes": 17816,
       "sha256": "442f106e50435ebd660287d864b112f4682957a8cad6776cdf13dfb418b8fb9d"
+    },
+    "web/scripts/vite-virtual-module-controls.test.mjs": {
+      "bytes": 3957,
+      "sha256": "1a98e45e96feca943a809b6c7e5513c0607a22d8907c96b26113d7bd14900561"
     },
     "web/src/App.vue": {
       "bytes": 7222,
@@ -639,5 +643,17 @@
     },
     "sourceAcquisitionExecution": "Data inspection only; no local package or compiler execution.",
     "sourceResponseObjectSha256": "5e13a914ddb075d688d479a53924853ea0c8ed959107f475c51372be1bc264e7"
+  },
+  "viteVirtualModuleControlsExpected": {
+    "actualInstalledPluginLoadUsed": true,
+    "branches": 4,
+    "browserRuntimeQualified": false,
+    "cases": 24,
+    "generatedModulesEvaluatedWithVmTimeoutMs": 1000,
+    "generatedModulesHadNoImports": true,
+    "httpRequestsOrListenCallsPerformed": false,
+    "namesPerBranch": 6,
+    "optimizerPrebundlePathExecuted": false,
+    "version": "7.3.8"
   }
 }

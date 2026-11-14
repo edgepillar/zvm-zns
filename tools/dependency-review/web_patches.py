@@ -110,7 +110,8 @@ def main():
                 'tools/dependency-review/web_patches.py', 'tools/dependency-review/bundled_archive.py',
                 'tools/dependency-review/compiled_labels.py',
                 'tools/dependency-review/lock_review.py', 'tools/dependency-review/openzeppelin_candidate.py',
-                'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs')},
+                'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs',
+                'web/scripts/vite-virtual-module-controls.test.mjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -134,6 +135,9 @@ def main():
             'npm_config_userconfig': str(userconfig), 'npm_config_globalconfig': str(globalconfig), 'npm_config_cache': str(cache)}
         commands = [('toolchain', ['node', '-p', 'JSON.stringify({node:process.version,versions:process.versions})'], env),
             ('vite-version', ['node', 'node_modules/vite/bin/vite.js', '--version'], env)]
+        fixtures = output / 'vite-module-fixtures'; fixtures.mkdir()
+        commands += [('vite-virtual-module-controls', ['node', '--experimental-vm-modules', '--test', '--test-reporter=tap',
+            'scripts/vite-virtual-module-controls.test.mjs'], {**env, 'ZNS_VITE_CONTROL_TMPDIR': str(fixtures)})]
         for role, version, root in [('baseline', '1.2.1', baseline), ('candidate', '1.2.2', web / 'node_modules/source-map-js')]:
             selected_env = {**env, 'ZNS_SOURCE_MAP_ROOT': str(root), 'ZNS_SOURCE_MAP_VERSION': version}
             commands += [(role + '-controls', ['node', '--test', '--test-reporter=tap', 'scripts/source-map-controls.test.mjs'], selected_env),
@@ -145,7 +149,12 @@ def main():
             require(result['actualExit'] == 0 and result['outputComplete'], label + ' failed or incomplete')
         toolchain = json.loads((output / 'streams/toolchain.stdout.txt').read_bytes())
         require(re.fullmatch(r'v22\.\d+\.\d+', toolchain['node']), 'unreviewed Node major')
-        require(b'vite/7.3.7' in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
+        vite_version = plan['packages']['vite']['version']
+        require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
+        virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()
+        virtual_totals = test_summary(virtual_raw, 4)
+        virtual_result = marker(virtual_raw, 'ZNS_VITE_VIRTUAL_MODULE_RESULT')
+        require(virtual_result == plan['viteVirtualModuleControlsExpected'], 'Vite virtual-module controls differ from reviewed scope')
         profiles = {}
         for role, version in [('baseline', '1.2.1'), ('candidate', '1.2.2')]:
             raw, restricted = [(output / ('streams/' + role + '-' + label + '.stdout.txt')).read_bytes() for label in ('controls', 'codegen')]
@@ -170,7 +179,8 @@ def main():
             require(distribution['files'][notice['distPath']] == notice['pin'], 'original notice not preserved in build output')
         verify_files(repo, plan['sourcePins'])
         report.update(status='SELECTED_WEB_PATCH_BYTES_AND_BUILD_QUALIFIED_NO_BROWSER_RUNTIME', profiles=profiles,
-            toolchain=toolchain, viteVersion='7.3.7', distribution=distribution, originalNoticesInDistributionVerified=True,
+            toolchain=toolchain, viteVersion=vite_version, distribution=distribution, originalNoticesInDistributionVerified=True,
+            virtualModuleControls={'testCounts': virtual_totals, 'result': virtual_result},
             sourcePinsVerifiedAndUnchanged=True, completeAdvisoryCoverageOrLegalReviewEstablished=False,
             signingLiveChainReleaseOrDeploymentPerformed=False)
     except Exception as error:

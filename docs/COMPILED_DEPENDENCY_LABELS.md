@@ -15,12 +15,17 @@ its code executes in the application.
 
 ## Current reviewed input
 
-Vite 7.3.7 has 239 supported header occurrences and 105 distinct package/version
+Vite 7.3.8 has 239 supported header occurrences and 105 distinct package/version
 labels. The source bytes are bound to the selected publication's reviewed file
 hashes. Six pairs overlap the existing lock/bundled-manifest inventory; 99 add
 new candidate pairs. Together the current inputs provide 292 distinct pairs
 across 281 package names: 193 from lock/verified bundled manifests, plus the
 additional label-derived candidates.
+
+The 7.3.7-to-7.3.8 patch keeps all labelled package names and versions equal.
+Its reviewed source-file and canonical inventory hashes change. The separate
+[virtual-module fix](WEB_DEPENDENCY_PATCHES.md) does not remediate or waive the
+seven label-only candidates below.
 
 The [web qualification plan](../tools/dependency-review/web-patches.json) pins
 the canonical inventory digest. Hosted CI verifies the selected installed
@@ -47,7 +52,11 @@ provider response omits them.
 
 ## Source review snapshot: 2026-11-14
 
-One Bulk request for the 292 pairs returned 13 advisory records. SemVer 7.8.4
+The request used dependency bytes from
+`77b824eb70ab1f3faf7cb4ee1e2b83f901510f10` (Vite 7.3.7); those inputs are
+unchanged at the inventory-code revision
+`a5057615d375af37b2d0e316653b94202cb240cc`. One Bulk request for the 292 pairs
+returned 13 advisory records. SemVer 7.8.4
 evaluated 23 pair/range comparisons, alongside 20 positive, negative and invalid
 input controls: 13 matched, 10 did not match and none remained unknown. Six
 matches have lock/bundled-manifest support; seven additional matches rely on
@@ -56,7 +65,9 @@ The six previous manifest-supported findings remain open without a waiver.
 
 The following seven candidates all remain open for source authentication and
 reachability review. Source locations refer to the SHA-256-pinned Vite 7.3.7
-publication files in the qualification plan; they are not installed package
+publication files in that revision's
+[qualification plan](https://github.com/edgepillar/zvm-zns/blob/a5057615d375af37b2d0e316653b94202cb240cc/tools/dependency-review/web-patches.json);
+they are not installed package
 manifests. These observations identify relevant code and preconditions, and do
 not establish application exposure or approve remediation.
 
@@ -74,6 +85,13 @@ Advisory responses can change. This dated source review does not waive a
 candidate, authenticate the labelled package independently or substitute for
 testing a reviewed replacement publication. A top-level override alone does
 not replace code already embedded in a Vite bundle.
+
+The upstream virtual-module advisory
+[GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7)
+was observed independently after that response, which did not return it. Its
+7.x affected range includes 7.3.7 and its patched list includes 7.3.8. This feed
+gap is retained alongside the selected source fix, rather than using the
+absence of a returned record as a safety waiver.
 
 Advisory freshness, independent package/source authentication, actual application
 or build-path reachability, complete shipped notices, supported platforms and

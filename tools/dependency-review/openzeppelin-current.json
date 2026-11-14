@@ -110,7 +110,7 @@
   "inputPins": {
     "NOTICE.md": {
       "bytes": 1561,
-      "sha256": "52d96c0e2a8b565406db12ca4af6021bfa2008e7e7ad7db5792153bd40c185f4"
+      "sha256": "b35895af3609e09f5953d4cdd70291510a01e0b34998c78bd07e0949a7f82499"
     },
     "contracts/out/ENSRegistry.json": {
       "bytes": 12853,

@@ -1,7 +1,7 @@
 # Selected web dependency patches
 
-The application selects Vite 7.3.7 and source-map-js 1.2.2. Vite's minimum
-declared 7.x version is 7.3.7; the source-map package remains a transitive
+The application selects Vite 7.3.8 and source-map-js 1.2.2. Vite's minimum
+declared 7.x version is 7.3.8; the source-map package remains a transitive
 dependency. No major override, other application lockfile package version, contract
 source or generated contract output changes for these updates.
 
@@ -15,6 +15,15 @@ Source-map-js 1.2.2 is the patched version for
 [GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q).
 These version/source updates do not establish deployed development-server
 exposure or reproduce all Windows/editor or browser middleware conditions.
+
+The additional Vite 7.3.8 patch addresses the virtual-module escaping issue in
+[GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7).
+The upstream advisory lists 7.3.7 as affected and 7.3.8 as patched. It requires
+an explicitly network-exposed development server. The tracked application
+configuration declares a port and filesystem allow list, but no `server.host`;
+actual launch flags, runtime network exposure and end-to-end exploitability
+have not been established. The earlier retained Bulk response omitted this
+advisory; the independently observed upstream record is preserved separately.
 
 ## Publication review
 
@@ -31,6 +40,19 @@ additional provenance clues and their separate advisory/reachability scope.
 Source-map-js has 18 regular
 files per version: its version and four library files change. The public entry
 point stays equal. Original licenses are byte-identical across each pair.
+
+For the subsequent 7.3.7-to-7.3.8 comparison, the previous archive was reused
+without another local transport. The candidate is 544,759 bytes, SHA-256
+`7d8597eab679d0833d9015f0f29ed145fe4fa1a956b7c80371f85bdd056362c3`.
+Exactly two of its 39 files differ: `package.json` changes only the version,
+and `dist/node/chunks/config.js` changes the virtual-module and dependency
+optimizer stubs. The upstream
+[source fix](https://github.com/vitejs/vite/commit/e5f23b60f0c46a906a60986faad88a5bd7611a15)
+serializes module names before embedding them into generated JavaScript.
+Exports, declarations, engines, all 105 compiled package/version labels and
+the original license bytes stay equal. Source-file hashes and the canonical
+compiled inventory digest change and are pinned anew. The Vite notice filename
+now identifies 7.3.8 and retains the exact original bytes.
 
 The source-map update also changes its quick-sort behavior when string code
 generation is disabled. This is reviewed alongside offset validation, bounded
@@ -57,6 +79,18 @@ The deepest source getter is expected to be read
 controls use Node's string-code-generation restriction; observing that restriction
 does not qualify an actual browser CSP. Each source-map profile must pass four
 normal test events and one restricted-runtime event with complete totals.
+
+The [Vite controls](../web/scripts/vite-virtual-module-controls.test.mjs) use
+the actual installed plugin container with four development/production and
+browser-external/optional-peer branches. Six benign names per branch exercise
+quotes, slashes, backticks, line separators and literal interpolation text:
+24 cases across four test events. Generated modules must have no imports and
+are evaluated in an empty Node VM context with a one-second timeout and string
+code generation disabled. Error messages must retain the exact input text.
+Each test uses a fresh hosted job-owned root, disables configuration/env file
+loading, watchers and WebSockets, and requires a null HTTP server. It sends no
+HTTP requests and makes no listen call. This does not exercise the optimizer
+prebundle path, an exposed server, browser behavior or the full upstream exploit.
 
 The same lane checks the actual Vite CLI version and captures the unchanged
 `npm run build` command, including its TypeScript check. It inventories bounded
