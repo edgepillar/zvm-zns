@@ -4,8 +4,9 @@ const assert = require('node:assert/strict');
 const {read, pin} = require('./browser-source-guard.cjs');
 const {runControls, validateControls} = require('./coherent-controls.cjs');
 const {openMapperRoute, inspectMapperMap} = require('./devtools-source-map-controls.cjs');
+const {bounded} = require('./runtime-stage.cjs');
 
-async function embeddedMapperControls(browser, input, guard, progress = {}) {
+async function embeddedMapperControls(browser, input, guard, progress = {}, checkpoint = () => {}) {
   const member = 'node_modules/chromium-bidi/out/Default/gen/src/mapperTab.js';
   const source = guard.asset(member); const map = guard.asset(member + '.map');
   guard.asset('node_modules/chromium-bidi/out/Default/gen/src/protocol-parser/protocol-parser.js.map');
@@ -59,6 +60,7 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
     }
     let context; let route;
     try {
+      checkpoint(instrumented ? 'BEGIN_INSPECTION_MAPPER' : 'BEGIN_INSTALLED_MAPPER');
       if (!instrumented && manifest.debuggerSamples) {
         route = await openMapperRoute(source, map, row);
         await page.goto(route.origin + '/mapper.html', {waitUntil: 'load'});
@@ -69,7 +71,7 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
       await session.send('Runtime.addBinding', {name: 'sendBidiResponse'});
       if (route) {
         row.executionSource = pin(source); row.sourceMapAttachment = 'AUTOMATIC_RELATIVE_FILE_ROUTE';
-        await inspectMapperMap(browser, page, session, targetId, route, source, map, manifest, row);
+        await inspectMapperMap(browser, page, session, targetId, route, source, map, manifest, row, checkpoint);
       } else {
         let expression = (instrumented ? probe : source).toString('utf8');
         if (!instrumented) expression += '\n//# sourceMappingURL=data:application/json;base64,' + map.toString('base64') + '\n';
@@ -82,6 +84,7 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
       const started = await session.send('Runtime.evaluate', {
         expression: 'window.runMapperInstance(' + JSON.stringify(targetId) + ')', awaitPromise: true, returnByValue: true});
       evaluatedOK(started, 'Embedded mapper bootstrap evaluation'); row.fullBrowserBootstrapExecuted = true;
+      checkpoint(instrumented ? 'INSPECTION_BOOTSTRAP_COMPLETED' : 'INSTALLED_BOOTSTRAP_COMPLETED');
       if (instrumented) {
         const result = await session.send('Runtime.evaluate', {expression: '(' + runControls.toString() + ')(globalThis.__rebuiltProbe)',
           awaitPromise: true, returnByValue: true});
@@ -109,10 +112,18 @@ async function embeddedMapperControls(browser, input, guard, progress = {}) {
       }
       for (const item of pending.values()) { clearTimeout(item.timer); item.reject(new Error('Embedded mapper closed')); }
       pending.clear(); session.off('Runtime.bindingCalled', binding);
-      await root.detach(); await session.detach(); await page.close(); row.mapperPageClosed = page.isClosed();
-      if (route) { await route.close(); row.mapperRouteClosed = true; }
+      checkpoint('BEGIN_MAPPER_CLEANUP');
+      const cleanup = async (label, operation) => {
+        try { await bounded(operation, label, 5000); }
+        catch (error) { (row.cleanupFailures ??= []).push(label + ': ' + error.name); }
+      };
+      await cleanup('Root session detach', () => root.detach());
+      await cleanup('Mapper session detach', () => session.detach());
+      await cleanup('Mapper page close', () => page.close()); row.mapperPageClosed = page.isClosed();
+      if (route) { await cleanup('Mapper route close', async () => { await route.close(); row.mapperRouteClosed = true; }); }
+      checkpoint('MAPPER_CLEANUP_OBSERVED');
     }
-    assert(row.mapperPageClosed && !row.contextCleanupNotEstablished);
+    assert(row.mapperPageClosed && !row.contextCleanupNotEstablished && !row.cleanupFailures?.length);
   }
   progress.status = 'INSTALLED_AND_INSPECTED_FULL_BROWSER_MAPPER_BOOTSTRAPS_PASSED';
   return {schema: 1, status: progress.status, bootstraps: 2,

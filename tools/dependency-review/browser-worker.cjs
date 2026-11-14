@@ -11,6 +11,7 @@ const {sourceGuard, read, pin} = require('./browser-source-guard.cjs');
 const {nativeControls} = require('./coherent-controls.cjs');
 const {embeddedMapperControls} = require('./embedded-mapper-controls.cjs');
 const {enableRuntimeMaps, nativeMapControls} = require('./runtime-source-map-controls.cjs');
+const {progressWriter, bounded} = require('./runtime-stage.cjs');
 
 const partial = {schema: 1, status: 'BROWSER_WORKER_INCOMPLETE_NOT_QUALIFIED', sessions: [], screenshots: [],
   sourceGuardQualification: 'NOT_COMPLETE', productionGate: 'NO_GO'};
@@ -46,6 +47,7 @@ async function main() {
   assert.equal(fs.realpathSync(input.executable), input.executable);
   assert.deepEqual(pin(read(input.executable, 512 << 20)), input.executablePin);
   const output = fs.realpathSync(input.output); assert.equal(output, input.output);
+  const checkpoint = progressWriter(output, partial); checkpoint('INPUT_AND_EXECUTABLE_VERIFIED');
   if (input.temporaryRoot) {
     const temporary = fs.realpathSync(input.temporaryRoot);
     assert.equal(temporary, input.temporaryRoot);
@@ -61,12 +63,17 @@ async function main() {
   const tracked = new vm.Script('(' + matches[0][1] + ')').runInContext(context, {timeout: 100});
   assert.deepEqual(Object.keys(tracked).sort(), caller.expectedKeys);
   if (input.profile === 'application') enableRuntimeMaps();
+  checkpoint('SOURCE_MAP_SUPPORT_ENABLED');
   const source = await sourceGuard(input);
+  checkpoint('SOURCE_GUARD_REGISTERED');
   const viem = await import(source.resolve('viem')); const {default: puppeteer} = await import(source.resolve('puppeteer-core'));
+  checkpoint('NATIVE_SDK_IMPORTS_COMPLETED');
   const coherentNode = derivativeProfile ? await nativeControls(source) : null;
   partial.coherentNativeNodeControls = coherentNode;
+  checkpoint('DIRECT_NATIVE_CONTROLS_COMPLETED');
   const nativeMaps = input.profile === 'application' ? await nativeMapControls(input, source) : null;
   partial.nativeRuntimeSourceMapControls = nativeMaps;
+  checkpoint('NATIVE_SOURCE_MAP_CONTROLS_COMPLETED');
   const server = await fixture(input, viem); const sessions = partial.sessions; const spawns = []; let deniedProcesses = 0;
   partial.fixture = server.report;
   const originalSpawn = child.spawn;
@@ -100,6 +107,7 @@ async function main() {
       let browser; let process; const errors = []; const network = []; const geo = [];
       const row = {protocol, application: [], externalPageRequests: [], pageErrors: errors}; sessions.push(row);
       try {
+        checkpoint('BEGIN_CHROME_' + protocol.toUpperCase());
         // Preserve the tracked caller expression, then record the hosted-only
         // transport/profile/budget overlays rather than claiming shots.mjs ran.
         browser = await puppeteer.launch({...tracked, args: [...tracked.args, '--disable-dev-shm-usage', '--no-first-run',
@@ -112,9 +120,11 @@ async function main() {
         row.browserClass = browser.constructor.name; assert.equal(row.browserClass, protocol === 'cdp' ? 'CdpBrowser' : 'BidiBrowser');
         row.version = await browser.version(); assert(row.version.includes(input.browserVersion));
         row.userAgent = await browser.userAgent(); row.userAgentEvidence = userAgentEvidence(row.userAgent, input.browserVersion);
+        checkpoint('CHROME_STARTED_' + protocol.toUpperCase());
         if (derivativeProfile && protocol === 'cdp') {
           row.embeddedMapper = {};
-          row.embeddedMapper = await embeddedMapperControls(browser, input, source, row.embeddedMapper);
+          row.embeddedMapper = await embeddedMapperControls(browser, input, source, row.embeddedMapper, checkpoint);
+          checkpoint('EMBEDDED_MAPPER_CONTROLS_COMPLETED');
         }
         const page = await browser.newPage(); page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(15000);
         page.on('pageerror', error => errors.push(String(error.message).slice(0, 1024)));
@@ -177,7 +187,8 @@ async function main() {
         await screenshot(page, protocol, 'fixture-mobile');
         row.network = network; assert.equal(errors.length, 0); assert.equal(row.externalPageRequests.length, 0);
       } finally {
-        if (browser) await browser.close();
+        checkpoint('BEGIN_CHROME_CLOSE_' + protocol.toUpperCase());
+        if (browser) await bounded(() => browser.close(), 'Chrome parent close');
         if (process) {
           if (process.exitCode === null && process.signalCode === null) await new Promise((resolve, reject) => {
             const timer = setTimeout(() => reject(new Error('Owned browser did not exit')), 10000);
@@ -188,6 +199,7 @@ async function main() {
           assert(row.processExit.disconnected);
         }
         row.profile = profileSize(directory);
+        checkpoint('CHROME_CLOSED_' + protocol.toUpperCase());
       }
     }
   } finally { await server.close(); }
@@ -195,6 +207,7 @@ async function main() {
   assert(sessions.reduce((sum, row) => sum + row.profile.regularBytes, 0) <= 192 << 20);
   assert(server.report.rpc.some(row => row.functionName === 'rentPrice') && server.report.rpc.some(row => row.method === 'eth_getLogs'));
   const guard = source.finish();
+  checkpoint('ALL_CONTROLS_AND_SOURCE_RECHECKS_COMPLETED');
   process.stdout.write(JSON.stringify({schema: 1, status: 'PAIRED_PROTOCOL_AND_SYNTHETIC_APPLICATION_CONTROLS_PASSED',
     profile: input.profile, browserVersion: input.browserVersion, runId: input.runId, nodeVersion: process.version,
     nodePlatform: process.platform, nodeArchitecture: process.arch, glibc: process.report.getReport().header.glibcVersionRuntime,

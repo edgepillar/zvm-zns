@@ -133,5 +133,6 @@ jobs:
             ${{ runner.temp }}/zns-app/application-raw-profile-sources.json
             ${{ runner.temp }}/zns-app/application-profile-source-binding.json
             ${{ runner.temp }}/zns-app/browser-evidence/*.png
+            ${{ runner.temp }}/zns-app/browser-evidence/browser-progress.json
           if-no-files-found: error
           retention-days: 14

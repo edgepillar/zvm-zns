@@ -95,6 +95,14 @@ full mapper bootstrap without claiming an unchanged attached map. Added renderer
 processes are not counted as extra Chrome parent instances. New exact-head hosted
 evidence is required before claiming these controls passed.
 
+An incomplete browser run retains a bounded `browser-progress.json` diagnostic
+snapshot beside its captures. It records the last observed stage and partial
+observations, including before/after debugger startup and cleanup. It is never
+qualification evidence by itself, even when individual observations succeeded.
+Owned frontend, mapper and browser cleanup waits have finite deadlines, and the
+overall foreground process-group deadline remains in place. A deadline or
+uncertain closure still fails the lane; no snapshot turns it into a pass.
+
 The previous raw baseline/candidate and separately rebuilt-profile qualifications
 remain pinned to commit `1fb99473f5acbed0c41a40f7ae3eb2e2aa474ef8` and their original
 artifacts. The old `web_patches.py` lane must be reproduced at its frozen revision;
