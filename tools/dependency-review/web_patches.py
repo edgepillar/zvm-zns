@@ -24,6 +24,7 @@ from node_parser_controls import qualify_parser_controls
 from mapper_rebuild import qualify_rebuild
 from node_consumer_controls import qualify_consumers
 from browser_runtime import qualify_browsers
+from coherent_runtime import qualify_coherent
 
 
 def pin(raw):
@@ -165,6 +166,9 @@ def main():
                 'tools/dependency-review/browser-app-sources.json', 'tools/dependency-review/browser_staging.py',
                 'tools/dependency-review/browser_runtime.py', 'tools/dependency-review/browser-source-guard.cjs',
                 'tools/dependency-review/test-browser-request-shapes.cjs',
+                'tools/dependency-review/coherent_derivation.py', 'tools/dependency-review/coherent_profile.py',
+                'tools/dependency-review/coherent_runtime.py', 'tools/dependency-review/coherent-controls.cjs',
+                'tools/dependency-review/embedded-mapper-controls.cjs',
                 'tools/dependency-review/browser-fixture.cjs', 'tools/dependency-review/browser-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'fullBrowserMigrationLiveChainWalletOrDeploymentQualified': False}
@@ -267,8 +271,12 @@ def main():
             proposedPackageExecutionScope='Real paired browser/application execution is being attempted; browser execution-stage and command receipts determine the completed scope.')
         report['browserRuntime'] = qualify_browsers(repo, web, parent_root, output, env, report['commands'],
             source_plan, report['browserRuntimeExecution'])
+        report['coherentRuntimeExecution'] = {}
+        report['coherentRuntime'] = qualify_coherent(repo, parent_root, output, env, report['commands'],
+            report['mapperRebuild'], report['coherentRuntimeExecution'])
         report['parentMigrationCandidate'].update(candidateBrowserBootstrapExecuted=True,
-            proposedPackageExecutionScope='Bounded mapper/parser and actual Node controls, followed by paired full Chrome CDP/BiDi sessions and real nominal/synthetic application builds and browser controls. Raw published packages remain unchanged.',
+            candidatePuppeteerChromeSessionsExecuted=True, generatedEmbeddedMapperBootstrapExecuted=True,
+            proposedPackageExecutionScope='Raw paired SDK/browser controls, followed by a separately identified physical derivative with native Node parser APIs, full installed browser-mapper bootstraps, and repeated real application controls. Original raw profiles remain unchanged.',
             migrationAcceptanceEstablished=False)
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
@@ -299,7 +307,7 @@ def main():
         for notice in plan['retainedNotices']:
             require(distribution['files'][notice['distPath']] == notice['pin'], 'original notice not preserved in build output')
         verify_files(repo, plan['sourcePins'])
-        report.update(status='SELECTED_WEB_PATCHES_AND_PAIRED_BROWSER_FIXTURES_QUALIFIED_MIGRATION_OPEN', profiles=profiles,
+        report.update(status='SELECTED_WEB_AND_COHERENT_BROWSER_FIXTURES_QUALIFIED_MIGRATION_OPEN', profiles=profiles,
             toolchain=toolchain, viteVersion=vite_version, distribution=distribution, originalNoticesInDistributionVerified=True,
             virtualModuleControls={'testCounts': virtual_totals, 'result': virtual_result},
             sourcePinsVerifiedAndUnchanged=True, completeAdvisoryCoverageOrLegalReviewEstablished=False,

@@ -140,6 +140,9 @@ jobs:
             ${{ runner.temp }}/zns-web-patch-review/candidate-profile-sources.json
             ${{ runner.temp }}/zns-web-patch-review/browser-app-builds.json
             ${{ runner.temp }}/zns-web-patch-review/browser-runtime.json
+            ${{ runner.temp }}/zns-web-patch-review/coherent-profile-source-binding.json
+            ${{ runner.temp }}/zns-web-patch-review/coherent-profile.json
+            ${{ runner.temp }}/zns-web-patch-review/coherent-runtime.json
             ${{ runner.temp }}/zns-web-patch-review/browser-evidence/*.png
             ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js
             ${{ runner.temp }}/zns-web-patch-review/mapper-rebuilt/mapper.js.map

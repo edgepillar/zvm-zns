@@ -8,6 +8,8 @@ const child = require('node:child_process');
 const {syncBuiltinESMExports} = require('node:module');
 const {fixture} = require('./browser-fixture.cjs');
 const {sourceGuard, read, pin} = require('./browser-source-guard.cjs');
+const {nativeControls} = require('./coherent-controls.cjs');
+const {embeddedMapperControls} = require('./embedded-mapper-controls.cjs');
 
 const partial = {schema: 1, status: 'BROWSER_WORKER_INCOMPLETE_NOT_QUALIFIED', sessions: [], screenshots: [],
   sourceGuardQualification: 'NOT_COMPLETE', productionGate: 'NO_GO'};
@@ -34,7 +36,8 @@ function profileSize(root) {
 }
 async function main() {
   assert.equal(process.argv.length, 3); const input = JSON.parse(read(process.argv[2], 65536));
-  assert.equal(input.schema, 1); assert(['baseline', 'candidate'].includes(input.profile));
+  assert.equal(input.schema, 1); assert(['baseline', 'candidate', 'coherentCandidate'].includes(input.profile));
+  const baseProfile = input.profile === 'coherentCandidate' ? 'candidate' : input.profile;
   partial.profile = input.profile; partial.browserVersion = input.browserVersion;
   assert.equal(process.platform, 'linux'); assert.equal(process.arch, 'x64');
   assert(/^\d+$/.test(input.runId)); assert(process.report.getReport().header.glibcVersionRuntime);
@@ -50,6 +53,8 @@ async function main() {
   assert.deepEqual(Object.keys(tracked).sort(), caller.expectedKeys);
   const source = await sourceGuard(input);
   const viem = await import(source.resolve('viem')); const {default: puppeteer} = await import(source.resolve('puppeteer-core'));
+  const coherentNode = input.profile === 'coherentCandidate' ? await nativeControls(source) : null;
+  partial.coherentNativeNodeControls = coherentNode;
   const server = await fixture(input, viem); const sessions = partial.sessions; const spawns = []; let deniedProcesses = 0;
   partial.fixture = server.report;
   const originalSpawn = child.spawn;
@@ -95,6 +100,10 @@ async function main() {
         row.browserClass = browser.constructor.name; assert.equal(row.browserClass, protocol === 'cdp' ? 'CdpBrowser' : 'BidiBrowser');
         row.version = await browser.version(); assert(row.version.includes(input.browserVersion));
         row.userAgent = await browser.userAgent(); row.userAgentEvidence = userAgentEvidence(row.userAgent, input.browserVersion);
+        if (input.profile === 'coherentCandidate' && protocol === 'cdp') {
+          row.embeddedMapper = {};
+          row.embeddedMapper = await embeddedMapperControls(browser, input, source, row.embeddedMapper);
+        }
         const page = await browser.newPage(); page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(15000);
         page.on('pageerror', error => errors.push(String(error.message).slice(0, 1024)));
         await page.setRequestInterception(true);
@@ -122,7 +131,7 @@ async function main() {
           let omitted;
           try { await page.setGeolocation({latitude: 12.5, longitude: 23.5}); omitted = {status: 'returned', observed: await position(page)}; }
           catch (error) { omitted = {status: 'rejected', type: error.name, message: String(error.message).slice(0, 512)}; }
-          if (input.profile === 'candidate') {
+          if (baseProfile === 'candidate') {
             assert.equal(omitted.status, 'returned'); assert.deepEqual(omitted.observed, {latitude: 12.5, longitude: 23.5, accuracy: 0});
             await page.setGeolocation(null); geo.push({case: 'candidate-null-reset', status: 'returned'});
           }
@@ -177,14 +186,16 @@ async function main() {
   process.stdout.write(JSON.stringify({schema: 1, status: 'PAIRED_PROTOCOL_AND_SYNTHETIC_APPLICATION_CONTROLS_PASSED',
     profile: input.profile, browserVersion: input.browserVersion, runId: input.runId, nodeVersion: process.version,
     nodePlatform: process.platform, nodeArchitecture: process.arch, glibc: process.report.getReport().header.glibcVersionRuntime,
-    puppeteerVersion: plan.profiles[input.profile].puppeteer, trackedCaller: {path: caller.path, sourcePin: caller.sourcePin,
+    puppeteerVersion: plan.profiles[baseProfile].puppeteer, coherentNativeNodeControls: coherentNode,
+    effectiveLocalDerivativeUsed: input.profile === 'coherentCandidate',
+    trackedCaller: {path: caller.path, sourcePin: caller.sourcePin,
       expressionSha256: caller.expressionSha256, completeOriginalScriptExecuted: false},
     sessions, sourceGuard: guard, screenshots, distributions: server.distributions, fixture: server.report,
     spawnedBrowserArguments: spawns.map(row => row.args.map(arg => arg.startsWith('--user-data-dir=') ? '--user-data-dir=<owned-profile>' : arg)),
     deniedChildProcesses: deniedProcesses, realBrowserProtocolSessions: 2, noSandboxFlagFromTrackedCaller: true,
     pageRequestAndSourceObserversAreNotOperatingSystemNetworkOrProcessIsolation: true,
     fundedVerificationWalletSigningLiveChainReleaseOrDeploymentPerformed: false,
-    derivedGuardOrRebuiltMapperInstalled: false, rawCandidateOrBaselinePackageSourcesModified: false,
+    derivedGuardOrRebuiltMapperInstalled: input.profile === 'coherentCandidate', rawCandidateOrBaselinePackageSourcesModified: false,
     fullApplicationMigrationAcceptance: false, productionGate: 'NO_GO'}) + '\n');
 }
 function processEnv(input) {

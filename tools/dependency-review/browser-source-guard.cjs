@@ -25,7 +25,9 @@ async function sourceGuard(input) {
   const root = fs.realpathSync(input.root); assert.equal(root, input.root);
   const lock = JSON.parse(read(path.join(root, 'package-lock.json'), 2 << 20));
   const plan = JSON.parse(read(input.plan, 65536));
-  assert.equal(hash(read(path.join(root, 'package-lock.json'), 2 << 20)), plan.profiles[input.profile].lockSha256);
+  const baseProfile = input.profile === 'coherentCandidate' ? 'candidate' : input.profile;
+  assert(['baseline', 'candidate'].includes(baseProfile));
+  assert.equal(hash(read(path.join(root, 'package-lock.json'), 2 << 20)), plan.profiles[baseProfile].lockSha256);
   const inventory = JSON.parse(read(input.inventory));
   assert.equal(inventory.lockSha256, plan.profiles.candidate.lockSha256);
   const changed = JSON.parse(read(input.changedSources, 2 << 20));
@@ -34,8 +36,32 @@ async function sourceGuard(input) {
     if (sources[key]) assert.deepEqual(sources[key].filePins, value.filePins);
     sources[key] = value;
   }
+  let derivative = null;
+  if (input.profile === 'coherentCandidate') {
+    const raw = read(input.derivation, 1 << 20); assert.deepEqual(pin(raw), input.derivationPin); derivative = JSON.parse(raw);
+    assert.equal(derivative.kind, 'REVIEWED_LOCAL_DERIVATIVE_PROFILE'); assert.equal(derivative.baseProfile, 'candidate');
+    assert.equal(derivative.baseLockSha256, plan.profiles.candidate.lockSha256);
+    assert.deepEqual(derivative.sourceInventory, pin(read(input.inventory)));
+    assert.equal(derivative.publication.location, 'node_modules/chromium-bidi');
+    const prefix = 'node_modules/chromium-bidi/';
+    const allowed = [
+      'out/Default/gen/src/protocol-parser/protocol-parser.js', 'out/Default/gen/src/protocol-parser/protocol-parser.js.map',
+      'out/Default/gen/src/mapperTab.js', 'out/Default/gen/src/mapperTab.js.map', 'out/Default/gen/src/mapper.js.LEGAL.txt',
+      'notices/chromium-bidi/LICENSE', 'notices/zod/LICENSE', 'notices/mitt/LICENSE', 'notices/esbuild/LICENSE.md',
+    ].map(name => prefix + name).sort();
+    assert.deepEqual(Object.keys(derivative.effectiveMembers).sort(), allowed);
+    assert.equal(derivative.registryArtifactOrPublisherAuthenticationClaimed, false);
+    assert.equal(derivative.originalRawSourceProfilesModified, false);
+    assert.deepEqual(derivative.effectiveMembers[prefix + 'out/Default/gen/src/protocol-parser/protocol-parser.js'].effective,
+      derivative.parserGuard.derived);
+    for (const [name, row] of Object.entries(derivative.effectiveMembers)) {
+      assert(name.startsWith('node_modules/chromium-bidi/') && !name.split('/').some(p => !p || p === '.' || p === '..'));
+      assert(row.effective.bytes > 0 && row.effective.bytes <= 16 << 20 && /^[0-9a-f]{64}$/.test(row.effective.sha256));
+      assert.equal(row.registryIntegrityCoversEffectiveBytes, false);
+    }
+  } else assert(!input.derivation && !input.derivationPin, 'Raw profiles must not silently accept a derivative');
   const locations = Object.keys(lock.packages).filter(Boolean).sort((a, b) => b.length - a.length);
-  const loaded = new Map(); let comparisons = 0; let violations = 0;
+  const loaded = new Map(); const assets = new Map(); let comparisons = 0; let violations = 0;
   function member(file) {
     assert(file.startsWith(root + path.sep));
     const relative = path.relative(root, file).split(path.sep).join('/');
@@ -43,9 +69,17 @@ async function sourceGuard(input) {
     const location = locations.find(p => relative.startsWith(p + '/')); assert(location);
     const selected = lock.packages[location]; assert(selected.integrity && !selected.link && !selected.inBundle);
     const publication = sources[selected.integrity]; assert(publication, 'Unbound browser worker publication');
-    const name = relative.slice(location.length + 1); const expected = publication.filePins[name];
+    const name = relative.slice(location.length + 1); const original = publication.filePins[name] ?? null;
+    const overlay = derivative?.effectiveMembers[relative];
+    if (overlay) {
+      assert.equal(location, derivative.publication.location);
+      assert.deepEqual(publication.selection, derivative.publication.selection);
+      assert.deepEqual(overlay.original, original);
+    }
+    const expected = overlay ? overlay.effective : original;
     assert(expected, 'Unbound browser worker member');
-    return {relative, location, member: name, integrity: selected.integrity, expected, publication};
+    return {relative, location, member: name, integrity: selected.integrity, expected, publication, original,
+      sourceKind: overlay ? overlay.kind : 'UNMODIFIED_REGISTRY_MEMBER'};
   }
   function verified(file) {
     const row = member(file); let cursor = root;
@@ -71,17 +105,27 @@ async function sourceGuard(input) {
         assert(result.source !== null && result.source !== undefined);
         assert.deepEqual(Buffer.from(result.source), raw); comparisons++;
         assert(loaded.size < 4096 || loaded.has(row.relative), 'Loaded browser source member budget');
-        loaded.set(row.relative, {location: row.location, member: row.member, integrity: row.integrity, ...row.expected, ...format});
+        loaded.set(row.relative, {location: row.location, member: row.member, integrity: row.integrity, ...row.expected, ...format,
+          sourceKind: row.sourceKind, originalRegistryMember: row.original,
+          registryIntegrityCoversEffectiveBytes: row.sourceKind === 'UNMODIFIED_REGISTRY_MEMBER'});
         return result;
       } catch (error) { violations++; throw error; }
     },
   });
   return {
     resolve: name => resolveProfile(name, pathToFileURL(path.join(root, 'package.json')).href),
+    asset(relative) {
+      assert(relative && !path.isAbsolute(relative)); const file = path.join(root, relative); const {row, raw} = verified(file);
+      assets.set(row.relative, {location: row.location, member: row.member, integrity: row.integrity, ...row.expected,
+        sourceKind: row.sourceKind, originalRegistryMember: row.original,
+        registryIntegrityCoversEffectiveBytes: row.sourceKind === 'UNMODIFIED_REGISTRY_MEMBER'}); return raw;
+    },
     finish() {
       for (const [name, row] of loaded) assert.deepEqual(pin(read(path.join(root, name))), {bytes: row.bytes, sha256: row.sha256});
+      for (const [name, row] of assets) assert.deepEqual(pin(read(path.join(root, name))), {bytes: row.bytes, sha256: row.sha256});
       assert.equal(violations, 0); assert(comparisons >= loaded.size && loaded.size > 0); hook.deregister();
-      return {loadedMembers: [...loaded.values()], exactLoaderSourceComparisons: comparisons,
+      return {loadedMembers: [...loaded.values()], verifiedRuntimeAssets: [...assets.values()], exactLoaderSourceComparisons: comparisons,
+        explicitLocalDerivativeProfile: Boolean(derivative), originalRawProfileInputsModified: false,
         sourceGuardViolations: violations, loaderFormatControls: formatControls,
         nativeResolutionAndUnmodifiedLoadResultsPreserved: true, sourcePinsRecheckedAfterBrowserClosure: true};
     },
