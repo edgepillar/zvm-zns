@@ -107,6 +107,9 @@ command and matches the returned target ID before querying its initialized SDK.
 A separate browser tab navigated to a DevTools resource URL does not establish
 native embedder initialization. Readiness checks use a finite main-realm query;
 request observation starts after the native frontend has opened.
+Executed mapper bytes are obtained through that frontend's own debugger session
+and compared with the installed payload, using the same script selected for
+automatic source-map consumption.
 
 The previous raw baseline/candidate and separately rebuilt-profile qualifications
 remain pinned to commit `1fb99473f5acbed0c41a40f7ae3eb2e2aa474ef8` and their original

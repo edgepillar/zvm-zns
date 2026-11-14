@@ -41,7 +41,7 @@ async function openMapperRoute(source, map, row) {
     })};
 }
 
-async function inspectMapperMap(browser, root, page, session, targetId, route, source, map, manifest, row, checkpoint = () => {}) {
+async function inspectMapperMap(browser, root, page, targetId, route, source, map, manifest, row, checkpoint = () => {}) {
   checkpoint('BEGIN_NATIVE_DEVTOOLS_OPEN');
   const opened = await root.send('Target.openDevTools', {targetId, panelId: 'sources'});
   assert(typeof opened.targetId === 'string' && opened.targetId !== targetId);
@@ -55,9 +55,7 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
   row.frontendCreatedBy = 'Target.openDevTools'; row.frontendTargetMatchedNativeReply = true;
   checkpoint('NATIVE_DEVTOOLS_FRONTEND_ATTACHED');
   const errors = []; const requests = []; row.frontendErrors = errors;
-  row.frontendRequests = requests; let scriptId;
-  const onScript = event => { if (event.url === route.origin + '/mapperTab.js') { assert(!scriptId); scriptId = event.scriptId; } };
-  session.on('Debugger.scriptParsed', onScript);
+  row.frontendRequests = requests;
   try {
     frontend.setDefaultTimeout(20000); frontend.setDefaultNavigationTimeout(20000);
     frontend.on('pageerror', error => errors.push(String(error.message).slice(0, 512)));
@@ -69,7 +67,6 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
       if (allowed) request.continue().catch(error => errors.push('DevTools continuation: ' + error.name));
       else request.abort().catch(() => {});
     });
-    await session.send('Debugger.enable');
     row.frontendRequestObservationBeganAfterNativeOpen = true;
     await waitInFrontend(frontend);
     checkpoint('DEVTOOLS_DEBUGGER_MODEL_READY');
@@ -78,9 +75,6 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
         script.onload = resolve; script.onerror = () => reject(new Error('Mapper script load failed')); document.head.append(script); });
     }, route.origin + '/mapperTab.js');
     checkpoint('INSTALLED_MAPPER_SCRIPT_LOADED');
-    assert(scriptId); const executed = await session.send('Debugger.getScriptSource', {scriptId});
-    assert.deepEqual(pin(Buffer.from(executed.scriptSource)), pin(source));
-    checkpoint('EXECUTED_MAPPER_SOURCE_VERIFIED');
     await waitInFrontend(frontend, route.origin + '/mapperTab.js');
     checkpoint('DEVTOOLS_MAPPER_SCRIPT_DISCOVERED');
     const actual = await bounded(() => frontend.evaluate(async ({scriptURL, samples}) => {
@@ -89,9 +83,11 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
         .flatMap(model => model.scriptsForSourceURL(scriptURL).map(script => ({model, script})));
       if (candidates.length !== 1) throw new Error('DevTools mapper script selection differs');
       const {model, script} = candidates[0];
+      const executed = await model.target().debuggerAgent().invoke_getScriptSource({scriptId: script.scriptId});
+      if (executed.getError() || typeof executed.scriptSource !== 'string') throw new Error('DevTools executed script source absent');
       const sourceMap = await model.sourceMapManager().sourceMapForClientPromise(script);
       if (!sourceMap) throw new Error('DevTools automatic source map absent');
-      return {compiledURL: sourceMap.compiledURL(), mapURL: sourceMap.url(),
+      return {executedSource: executed.scriptSource, compiledURL: sourceMap.compiledURL(), mapURL: sourceMap.url(),
         contents: sourceMap.sourceURLs().map(url => ({url, content: sourceMap.embeddedContentByURL(url)})),
         samples: samples.map(row => {
           const found = sourceMap.findEntry(row.generatedLine, row.generatedColumn);
@@ -101,6 +97,8 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
         })};
     }, {scriptURL: route.origin + '/mapperTab.js', samples: manifest.debuggerSamples}), 'DevTools map consumption', 25000);
     checkpoint('DEVTOOLS_MAP_CONSUMPTION_RETURNED');
+    assert.deepEqual(pin(Buffer.from(actual.executedSource)), pin(source)); delete actual.executedSource;
+    checkpoint('EXECUTED_MAPPER_SOURCE_VERIFIED');
     const data = JSON.parse(map); assert.equal(actual.compiledURL, route.origin + '/mapperTab.js');
     assert.equal(actual.mapURL, route.origin + '/mapperTab.js.map');
     assert.deepEqual(actual.contents, data.sources.map((name, index) => ({url: new URL(name, actual.mapURL).href, content: data.sourcesContent[index]})));
@@ -114,11 +112,11 @@ async function inspectMapperMap(browser, root, page, session, targetId, route, s
       frontendRevisionIndependentlyAuthenticated: false, additionalChromeParentInstances: 0,
       initializedFrontendSDKQueriedInMainWorld: true,
       nativeBrowserCreatedFrontend: true,
+      scriptSourceRetrievedThroughFrontendDebuggerSession: true,
       manuallyAttachedMapOrReplacementConsumerUsed: false, productionGate: 'NO_GO'};
     checkpoint('DEVTOOLS_MAP_CONTENTS_AND_SAMPLES_VERIFIED');
   } finally {
     checkpoint('BEGIN_DEVTOOLS_FRONTEND_CLEANUP');
-    session.off('Debugger.scriptParsed', onScript); await session.send('Debugger.disable');
     await bounded(() => frontend.close(), 'DevTools frontend close', 5000); row.frontendClosed = frontend.isClosed();
     checkpoint('DEVTOOLS_FRONTEND_CLOSED');
   }
