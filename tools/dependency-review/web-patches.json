@@ -422,8 +422,8 @@
       "sha256": "442f106e50435ebd660287d864b112f4682957a8cad6776cdf13dfb418b8fb9d"
     },
     "web/scripts/vite-virtual-module-controls.test.mjs": {
-      "bytes": 3957,
-      "sha256": "1a98e45e96feca943a809b6c7e5513c0607a22d8907c96b26113d7bd14900561"
+      "bytes": 3955,
+      "sha256": "56b182d3f4fe7f554f057bbdc840c3de49b19f81d9ce33c447c0e7516acba255"
     },
     "web/src/App.vue": {
       "bytes": 7222,

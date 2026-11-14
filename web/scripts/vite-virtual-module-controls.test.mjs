@@ -72,7 +72,7 @@ for (const production of [false, true]) {
   }
 }
 assert.equal(observed.length, 24)
-console.log('# ZNS_VITE_VIRTUAL_MODULE_RESULT ' + JSON.stringify({
+console.log('ZNS_VITE_VIRTUAL_MODULE_RESULT ' + JSON.stringify({
   version, branches: 4, namesPerBranch: names.length, cases: observed.length,
   actualInstalledPluginLoadUsed: true, generatedModulesHadNoImports: true,
   generatedModulesEvaluatedWithVmTimeoutMs: 1000,
