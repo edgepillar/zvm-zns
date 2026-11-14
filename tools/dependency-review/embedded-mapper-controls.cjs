@@ -71,7 +71,7 @@ async function embeddedMapperControls(browser, input, guard, progress = {}, chec
       await session.send('Runtime.addBinding', {name: 'sendBidiResponse'});
       if (route) {
         row.executionSource = pin(source); row.sourceMapAttachment = 'AUTOMATIC_RELATIVE_FILE_ROUTE';
-        await inspectMapperMap(browser, page, session, targetId, route, source, map, manifest, row, checkpoint);
+        await inspectMapperMap(browser, root, page, session, targetId, route, source, map, manifest, row, checkpoint);
       } else {
         let expression = (instrumented ? probe : source).toString('utf8');
         if (!instrumented) expression += '\n//# sourceMappingURL=data:application/json;base64,' + map.toString('base64') + '\n';

@@ -7,6 +7,20 @@ const http = require('node:http');
 const {pin} = require('./browser-source-guard.cjs');
 const {bounded} = require('./runtime-stage.cjs');
 
+async function waitInFrontend(frontend, scriptURL = null) {
+  // Query the browser-created frontend's initialized SDK with an explicit
+  // finite readiness budget. Importing the SDK does not itself bootstrap UI.
+  return await bounded(() => frontend.evaluate(async scriptURL => {
+    const SDK = await import('./core/sdk/sdk.js'); const deadline = performance.now() + 15000;
+    do {
+      const models = SDK.TargetManager.TargetManager.instance().models(SDK.DebuggerModel.DebuggerModel);
+      if (scriptURL ? models.some(model => model.scriptsForSourceURL(scriptURL).length > 0) : models.length > 0) return;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    } while (performance.now() < deadline);
+    throw new Error(scriptURL ? 'Main-world DevTools mapper script absent' : 'Main-world DevTools debugger model absent');
+  }, scriptURL), 'Main-world DevTools readiness', 18000);
+}
+
 async function openMapperRoute(source, map, row) {
   const files = new Map([
     ['/mapper.html', {type: 'text/html', raw: Buffer.from('<!doctype html><meta charset="utf-8"><title>Mapper map fixture</title>')}],
@@ -27,8 +41,20 @@ async function openMapperRoute(source, map, row) {
     })};
 }
 
-async function inspectMapperMap(browser, page, session, targetId, route, source, map, manifest, row, checkpoint = () => {}) {
-  const frontend = await browser.newPage(); const errors = []; const requests = []; row.frontendErrors = errors;
+async function inspectMapperMap(browser, root, page, session, targetId, route, source, map, manifest, row, checkpoint = () => {}) {
+  checkpoint('BEGIN_NATIVE_DEVTOOLS_OPEN');
+  const opened = await root.send('Target.openDevTools', {targetId, panelId: 'sources'});
+  assert(typeof opened.targetId === 'string' && opened.targetId !== targetId);
+  const frontendTarget = await browser.waitForTarget(async target => {
+    if (!target.url().startsWith('devtools://devtools/')) return false;
+    const inspector = await target.createCDPSession();
+    try { return (await inspector.send('Target.getTargetInfo')).targetInfo.targetId === opened.targetId; }
+    finally { await inspector.detach(); }
+  }, {timeout: 15000});
+  const frontend = await frontendTarget.asPage(); assert(frontend);
+  row.frontendCreatedBy = 'Target.openDevTools'; row.frontendTargetMatchedNativeReply = true;
+  checkpoint('NATIVE_DEVTOOLS_FRONTEND_ATTACHED');
+  const errors = []; const requests = []; row.frontendErrors = errors;
   row.frontendRequests = requests; let scriptId;
   const onScript = event => { if (event.url === route.origin + '/mapperTab.js') { assert(!scriptId); scriptId = event.scriptId; } };
   session.on('Debugger.scriptParsed', onScript);
@@ -36,23 +62,16 @@ async function inspectMapperMap(browser, page, session, targetId, route, source,
     frontend.setDefaultTimeout(20000); frontend.setDefaultNavigationTimeout(20000);
     frontend.on('pageerror', error => errors.push(String(error.message).slice(0, 512)));
     await frontend.setRequestInterception(true);
-    const endpoint = new URL(browser.wsEndpoint()); assert.equal(endpoint.hostname, '127.0.0.1');
-    const socket = '127.0.0.1:' + endpoint.port + '/devtools/page/' + targetId;
     frontend.on('request', request => {
       const url = new URL(request.url()); const allowed = ['devtools:', 'data:', 'about:'].includes(url.protocol)
-        || url.origin === route.origin || (url.protocol === 'ws:' && url.host === endpoint.host);
+        || url.origin === route.origin;
       assert(requests.length < 2048); requests.push({protocol: url.protocol, path: url.pathname, allowed});
       if (allowed) request.continue().catch(error => errors.push('DevTools continuation: ' + error.name));
       else request.abort().catch(() => {});
     });
     await session.send('Debugger.enable');
-    checkpoint('BEGIN_DEVTOOLS_FRONTEND_NAVIGATION');
-    await frontend.goto('devtools://devtools/bundled/inspector.html?ws=' + socket, {waitUntil: 'domcontentloaded'});
-    checkpoint('DEVTOOLS_FRONTEND_NAVIGATED');
-    await frontend.waitForFunction(async () => {
-      const SDK = await import('./core/sdk/sdk.js');
-      return SDK.TargetManager.TargetManager.instance().models(SDK.DebuggerModel.DebuggerModel).length > 0;
-    });
+    row.frontendRequestObservationBeganAfterNativeOpen = true;
+    await waitInFrontend(frontend);
     checkpoint('DEVTOOLS_DEBUGGER_MODEL_READY');
     await page.evaluate(async url => {
       await new Promise((resolve, reject) => { const script = document.createElement('script'); script.src = url;
@@ -62,11 +81,7 @@ async function inspectMapperMap(browser, page, session, targetId, route, source,
     assert(scriptId); const executed = await session.send('Debugger.getScriptSource', {scriptId});
     assert.deepEqual(pin(Buffer.from(executed.scriptSource)), pin(source));
     checkpoint('EXECUTED_MAPPER_SOURCE_VERIFIED');
-    await frontend.waitForFunction(async scriptURL => {
-      const SDK = await import('./core/sdk/sdk.js');
-      return SDK.TargetManager.TargetManager.instance().models(SDK.DebuggerModel.DebuggerModel)
-        .some(model => model.scriptsForSourceURL(scriptURL).length > 0);
-    }, {}, route.origin + '/mapperTab.js');
+    await waitInFrontend(frontend, route.origin + '/mapperTab.js');
     checkpoint('DEVTOOLS_MAPPER_SCRIPT_DISCOVERED');
     const actual = await bounded(() => frontend.evaluate(async ({scriptURL, samples}) => {
       const SDK = await import('./core/sdk/sdk.js');
@@ -97,6 +112,8 @@ async function inspectMapperMap(browser, page, session, targetId, route, source,
       mappedSourcesAndEmbeddedContentsVerified: actual.contents.length, debuggerSamples: manifest.debuggerSamples,
       frontendRevisionFromChromeDEPS: '12ada949de6a27116dea47c600da5322f44c64f4',
       frontendRevisionIndependentlyAuthenticated: false, additionalChromeParentInstances: 0,
+      initializedFrontendSDKQueriedInMainWorld: true,
+      nativeBrowserCreatedFrontend: true,
       manuallyAttachedMapOrReplacementConsumerUsed: false, productionGate: 'NO_GO'};
     checkpoint('DEVTOOLS_MAP_CONTENTS_AND_SAMPLES_VERIFIED');
   } finally {

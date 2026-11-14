@@ -102,6 +102,11 @@ qualification evidence by itself, even when individual observations succeeded.
 Owned frontend, mapper and browser cleanup waits have finite deadlines, and the
 overall foreground process-group deadline remains in place. A deadline or
 uncertain closure still fails the lane; no snapshot turns it into a pass.
+The controller opens the frontend with Chrome's native `Target.openDevTools`
+command and matches the returned target ID before querying its initialized SDK.
+A separate browser tab navigated to a DevTools resource URL does not establish
+native embedder initialization. Readiness checks use a finite main-realm query;
+request observation starts after the native frontend has opened.
 
 The previous raw baseline/candidate and separately rebuilt-profile qualifications
 remain pinned to commit `1fb99473f5acbed0c41a40f7ae3eb2e2aa474ef8` and their original
