@@ -21,6 +21,14 @@ price, name navigation, a two-year price, theme persistence and desktop/mobile
 layout. Both candidate builds and the baseline fixture retain the application's
 TypeScript check before Vite. The existing baseline normal build is reused.
 
+The separate baseline fixture reconstructs original published package members.
+It prefers the already verified, lifecycle-disabled candidate installation when
+name, version, URL and integrity all match; baseline-specific publications use
+their verified baseline members. This avoids adopting install-time transforms
+such as esbuild's optimized hard-linked executable. All fixture destinations
+are new portable regular files, individually hash checked. The original normal
+baseline installation and its build remain unchanged.
+
 The RPC server uses the actual selected viem package to decode the tracked ABI
 and encode its responses. Its finite method, contract and function allowlists
 reject unknown requests. It has no upstream RPC forwarding, wallet provider or

@@ -10,6 +10,7 @@ import stat
 from lock_review import read_input, require
 from openzeppelin_candidate import run_bounded, sha, write_json
 from profile_sources import read_regular, select_profile, pin
+from proposal_delta import registry_identity
 
 
 def validate_source_plan(plan):
@@ -81,27 +82,49 @@ def copy_sources(repo, output, plan, baseline=False):
         'hardLinksAliasesOrOperatorDataUsed': False}
 
 
-def copy_baseline_packages(web, destination, inventory, changed):
+def choose_copy_source(selection, location, candidate_sources):
+    source = candidate_sources.get(selection['integrity'])
+    if source is None:
+        return {'profile': 'baseline', 'location': location, 'selection': selection}
+    require(source['selection'] == selection, 'portable publication source identity collision')
+    return {'profile': 'candidate', 'location': source['location'], 'selection': selection}
+
+
+def copy_baseline_packages(web, candidate, destination, inventory, changed):
     lock_raw = read_input(web, 'package-lock.json'); rows = json.loads(lock_raw)['packages']
     installed = {name for name in rows if name and (web / name).exists()}
     classified = select_profile(lock_raw, installed, {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'})
     sources = dict(inventory['sources']); sources.update(changed['publications'])
+    candidate_lock = json.loads(read_input(candidate, 'package-lock.json'))['packages']; candidate_sources = {}
+    for location in sorted(inventory['installed']):
+        selected = registry_identity(location, candidate_lock[location])
+        require(inventory['sources'][selected['integrity']]['selection'] == selected, 'candidate copy source identity differs')
+        candidate_sources.setdefault(selected['integrity'], {'location': location, 'selection': selected})
     count = total = 0; packages = []
     for location, entry in sorted(classified['selected'].items()):
         selected = entry['selection']; publication = sources.get(selected['integrity'])
         require(publication is not None and publication['selection'] == selected, 'baseline fixture publication absent')
+        # npm's normal esbuild lifecycle can replace its wrapper with a hard
+        # link to the native executable. Reconstruct original published members
+        # from the already verified ignore-scripts profile when the complete
+        # publication identity matches, without reading/adopting those links.
+        source = choose_copy_source(selected, location, candidate_sources)
+        provider = candidate if source['profile'] == 'candidate' else web
         for name, expected in publication['filePins'].items():
-            raw = read_regular(web, location + '/' + name, 16 << 20)
+            raw = read_regular(provider, source['location'] + '/' + name, 16 << 20)
             require(pin(raw) == expected, 'baseline fixture package member differs')
-            mode = (web / location / name).stat().st_mode
+            mode = (provider / source['location'] / name).stat().st_mode
             require(stat.S_ISREG(mode), 'baseline fixture package type')
             total += len(raw); count += 1
             require(total <= 256 << 20 and count <= 32768, 'baseline fixture portable copy budget')
             new_file(destination, location + '/' + name, raw, bool(mode & 0o111))
-        packages.append({'location': location, 'selection': selected, 'regularFiles': len(publication['filePins'])})
+        packages.append({'location': location, 'selection': selected, 'regularFiles': len(publication['filePins']),
+            'copySource': source})
     return {'packageLocations': len(packages), 'regularFiles': count, 'bytes': total, 'packages': packages,
         'completePublishedRegularMembersCopiedAndVerified': True, 'npmGeneratedExtrasOrBinLinksCopied': False,
-        'hardLinksOrSymbolicAliasesUsed': False, 'copyBudgetBytes': 256 << 20}
+        'hardLinksOrSymbolicAliasesUsed': False, 'copyBudgetBytes': 256 << 20,
+        'normalBaselineInstallationModified': False, 'samePublicationCandidateSourcesPreferred': True,
+        'fixtureCopiesReconstructPublishedGraphRatherThanInstallTimeTransforms': True}
 
 
 def qualify_application_builds(repo, web, candidate, output, env, commands, source_plan, execution):
@@ -117,7 +140,8 @@ def qualify_application_builds(repo, web, candidate, output, env, commands, sour
     for name in ['package.json', 'package-lock.json']:
         new_file(baseline_root, name, read_input(web, name))
     inventory = json.loads(read_regular(output, 'candidate-profile-sources.json', 16 << 20))
-    package_copy = copy_baseline_packages(web, baseline_root, inventory, source_plan)
+    execution['status'] = 'BASELINE_PUBLISHED_PACKAGE_GRAPH_COPY_ATTEMPTED'
+    package_copy = copy_baseline_packages(web, candidate, baseline_root, inventory, source_plan)
     def run(label, root):
         package = json.loads(read_input(root, 'package.json'))
         require(package['scripts']['build'] == 'vue-tsc --noEmit && vite build' and not any(name in package['scripts'] for name in ('prebuild', 'postbuild')),
