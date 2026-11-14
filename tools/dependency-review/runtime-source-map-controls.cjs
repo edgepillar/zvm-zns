@@ -6,9 +6,15 @@ const {fileURLToPath} = require('node:url');
 const {setSourceMapsSupport, getSourceMapsSupport, findSourceMap, SourceMap} = require('node:module');
 const {read, pin} = require('./browser-source-guard.cjs');
 
+function validateSupport(value) {
+  assert(value && typeof value === 'object');
+  assert.deepEqual(Object.keys(value).sort(), ['enabled', 'generatedCode', 'nodeModules']);
+  assert.equal(value.enabled, true); assert.equal(value.nodeModules, true); assert.equal(value.generatedCode, false);
+}
+
 function enableRuntimeMaps() {
   setSourceMapsSupport(true, {nodeModules: true, generatedCode: false});
-  assert.deepEqual(getSourceMapsSupport(), {enabled: true, nodeModules: true, generatedCode: false});
+  validateSupport(getSourceMapsSupport());
 }
 
 async function nativeMapControls(input, guard) {
@@ -56,4 +62,4 @@ async function nativeMapControls(input, guard) {
     nodeModulesSourceMapSupportExplicitlyEnabledBeforeImports: true, originalTypeScriptMappingClaimed: false,
     privateStackOrPathsPublished: false, productionGate: 'NO_GO'};
 }
-module.exports = {enableRuntimeMaps, nativeMapControls};
+module.exports = {enableRuntimeMaps, nativeMapControls, validateSupport};

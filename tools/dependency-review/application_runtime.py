@@ -155,6 +155,8 @@ def main():
         run('toolchain', ['node', '-p', 'JSON.stringify({node:process.version,versions:process.versions})'])
         report['toolchain'] = json.loads(read_input(output, 'streams/toolchain.stdout.txt'))
         require(re.fullmatch(r'v22\.\d+\.\d+', report['toolchain']['node']), 'unreviewed Node major')
+        run('runtime-source-map-support-controls', ['node', '--test', '--test-reporter=tap',
+            str(repo / 'tools/dependency-review/test-runtime-source-map-support.cjs')])
         run('npm-version', ['npm', '--version']); npm_version = read_input(output, 'streams/npm-version.stdout.txt').decode().strip()
         run('npm-script-policy', ['npm', 'config', 'get', 'ignore-scripts'])
         require(read_input(output, 'streams/npm-script-policy.stdout.txt').strip() == b'true', 'project install scripts must be disabled')

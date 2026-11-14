@@ -91,7 +91,8 @@
     "tools/dependency-review/derivative_notices.py",
     "tools/dependency-review/test_derivative_notices.py",
     "tools/dependency-review/runtime-source-map-controls.cjs",
-    "tools/dependency-review/devtools-source-map-controls.cjs"
+    "tools/dependency-review/devtools-source-map-controls.cjs",
+    "tools/dependency-review/test-runtime-source-map-support.cjs"
   ],
   "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
   "inputPins": {
