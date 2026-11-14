@@ -136,9 +136,13 @@ constraints only for exactly identical publications. The
 changed registry location and verifies the baseline members against the
 existing application installation without an extra install or source request.
 The [version gate](PROPOSAL_VERSION_RANGES.md) adds a further bounded command
-using a pinned SemVer source tree. Eleven command records cover the existing
-eight commands, the two proposal commands and this range evaluation. Proposed
-packages are neither installed nor executed. The complete proposed graph,
+using a pinned SemVer source tree. The separate
+[mapper controls](MAPPER_ARRAY_CONTROLS.md) add one bounded command using two
+exact source archives, with no extracted package tree or candidate installation.
+Twelve command records cover the existing eight commands, two proposal commands,
+range evaluation and mapper controls. Selected proposed mapper declarations and
+root Zod code execute in small VM fixtures; the browser/CDP bootstrap is removed
+explicitly. The complete proposed graph,
 source/API and browser/platform compatibility need review before adoption;
 this proposal does not waive or remediate the current Zod finding.
 

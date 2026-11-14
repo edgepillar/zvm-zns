@@ -26,7 +26,8 @@ Each archive is bounded, SHA-512 checked and inspected in memory. The complete
 compressed/tar stream, canonical paths, regular members, hashes, manifest
 identity and dependency/bundle declarations are checked. Peer declarations,
 platform/license metadata, engine ranges and lifecycle declarations are compared
-with the hashed manifest. Source code and lifecycle scripts are not executed.
+with the hashed manifest. This source-accounting stage executes no package code
+or lifecycle scripts. The subsequent bounded mapper control has its own scope.
 
 The report retains selected manifest/API-entry changes, added/removed/changed
 members and original notice candidates. It excludes author/contact fields from
@@ -54,8 +55,10 @@ retains each selected publication, verified member count and canonical pin-set
 hash, bound to the exact source plan and application lock.
 
 The same checker supports a separately qualified candidate installation. This
-lane does not install or execute proposed application packages; candidate API
-and browser controls remain subsequent work. Matching known files does not
+lane does not install the proposed application graph. Separate
+[mapper array controls](MAPPER_ARRAY_CONTROLS.md) execute selected generated
+declarations and root-library code without the browser bootstrap. Full candidate
+API and browser controls remain subsequent work. Matching known files does not
 authenticate unknown extra installed files or the publisher.
 
 ## Remaining acceptance

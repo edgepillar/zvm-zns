@@ -48,8 +48,10 @@ The web plan pins SemVer 7.8.4: its 29,325-byte npm publication has SHA-256
 All 53 regular members have individual SHA-256 pins. A single capped hosted
 request checks SHA-512, the complete archive and member set before extracting
 only those regular members into a new job-owned tool directory. No npm tool
-installation or lifecycle script is needed. This separate tool is executed;
-the proposed application packages are not installed or executed.
+installation or lifecycle script is needed. This range stage executes the
+separate tool without executing proposed application packages. The subsequent
+[mapper controls](MAPPER_ARRAY_CONTROLS.md) execute selected proposed code under
+a separate, bounded scope; they do not install the candidate graph.
 
 Before loading SemVer, the worker verifies every supplied source pin and the
 dependency-free tool manifest. It checks every loaded scanner module against

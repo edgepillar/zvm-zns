@@ -19,6 +19,7 @@ from web_parent_candidate import stage_candidate, inspect_candidate
 from proposal_range_qualification import qualify_ranges
 from proposal_delta import prepare_platform_candidate
 from changed_source_installation import verify_selected_installation
+from mapper_size_controls import qualify_mapper_controls
 
 
 def pin(raw):
@@ -143,7 +144,8 @@ def main():
                 'tools/dependency-review/proposal_versions.py', 'tools/dependency-review/version_ranges.cjs',
                 'tools/dependency-review/proposal_range_qualification.py', 'tools/dependency-review/proposal_delta.py',
                 'tools/dependency-review/changed_publications.py', 'tools/dependency-review/changed_source_installation.py',
-                'tools/dependency-review/changed-publications.json')},
+                'tools/dependency-review/changed-publications.json', 'tools/dependency-review/mapper_size_controls.py',
+                'tools/dependency-review/mapper-size-worker.cjs')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -216,6 +218,11 @@ def main():
         ranges = report['proposalVersionRanges']['versionReview']
         require(ranges['allRecordedVersionCasesEvaluated'] and ranges['allResolvedDependencyRangesSatisfied']
             and ranges['allRecordedEngineRangesSatisfiedForProfile'], 'proposal version or engine constraints require review')
+        report['mapperArrayControls'] = qualify_mapper_controls(repo, parent_root, output, env, report['commands'], source_plan)
+        report['parentMigrationCandidate'].update(newPackagesInstalledOrExecuted=True,
+            proposedPackageExecutionScope='Selected generated mapper declarations and pinned Zod library code in bounded array controls only.',
+            completeCandidateDependencyInstallation=False, candidateBrowserBootstrapExecuted=False,
+            migrationAcceptanceEstablished=False)
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()

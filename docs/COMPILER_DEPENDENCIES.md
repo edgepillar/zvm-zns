@@ -81,7 +81,10 @@ by the compiler update. A bounded hosted npm lock-only step stages Puppeteer
 25.17.0 and Zod 4.6.7 as a **review-only proposal** in a new job-owned directory.
 Puppeteer's declared BiDi selection is `157.0.8090-0`; it must be retained by the
 proposal. Lifecycle scripts and audit/funding transport are disabled. No proposed
-package is installed or executed and the actual application inputs stay equal.
+package is installed or executed by that lock-only step, and the actual
+application inputs stay equal. Subsequent
+[mapper controls](MAPPER_ARRAY_CONTROLS.md) execute selected proposed code in
+memory without installing the complete candidate graph or starting a browser.
 
 The two proposed manifest/lock files, source hashes, npm version, command streams
 and strict declaration-inventory result or refusal are retained explicitly. The
