@@ -7,6 +7,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const {isBuiltin, registerHooks, syncBuiltinESMExports} = require('node:module');
 const {fileURLToPath, pathToFileURL} = require('node:url');
+const {describeLoad, controls: formatControls} = require('./node-consumer-formats.cjs');
 
 const hash = raw => crypto.createHash('sha256').update(raw).digest('hex');
 const pin = raw => ({bytes: raw.length, sha256: hash(raw)});
@@ -36,6 +37,7 @@ async function main() {
   const inventory = json(input.inventory, 16 * 1024 * 1024);
   const changed = json(input.changedSources, 2 * 1024 * 1024);
   const planRaw = read(input.plan, 65536); const plan = JSON.parse(planRaw);
+  const loaderFormatControls = formatControls();
   const lockRaw = read(path.join(root, 'package-lock.json'), 2 * 1024 * 1024); const lock = JSON.parse(lockRaw);
   assert.equal(hash(lockRaw), plan.profiles[input.profile].lockSha256);
   assert.equal(inventory.lockSha256, plan.profiles.candidate.lockSha256);
@@ -110,12 +112,12 @@ async function main() {
       try {
         const file = fileURLToPath(url); const {value, raw} = verified(file);
         const result = nextLoad(url, context);
-        assert(['module', 'commonjs', 'json'].includes(result.format), 'Unreviewed runtime module format');
+        const formatEvidence = describeLoad(file, context, result);
         assert(result.source !== null && result.source !== undefined, 'Synchronous loader did not expose source bytes');
         const actual = typeof result.source === 'string' ? Buffer.from(result.source) : Buffer.from(result.source);
         assert.deepEqual(actual, raw); loaderSourceMatches++;
         loaded.set(value.relative, {location: value.location, member: value.member, integrity: value.integrity,
-          ...value.expected, format: result.format});
+          ...value.expected, ...formatEvidence});
         return result;
       } catch (error) { violations++; throw error; }
     },
@@ -159,6 +161,7 @@ async function main() {
     profile: input.profile, nodeVersion: process.version, nodePlatform: process.platform, nodeArchitecture: process.arch,
     libc: 'glibc', puppeteerVersion: manifest.version, planPin: pin(planRaw),
     sourceGuardRefusals: refusals, packageAPIObservations: 3, trackedCallerOptionCases: 2,
+    loaderFormatControls,
     observedPublicMethods: methods, options, loadedMembers: [...loaded.values()], builtinModules: [...builtins].sort(),
     missingModuleResolutions: [...missing].map(([request, code]) => ({request, code})),
     exactLoaderSourceComparisons: loaderSourceMatches, sourceGuardViolations: violations, requestedNetworkOrProcessOperations: requestedIO,

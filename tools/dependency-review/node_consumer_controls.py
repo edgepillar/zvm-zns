@@ -77,6 +77,8 @@ def qualify_consumers(repo, web, parent_root, output, env, commands, source_plan
             'Node consumer result scope differs')
         require(result['planPin'] == pin(plan_raw) and result['nodePlatform'] == 'linux' and result['nodeArchitecture'] == 'x64'
             and result['libc'] == 'glibc' and result['actualInstalledPackageCodeExecuted'] and result['actualNodeResolutionPreserved'], 'actual Node execution or source binding differs')
+        require(result['loaderFormatControls'] == {'acceptedCases': 4, 'refusedCases': 8, 'nativeLoadResultsModified': False},
+            'native loader format controls differ')
         require(result['sourceGuardViolations'] == result['requestedNetworkOrProcessOperations'] == 0
             and not result['browserOrCDPOrProtocolHandlersOrApplicationScriptsExecuted']
             and not result['fundedVerificationOrWalletSigningOrLiveChainExecuted'] and not result['proposalAdopted'], 'Node consumer boundary differs')

@@ -40,6 +40,15 @@ existing reviewed publication pins; unchanged publications reuse the matching
 candidate source inventory. CommonJS remains under Node's normal synchronous
 hook behavior. See [Node module hooks](https://nodejs.org/api/module.html).
 
+Node can leave a CommonJS `.js` load format undefined until native syntax
+detection. The observer records this as `node-autodetect` only when both native
+format fields are undefined and the load conditions contain `require` without
+`import`. It records the native fields and conditions without setting a format
+or changing the returned source. Other formats remain refused. Four positive
+and eight refusal cases check this boundary before package execution. See the
+[Node 22 loader](https://github.com/nodejs/node/blob/v22.23.4/lib/internal/modules/cjs/loader.js)
+and [hook result validation](https://github.com/nodejs/node/blob/v22.23.4/lib/internal/modules/customization_hooks.js).
+
 The worker imports real Puppeteer, its BiDi-over-CDP adapter and the BiDi package
 main. It observes the expected public API shapes. It extracts only the two
 source-pinned `puppeteer.launch` option expressions from `shots.mjs` and
