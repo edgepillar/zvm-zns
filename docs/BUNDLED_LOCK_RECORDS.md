@@ -64,10 +64,14 @@ plan, source, streams and original proposed manifest/lock bytes.
 ## Remaining migration acceptance
 
 This model establishes selected parent/member source bindings. It does not
-authenticate publishers or registry attestations, independently verify every
-version range, acquire every package payload, qualify WASI/browser runtime or
+authenticate publishers or registry attestations, acquire every package payload, qualify WASI/browser runtime or
 complete legal/output obligations. The full proposed graph and migration remain
 unqualified and unapplied. The application's current Zod finding stays open.
+
+The separate [version and engine gate](PROPOSAL_VERSION_RANGES.md) checks each
+resolved declaration and recorded toolchain constraint with reviewed SemVer
+source. Its result is retained separately from this structural source inventory.
+Every source revision needs its own actual execution evidence.
 
 Source/API review and isolated browser compatibility are separate next gates.
 The existing funded chain-verification consumer is not executed by this model.

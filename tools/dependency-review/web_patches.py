@@ -16,6 +16,7 @@ from compiled_labels import canonical_sha256, inspect_labels
 from lock_review import read_input, require
 from openzeppelin_candidate import checked_name, run_bounded, sha, write_json
 from web_parent_candidate import stage_candidate, inspect_candidate
+from proposal_range_qualification import qualify_ranges
 
 
 def pin(raw):
@@ -136,7 +137,9 @@ def main():
                 'tools/dependency-review/web_parent_candidate.py', 'tools/dependency-review/bundled_lock.py',
                 'tools/dependency-review/lock_review.py', 'tools/dependency-review/openzeppelin_candidate.py',
                 'web/scripts/source-map-controls.test.mjs', 'web/scripts/source-map-codegen.test.mjs',
-                'web/scripts/vite-virtual-module-controls.test.mjs')},
+                'web/scripts/vite-virtual-module-controls.test.mjs',
+                'tools/dependency-review/proposal_versions.py', 'tools/dependency-review/version_ranges.cjs',
+                'tools/dependency-review/proposal_range_qualification.py')},
             'runId': os.environ.get('GITHUB_RUN_ID'), 'runAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
             'browserLiveChainWalletOrDeploymentQualified': False}
         write_json(output / 'source-binding.json', binding)
@@ -195,6 +198,12 @@ def main():
         report['parentMigrationCandidate']['npmVersion'] = (output / 'streams/parent-package-toolchain.stdout.txt').read_text().strip()
         toolchain = json.loads((output / 'streams/toolchain.stdout.txt').read_bytes())
         require(re.fullmatch(r'v22\.\d+\.\d+', toolchain['node']), 'unreviewed Node major')
+        report['proposalVersionRanges'] = qualify_ranges(repo, parent_root, proposed_inventory,
+            {'node': toolchain['node'], 'npm': report['parentMigrationCandidate']['npmVersion']},
+            output, env, report['commands'], plan['versionRangeTool'])
+        ranges = report['proposalVersionRanges']['versionReview']
+        require(ranges['allRecordedVersionCasesEvaluated'] and ranges['allResolvedDependencyRangesSatisfied']
+            and ranges['allRecordedEngineRangesSatisfiedForProfile'], 'proposal version or engine constraints require review')
         vite_version = plan['packages']['vite']['version']
         require(('vite/' + vite_version).encode() in (output / 'streams/vite-version.stdout.txt').read_bytes(), 'selected Vite CLI not observed')
         virtual_raw = (output / 'streams/vite-virtual-module-controls.stdout.txt').read_bytes()

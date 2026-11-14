@@ -93,6 +93,10 @@ archive bytes and a bijection with the six hashed manifests before inventorying
 those rows. Its original registry-only refusal remains visible in the new report.
 The actual application's strict inventory remains its separate required check.
 An unqualified proposal packet preserves review inputs and accepts no migration.
+The separate [version gate](PROPOSAL_VERSION_RANGES.md) then checks every
+resolved range and recorded Node/npm engine constraint using a pinned,
+dependency-free SemVer source tree and explicit policies. Proposed packages
+remain uninstalled. Its result does not qualify the complete graph.
 Source/API, complete resolved
 graph, browser/platform and compatible adoption review must follow before any
 proposal becomes an application update. A proposed clean range or a successful

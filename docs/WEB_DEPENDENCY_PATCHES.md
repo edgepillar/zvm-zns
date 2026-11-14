@@ -128,8 +128,9 @@ from the exact parent archive, preserves the registry-only refusal and rebuilds
 the complete original declaration graph. This source inventory remains separate
 from full graph, source/API, browser and migration acceptance. An explicitly
 requested parent binding is strict and fails if any claim cannot be paired.
-These ten command records
-cover the existing eight commands plus the two proposal commands. Proposed
+The [version gate](PROPOSAL_VERSION_RANGES.md) adds a further bounded command
+using a pinned SemVer source tree. Eleven command records cover the existing
+eight commands, the two proposal commands and this range evaluation. Proposed
 packages are neither installed nor executed. The complete proposed graph,
 source/API and browser/platform compatibility need review before adoption;
 this proposal does not waive or remediate the current Zod finding.
