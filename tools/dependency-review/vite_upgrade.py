@@ -12,7 +12,7 @@ import subprocess
 from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from lock_review import decode, dependencies, read_input, require, resolve
+from lock_review import NAME, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
 from profile_sources import inspect_profile_archive, pin, read_regular
 from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity
@@ -90,6 +90,67 @@ def inspect_vite(web, cache, cache_row, lock_row):
     return archive, installed_vite_labels(web, archive)
 
 
+def changed_publications(rows, delta):
+    locations = set(delta['addedLocations']) | {row['location'] for row in delta['publicationChanges']}
+    require(LOCATION in locations and len(locations) <= 64, 'candidate changed publication budget')
+    return {location: registry_identity(location, rows[location]) for location in sorted(locations)}
+
+
+def installed_changes(web, rows, delta):
+    installed, absent = {}, []
+    for location, selection in changed_publications(rows, delta).items():
+        path = web / location
+        if path.exists() or path.is_symlink():
+            require(path.is_dir() and not path.is_symlink(), 'candidate package location differs: ' + location)
+            installed[location] = selection
+        else:
+            require(rows[location].get('optional') is True, 'candidate required publication is missing: ' + location)
+            absent.append(location)
+    require(LOCATION in installed, 'candidate Vite is missing')
+    return installed, absent
+
+
+def review_installed_publications(web, rows, installed, cache, index, vite_archive):
+    archives = {PUBLICATION['integrity']: vite_archive}
+    records = {}
+    for location, selection in installed.items():
+        integrity = selection['integrity']
+        if integrity not in archives:
+            cached = index[integrity]
+            raw = read_regular(cache, cached['cacheRelative'], 32 << 20)
+            require(len(raw) == cached['bytes'], 'cached publication length differs: ' + location)
+            member_bytes = 32 << 20 if selection['name'] == '@rolldown/binding-linux-x64-gnu' else 16 << 20
+            archives[integrity] = inspect_profile_archive(raw, selection, rows[location],
+                expanded_limit=64 << 20, member_limit=4096, member_bytes=member_bytes)
+        archive = archives[integrity]
+        require(archive['selection'] == selection, 'candidate publication identity collision')
+        manifest_raw = read_regular(web, location + '/package.json', 1 << 20)
+        manifest_pin = archive['filePins']['package.json']
+        require(pin(manifest_raw) == manifest_pin, 'candidate manifest differs from its archive: ' + location)
+        manifest = decode(manifest_raw)
+        notices = {name: archive['filePins'][name] for name in archive['noticeCandidates']}
+        for name, expected in notices.items():
+            require(pin(read_regular(web, location + '/' + name, 1 << 20)) == expected,
+                'candidate original notice differs: ' + location + '/' + name)
+        records[location] = {'selection': selection, 'archive': archive['publication'],
+            'originalManifest': manifest_pin, 'manifestLicense': manifest.get('license'), 'originalNotices': notices}
+    return records
+
+
+def notice_dependency_names(raw):
+    require(pin(raw) == RELEASE_NOTICE, 'Vite release notice bytes differ')
+    sections = raw.decode('utf-8').split('\n# Licenses of bundled dependencies\n')
+    require(len(sections) == 2, 'reviewed Vite notice heading differs')
+    names = set()
+    for line in sections[1].splitlines():
+        if line.startswith('## '):
+            group = line[3:].split(', ')
+            require(all(NAME.fullmatch(name) for name in group), 'unrecognized dependency notice heading')
+            names.update(group)
+    require(0 < len(names) <= 256, 'Vite dependency notice names budget')
+    return sorted(names)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
@@ -160,12 +221,18 @@ def main():
         run('candidate-install', ['npm', 'ci', *INSTALL_FLAGS], timeout=180)
         require(read_input(web, 'package-lock.json') == selected_lock and read_input(web, 'package.json') == package_raw,
             'candidate npm ci changed the selected inputs')
-        cache, index = current_cache_index(repo, web, output, env, run, npm, {PUBLICATION['integrity']})
-        archive, labels = inspect_vite(web, cache, index['index'][PUBLICATION['integrity']], package_table(selected_lock)[1][LOCATION])
+        _, rows = package_table(selected_lock)
+        installed, absent = installed_changes(web, rows, report['lockDelta'])
+        cache, index = current_cache_index(repo, web, output, env, run, npm,
+            {selection['integrity'] for selection in installed.values()})
+        archive, labels = inspect_vite(web, cache, index['index'][PUBLICATION['integrity']], rows[LOCATION])
         write_json(output / 'vite-compiled-labels.json', labels)
         observed = {(row['name'], row['version']) for row in labels['distinctNameVersionLabels']}
         report['viteArchive'] = archive
         report['archivedNoticeMatchesReleaseSource'] = True
+        report['releaseNoticeDependencyNames'] = notice_dependency_names(read_regular(web, LOCATION + '/LICENSE.md', 1 << 20))
+        report['installedChangedPublications'] = review_installed_publications(web, rows, installed, cache, index['index'], archive)
+        report['absentOptionalChangedLocations'] = absent
         report['compiledLabels'] = {'inventorySha256': canonical_sha256(labels), 'distinctPairs': len(observed),
             'unparsedHeaders': len(labels['unparsedRegionLabels']), 'recognizedOccurrences': len(labels['generatedRegionLabels']),
             'previousExactPairs': [{'name': name, 'version': version, 'observed': (name, version) in observed}

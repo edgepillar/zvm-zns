@@ -84,6 +84,13 @@ class ProfileSourceControls(unittest.TestCase):
         data, selection, row = publication()
         with self.assertRaisesRegex(ReviewError, 'expanded source budget'): inspect_profile_archive(data, selection, row, expanded_limit=512)
 
+    def test_explicit_member_byte_cap_refuses_oversized_members(self):
+        raw_bytes, selection, row = publication(extra=[('package/ordinary.txt', b'x' * 1024)])
+        with self.assertRaisesRegex(ReviewError, 'member budget'):
+            inspect_profile_archive(raw_bytes, selection, row, member_bytes=512)
+        result = inspect_profile_archive(raw_bytes, selection, row, member_bytes=1024)
+        self.assertEqual(result['filePins']['ordinary.txt'], pin(b'x' * 1024))
+
     def test_explicit_member_ceiling_is_bounded_and_preserves_integrity_refusal(self):
         data, selection, row = publication()
         with self.assertRaisesRegex(ReviewError, 'member count'): inspect_profile_archive(data, selection, row, member_limit=1)

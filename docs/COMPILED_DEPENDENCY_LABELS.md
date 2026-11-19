@@ -104,10 +104,23 @@ Both builds use `npm run build` to check runtime preparation, types, vendor
 chunks and current static notices. The default application and synthetic fixture
 share one installation. CI retains the locks, label inventory and command reports.
 
+The web job also checks the npm registry archive, original package manifest and
+notice pins for each added or replaced publication installed on Linux x64 glibc.
+Its report identifies changed optional locations absent from that installation.
+The pinned Vite notice provides names of dependencies listed by the release
+without binding versions of embedded code.
+
+The `vite-evidence` job validates the candidate ZIP against its upload digest
+and reads only bounded, expected members. From those bytes it reconstructs the
+lock delta and platform carries, validates the derived runtime manifest and
+checks every recorded command stream, compiled-label report and notice receipt.
+It runs without a package install or browser launch. Raw package verification
+belongs to the producer, whose records are bound to the same commit and run.
+
 The tracked application uses Vite 7. Hosted CDP and BiDi controls exercise both
 Vite versions' normal and synthetic builds from the same two Chrome sessions.
-Adoption of Vite 8 requires review of the selected dependency delta, compiled
-code and shipped notice obligations. The textual labels cover supported build
+Adoption of Vite 8 requires review of compiled code, other supported platforms
+and shipped notice obligations. The textual labels cover supported build
 markers and leave unmarked code outside this inventory.
 
 The upstream virtual-module advisory

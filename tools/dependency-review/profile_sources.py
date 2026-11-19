@@ -73,11 +73,12 @@ def select_profile(lock_raw, installed, profile):
     return {'selected': selected, 'excluded': excluded, 'decisions': decisions}
 
 
-def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, member_limit=8192):
+def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, member_limit=8192, member_bytes=16 << 20):
     require(type(raw) is bytes and 0 < len(raw) <= 32 << 20, 'profile compressed source budget')
     require(selection['integrity'] == 'sha512-' + base64.b64encode(hashlib.sha512(raw).digest()).decode(), 'profile raw publication integrity differs')
     require(type(expanded_limit) is int and 0 < expanded_limit <= 192 << 20, 'profile expansion limit')
     require(type(member_limit) is int and 0 < member_limit <= 32768, 'profile archive member limit')
+    require(type(member_bytes) is int and 0 < member_bytes <= 32 << 20, 'profile member byte limit')
     with gzip.GzipFile(fileobj=io.BytesIO(raw)) as source: expanded = source.read(expanded_limit + 1)
     require(len(expanded) <= expanded_limit and len(expanded) % 512 == 0, 'profile expanded source budget or alignment')
     seen, files, bodies, roots = set(), {}, {}, set()
@@ -90,7 +91,7 @@ def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, me
             checked_name(name); parts = name.split('/'); roots.add(parts[0])
             require(len(roots) == 1 and name.casefold() not in seen, 'profile archive root or case alias differs')
             seen.add(name.casefold())
-            require((member.isfile() or member.isdir()) and not member.sparse and 0 <= member.size <= 16 << 20, 'profile archive type or member budget')
+            require((member.isfile() or member.isdir()) and not member.sparse and 0 <= member.size <= member_bytes, 'profile archive type or member budget')
             if member.isdir():
                 require(member.size == 0, 'profile directory payload'); continue
             require(len(parts) >= 2, 'profile member outside package root')
@@ -98,8 +99,8 @@ def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, me
             start, end = member.offset_data, member.offset_data + member.size
             require(0 <= start <= end <= len(expanded), 'profile archive truncated member')
             require(not any(expanded[end:((end + 511) // 512) * 512]), 'profile member nonzero padding')
-            body = expanded[start:end]; files[relative] = pin(body)
-            if relative == 'package.json': bodies[relative] = body
+            body = memoryview(expanded)[start:end]; files[relative] = pin(body)
+            if relative == 'package.json': bodies[relative] = bytes(body)
         require(len(expanded) - source.offset >= 1024 and not any(expanded[source.offset:]), 'profile tar terminator or trailer')
     require('package.json' in bodies and files, 'profile publication manifest absent')
     manifest = decode(bodies['package.json'])
