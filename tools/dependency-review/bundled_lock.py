@@ -1,13 +1,11 @@
 """Classify bundled lock rows using actual SHA-512-bound parent publications."""
 
 import hashlib
-import io
 import json
 import re
-import tarfile
 
-from bundled_archive import inspect_archive
-from lock_review import (MAX_EDGES, MAX_INPUT, MAX_PACKAGES, SCOPES, bundled_names,
+from bundled_archive import inspect_archive_with_manifests
+from lock_review import (MAX_EDGES, MAX_PACKAGES, SCOPES, bundled_names,
     decode, dependencies, effective_name, inventory, location_name, optional_peers,
     require, resolve)
 
@@ -50,34 +48,19 @@ def bind_members(packages, archives):
     require(type(archives) is dict and len(archives) <= 16, 'parent publication budget')
     require(all(type(raw) is bytes for raw in archives.values()) and sum(map(len, archives.values())) <= 64 << 20,
         'parent publication byte budget')
-    bindings, publications = {}, {}
+    bindings, publications, reports = {}, {}, {}
     for parent_location, raw in sorted(archives.items()):
         location_name(parent_location)
         require(parent_location in packages and type(packages[parent_location]) is dict
             and packages[parent_location].get('inBundle', False) is False, 'parent must have its own registry record')
         selected = packages[parent_location]
-        review = inspect_archive(raw, {**selected, 'name': selected.get('name', location_name(parent_location))}, expanded_limit=32 << 20)
+        selected = {**selected, 'name': selected.get('name', location_name(parent_location))}
+        review, found = inspect_archive_with_manifests(raw, selected, expanded_limit=32 << 20)
         manifests = review['allArchivePackageManifests']
         require(manifests and len(manifests) <= MAX_PACKAGES, 'selected publication has no bounded bundle manifests')
-        requested = {value['manifestPath']: (relative, value) for relative, value in manifests.items()}
-        parent_member, = [row for row in review['archiveMembers'] if row['path'] == 'package/package.json']
-        requested['package/package.json'] = ('', {'manifestBytes': parent_member['bytes'], 'manifestSha256': parent_member['sha256']})
-        found = {}
-        # The inspector has already validated the complete compressed stream,
-        # archive paths/types, member hashes and expansion bound. Decode only its
-        # canonical package manifests, excluding package-internal data manifests.
-        with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as archive:
-            for member in archive:
-                if member.name not in requested:
-                    continue
-                relative, expected = requested[member.name]
-                require(member.isfile() and 0 < member.size <= MAX_INPUT, 'bundled manifest byte budget')
-                body = archive.extractfile(member).read(MAX_INPUT + 1)
-                require(len(body) == expected['manifestBytes'] and hashlib.sha256(body).hexdigest() == expected['manifestSha256'],
-                    'bundled manifest changed after inspection')
-                found[relative] = decode(body)
         require(set(found) == set(manifests) | {''}, 'bundled manifests incomplete')
         metadata(selected, found.pop(''), bundled=False)
+        reports[parent_location] = review
         publications[parent_location] = {'publication': review['publication'],
             'parentManifestSha256': review['parentManifestSha256'],
             'archiveMemberCount': review['archiveMemberCount'], 'regularFileCount': review['regularFileCount'],
@@ -93,7 +76,7 @@ def bind_members(packages, archives):
             metadata(row, manifest)
             bindings[location] = {'parentLockLocation': parent_location,
                 'parentPublication': review['publication'], **manifests[relative]}
-    return bindings, publications
+    return bindings, publications, reports
 
 
 def declaration_graph(packages, bindings):
@@ -155,13 +138,18 @@ def declaration_graph(packages, bindings):
 
 
 def inventory_with_archives(package_raw, lock_raw, archives):
+    graph, _ = inventory_and_archive_reports(package_raw, lock_raw, archives)
+    return graph
+
+
+def inventory_and_archive_reports(package_raw, lock_raw, archives):
     lock = decode(lock_raw); packages = lock.get('packages')
     require(type(packages) is dict and 1 <= len(packages) <= MAX_PACKAGES + 1
         and all(type(row) is dict for row in packages.values()), 'source package table budget or type')
     require(all('inBundle' not in row or type(row['inBundle']) is bool for row in packages.values()), 'invalid inBundle flag')
     require(not packages.get('', {}).get('inBundle'), 'project root cannot be a bundled member')
     claimed = {location for location, row in packages.items() if row.get('inBundle') is True}
-    bindings, publications = bind_members(packages, archives)
+    bindings, publications, reports = bind_members(packages, archives)
     require(set(bindings) == claimed, 'bundled lock claims and archive members are not a bijection')
     projection = {**lock, 'packages': {name: row for name, row in packages.items() if name not in bindings}}
     projection_raw = encoded(projection)
@@ -182,7 +170,7 @@ def inventory_with_archives(package_raw, lock_raw, archives):
             'declaredBundledDependencies': bundled_names(row), 'declaredOptionalPeers': optional_peers(row),
             'peerMetadataWithoutDeclaration': sorted(set(row.get('peerDependenciesMeta', {})) - set(row.get('peerDependencies', {})))})
     graph = declaration_graph(packages, bindings)
-    return {'schema': 3, 'status': 'LOCK_ROWS_AND_SELECTED_PARENT_ARCHIVE_MEMBERS_INVENTORIED_REVIEW_REQUIRED',
+    result = {'schema': 3, 'status': 'LOCK_ROWS_AND_SELECTED_PARENT_ARCHIVE_MEMBERS_INVENTORIED_REVIEW_REQUIRED',
         'packageJsonSha256': hashlib.sha256(package_raw).hexdigest(), 'packageLockSha256': hashlib.sha256(lock_raw).hexdigest(),
         'packageCount': len(records), 'packageRecords': sorted(records, key=lambda row: row['location']),
         'registryPackageCount': len(registry['packageRecords']), 'boundArchiveMemberCount': len(bindings),
@@ -196,3 +184,4 @@ def inventory_with_archives(package_raw, lock_raw, archives):
         'vulnerabilityScanExecuted': False, 'applicationRuntimeReachabilityEstablished': False,
         'licenseReviewComplete': False, 'installedPlatformQualified': False,
         'completeLockIntegrityReview': False, 'completeSBOM': False, 'releaseAccepted': False}
+    return result, reports

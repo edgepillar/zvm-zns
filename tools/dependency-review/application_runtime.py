@@ -12,6 +12,7 @@ import subprocess
 from browser_runtime import download_browser, extract_browser
 from browser_staging import hosted_only, new_file, validate_source_plan
 from coherent_derivation import PACKAGE, MAPPER, runtime_probe
+from compiled_labels import canonical_sha256, inspect_labels
 from lock_review import read_input, require
 from node_consumer_controls import permission_args
 from openzeppelin_candidate import run_bounded, write_json
@@ -62,6 +63,28 @@ def raw_profile(repo, web, output, env, run, npm_version):
     inventory['sourceBudgetPlanPin'] = pin(budgets_raw)
     write_json(output / 'application-raw-profile-sources.json', inventory)
     return inventory, result
+
+
+def verify_vite_labels(web, inventory, expected):
+    location = 'node_modules/vite'
+    require(location in inventory['installed'], 'installed Vite publication missing')
+    selected = inventory['installed'][location]['selection']
+    require(selected['name'] == 'vite' and selected['version'] == expected['version'], 'installed Vite identity differs')
+    publication = inventory['sources'][selected['integrity']]
+    files = {}
+    for name, value in publication['filePins'].items():
+        if name.endswith(('.js', '.mjs', '.cjs')):
+            raw = read_regular(web, location + '/' + name, 2 << 20)
+            require(pin(raw) == value, 'installed Vite label source differs from its publication')
+            files[name] = raw
+    labels = inspect_labels(files)
+    require(not labels['unparsedRegionLabels'], 'installed Vite has unreviewed compiled labels')
+    digest = canonical_sha256(labels)
+    require(digest == expected['inventorySha256'], 'installed Vite compiled label inventory differs')
+    return {'version': selected['version'], 'integrity': selected['integrity'],
+        'inventorySha256': digest, 'fileCount': len(files),
+        'occurrences': len(labels['generatedRegionLabels']), 'pairs': len(labels['distinctNameVersionLabels']),
+        'evidenceAuthority': labels['evidenceAuthority']}
 
 
 def effective_profile(web, manifest):
@@ -163,6 +186,7 @@ def main():
         require(read_input(output, 'streams/npm-script-policy.stdout.txt').strip() == b'true', 'project install scripts must be disabled')
         run('application-install', ['npm', 'ci', '--ignore-scripts', '--include=dev', '--include=optional', '--no-audit', '--no-fund', '--no-progress'], timeout=180)
         inventory, cache = raw_profile(repo, web, output, env, run, npm_version)
+        report['installedViteCompiledLabels'] = verify_vite_labels(web, inventory, plan['viteCompiledLabels'])
         report['rawInstalledProfile'] = {key: inventory[key] for key in ['installedPackageLocations', 'uniquePublications', 'regularSourceFiles', 'compressedSourceBytes', 'expandedSourceBytes']}
         report['rawSourceInventory'] = pin((output / 'application-raw-profile-sources.json').read_bytes())
         report['npmCacheAPITool'] = {key: cache[key] for key in ['npmVersion', 'toolPins', 'API', 'cacheAPIIsNotIndependentNpmToolchainAuthentication']}

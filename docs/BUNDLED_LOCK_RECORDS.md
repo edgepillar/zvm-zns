@@ -13,11 +13,13 @@ plan additionally pins the archive byte count, SHA-256, parent manifest and all
 six member manifests. The publication is **1,829,808 bytes**, SHA-256
 `d5b61fbe10d237f7565032a74b03b5be6c83b309037ee407e2b5b46f24738823`.
 
-The archive inspector checks the complete compressed/tar stream, safe regular
-members, expansion limits and every member hash in memory. The model then
-decodes only canonical package manifests. Package-internal data manifests, such
-as a module-format declaration below a package root, remain hashed archive
-members and do not become invented package records.
+The current application lock job inflates and inspects the selected archive
+once. That inspection checks the complete compressed/tar stream, safe regular
+members, expansion limits and every member hash in memory. It decodes canonical
+package manifests and retains the notice inventory during the same traversal.
+Package-internal data manifests, such as a module-format declaration below a
+package root, remain hashed archive members. Member hashing uses views of the
+expanded data and avoids separate retained copies of the file bodies.
 
 ## Identity and graph rules
 
@@ -50,23 +52,23 @@ The retained real proposal has 182 rows: 176 registry declarations and six
 members bound to the already retained parent publication. It needs no repeated
 local npm resolution, source download, archive extraction or package execution.
 
-The existing web lane obtains the same pinned parent publication once for this
-proposal check, with a byte cap and no extraction. This is one additional bounded
-request in that job; the independent existing lock-input job still performs its
-own original archive check. Reports retain transport pins, every manifest
-binding and the original registry-only refusal. An explicit binding failure
-fails the requested check and cannot fall back to an unqualified success.
+The current lock-input job fetches the parent once and uses the same inspection
+for the six member bindings and original notice candidates. The installed
+Linux x64 glibc web job uses the package archives already selected by its fresh
+npm install. The WASI parent remains part of the full lock review regardless
+of this installed profile's selection. An explicit binding failure fails the
+requested check.
 
 These are requirements for each source revision, not a claim that every revision
 has already passed hosted CI. Actual reports must bind the producer commit,
 plan, source, streams and original proposed manifest/lock bytes.
 
-## Remaining migration acceptance
+## Remaining acceptance
 
 This model establishes selected parent/member source bindings. It does not
-authenticate publishers or registry attestations, acquire every package payload, qualify WASI/browser runtime or
-complete legal/output obligations. The full proposed graph and migration remain
-unqualified and unapplied. The application's current Zod finding stays open.
+authenticate publishers or registry attestations, acquire every package payload,
+qualify WASI runtime or complete legal/output obligations. The application now
+uses the reviewed lock as described in [Application runtime](APPLICATION_RUNTIME.md).
 
 The separate [version and engine gate](PROPOSAL_VERSION_RANGES.md) checks each
 resolved declaration and recorded toolchain constraint with reviewed SemVer
@@ -74,6 +76,6 @@ source. Its result is retained separately from this structural source inventory.
 Every source revision needs its own actual execution evidence.
 
 Source/API review and isolated browser compatibility are separate next gates.
-The existing funded chain-verification consumer is not executed by this model.
-Current application inputs, compiled Solidity outputs and the original 42-item
-roadmap acceptance remain unchanged.
+The funded chain-verification consumer requires separate qualification. See the
+[current application plan](../tools/dependency-review/application-runtime.json)
+for the recorded hosted profile.

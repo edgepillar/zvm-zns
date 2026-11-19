@@ -27,13 +27,14 @@ Its reviewed source-file and canonical inventory hashes change. The separate
 [virtual-module fix](WEB_DEPENDENCY_PATCHES.md) does not remediate or waive the
 seven label-only candidates below.
 
-The [web qualification plan](../tools/dependency-review/web-patches.json) pins
-the canonical inventory digest. Hosted CI verifies the selected installed
-publication files, reproduces the inventory and retains its full output in the
-web qualification report. Changed, unsupported or omitted labels fail that
-comparison. This deterministic CI check does not fetch fresh advisories or
-turn a label into a package manifest. The original web build, bounded controls
-and original notice checks still run independently.
+The [current application qualification plan](../tools/dependency-review/application-runtime.json)
+pins the canonical inventory digest. Hosted CI checks the installed Vite
+JavaScript files against the publication identified by the job's npm cache.
+It reproduces the label inventory before the builds and browser download and
+records its digest and counts in the artifact. Changed, unsupported or omitted
+labels fail that comparison. The historical web qualification retains the full
+inventory. Fresh advisory results, package provenance and runtime reachability
+require their own evidence.
 
 ## Advisory review boundary
 

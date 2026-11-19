@@ -1,11 +1,13 @@
 """Bind real archive bytes to lock claims without inventing child tarballs."""
 
 import copy
+import gzip
 import json
 import tarfile
 import unittest
+from unittest.mock import patch
 
-from bundled_lock import inventory_with_archives
+from bundled_lock import inventory_and_archive_reports, inventory_with_archives
 from lock_review import ReviewError, inventory
 from test_bundled_archive import make_publication
 
@@ -28,6 +30,17 @@ def inputs(package, lock):
 
 
 class BundledLockControls(unittest.TestCase):
+    def test_lock_and_original_notice_inventory_share_one_inflation(self):
+        package, lock, archives = fixture()
+        with patch('bundled_archive.gzip.GzipFile', wraps=gzip.GzipFile) as opened:
+            graph, reports = inventory_and_archive_reports(*inputs(package, lock), archives)
+        opened.assert_called_once()
+        report = reports['node_modules/a']
+        child = next(row for row in graph['packageRecords'] if row['sourceKind'] == 'PARENT_PUBLICATION_MEMBER')
+        self.assertEqual(child['sourceBinding']['manifestSha256'], report['bundledPackages'][0]['manifestSha256'])
+        self.assertEqual(report['originalNoticeCandidates'][0]['path'], 'package/node_modules/b/LICENSE')
+        self.assertEqual(graph['boundArchiveMemberCount'], 1)
+
     def test_member_identity_uses_parent_publication_and_preserves_strict_registry_reader(self):
         p, lock, archives = fixture(); package_raw, lock_raw = inputs(p, lock)
         with self.assertRaises(ReviewError): inventory(package_raw, lock_raw)

@@ -94,7 +94,8 @@
     "tools/dependency-review/devtools-source-map-controls.cjs",
     "tools/dependency-review/test-runtime-source-map-support.cjs",
     "tools/dependency-review/runtime-stage.cjs",
-    "tools/dependency-review/test-runtime-stage.cjs"
+    "tools/dependency-review/test-runtime-stage.cjs",
+    "tools/dependency-review/compiled_labels.py"
   ],
   "coreCommit": "29e6d9b30be94de3772c850c7a1e9811585a8833",
   "inputPins": {
@@ -448,5 +449,9 @@
     }
   ],
   "schema": 1,
-  "scope": "Actual application manifest/lock, explicit local derivative and bounded Linux x64 glibc install/build/browser qualification."
+  "scope": "Actual application manifest/lock, explicit local derivative and bounded Linux x64 glibc install/build/browser qualification.",
+  "viteCompiledLabels": {
+    "inventorySha256": "54a3ea290194995665a4d86c5d618a1af502b5ef8190e34f79d5ae438e608db5",
+    "version": "7.3.8"
+  }
 }

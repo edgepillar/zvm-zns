@@ -11,7 +11,7 @@ from pathlib import Path
 import stat
 import tarfile
 
-from lock_review import (NAME, ReviewError, VERSION, bundled_names, decode, dependencies,
+from lock_review import (MAX_INPUT, NAME, ReviewError, VERSION, bundled_names, decode, dependencies,
                          effective_name, inventory, location_name, read_input, require, resolve)
 
 MAX_COMPRESSED = 32 << 20
@@ -20,6 +20,12 @@ MAX_MEMBERS = 8192
 
 
 def inspect_archive(raw, selected, *, expanded_limit=MAX_EXPANDED):
+    review, _ = inspect_archive_with_manifests(raw, selected, expanded_limit=expanded_limit)
+    return review
+
+
+def inspect_archive_with_manifests(raw, selected, *, expanded_limit=MAX_EXPANDED):
+    """Return the archive report and the exact manifests decoded in that pass."""
     require(type(raw) is bytes and 0 < len(raw) <= MAX_COMPRESSED, "compressed publication budget")
     require(type(expanded_limit) is int and 0 < expanded_limit <= MAX_EXPANDED, "invalid expanded budget")
     integrity = "sha512-" + base64.b64encode(hashlib.sha512(raw).digest()).decode()
@@ -31,7 +37,11 @@ def inspect_archive(raw, selected, *, expanded_limit=MAX_EXPANDED):
         archive = tarfile.open(fileobj=io.BytesIO(expanded), mode="r:")
     except (OSError, EOFError, tarfile.TarError) as error:
         raise ReviewError("invalid complete gzip/tar publication") from error
-    members, seen, contents = [], set(), {}
+    members, seen = [], set()
+    package_rows, package_manifests = {}, {}
+    regular_files = regular_bytes = 0
+    parent_manifest_hash = None
+    expanded_view = memoryview(expanded)
     try:
         for member in archive:
             require(len(members) < MAX_MEMBERS, "archive member budget")
@@ -51,40 +61,45 @@ def inspect_archive(raw, selected, *, expanded_limit=MAX_EXPANDED):
                 continue
             start, end = member.offset_data, member.offset_data + member.size
             require(0 <= start <= end <= len(expanded), "truncated archive payload")
-            body = expanded[start:end]
+            body = expanded_view[start:end]
             require(len(body) == member.size, "incomplete member payload")
             require(not any(expanded[end:((end + 511) // 512) * 512]), "nonzero member padding")
-            contents[name] = body
-            members.append({"path": name, "kind": "file", "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()})
+            digest = hashlib.sha256(body).hexdigest()
+            members.append({"path": name, "kind": "file", "bytes": len(body), "sha256": digest})
+            regular_files += 1
+            regular_bytes += len(body)
+            if name == "package/package.json":
+                require(0 < len(body) <= MAX_INPUT, "parent manifest byte budget")
+                package_rows[""] = decode(bytes(body))
+                parent_manifest_hash = digest
+            elif name.startswith("package/node_modules/") and name.endswith("/package.json"):
+                location = name[len("package/"):-len("/package.json")]
+                try:
+                    location_name(location)
+                except ReviewError:
+                    continue  # Package-internal data manifests remain hashed members.
+                require(0 < len(body) <= MAX_INPUT, "bundled manifest byte budget")
+                manifest = decode(bytes(body))
+                require(type(manifest.get("name")) is str and NAME.fullmatch(manifest["name"])
+                    and type(manifest.get("version")) is str and VERSION.fullmatch(manifest["version"]),
+                    "bundled package manifest identity differs")
+                package_rows[location] = manifest
+                package_manifests[location] = {"name": manifest["name"], "version": manifest["version"],
+                    "manifestPath": name, "manifestBytes": len(body), "manifestSha256": digest,
+                    "declaredLicense": manifest.get("license"), "declaredLifecycleScripts": sorted(
+                        key for key in manifest.get("scripts", {}) if key in ("preinstall", "install", "postinstall"))}
         require(len(expanded) - archive.offset >= 1024 and not any(expanded[archive.offset:]), "missing tar terminator or trailing nonzero data")
     except tarfile.TarError as error:
         raise ReviewError("invalid tar member stream") from error
     finally:
         archive.close()
-    require("package/package.json" in contents, "publication manifest absent")
-    parent = decode(contents["package/package.json"])
+    require("" in package_rows, "publication manifest absent")
+    parent = package_rows[""]
     require(parent.get("name") == selected["name"] and parent.get("version") == selected["version"], "publication package identity differs")
     expected_bundles = bundled_names(selected)
     require(bundled_names(parent) == expected_bundles, "publication bundle declarations differ from lock")
     for scope in ("dependencies", "optionalDependencies"):
         require(dependencies(parent, scope) == dependencies(selected, scope), "publication dependency declarations differ from lock")
-    package_manifests, package_rows = {}, {"": parent}
-    for path, body in sorted(contents.items()):
-        if not path.startswith("package/node_modules/") or not path.endswith("/package.json"):
-            continue
-        location = path[len("package/"):-len("/package.json")]
-        try:
-            name = location_name(location)
-        except ReviewError:
-            continue  # Other data manifests remain hashed, outside package locations.
-        value = decode(body)
-        require(type(value.get("name")) is str and NAME.fullmatch(value["name"]) and type(value.get("version")) is str
-            and VERSION.fullmatch(value["version"]), "bundled package manifest identity differs")
-        package_rows[location] = value
-        package_manifests[location] = {"name": value["name"], "version": value["version"], "manifestPath": path,
-            "manifestBytes": len(body), "manifestSha256": hashlib.sha256(body).hexdigest(),
-            "declaredLicense": value.get("license"), "declaredLifecycleScripts": sorted(
-                key for key in value.get("scripts", {}) if key in ("preinstall", "install", "postinstall"))}
     required_bundles = []
     for name in expected_bundles:
         location = "node_modules/" + name
@@ -107,12 +122,12 @@ def inspect_archive(raw, selected, *, expanded_limit=MAX_EXPANDED):
         owners = [location for location in package_rows if notice["path"].startswith(
             "package/" + (location + "/" if location else ""))]
         unit_notices[max(owners, key=len)].append(notice)
-    return {"schema": 1, "status": "LOCKED_BUNDLED_PUBLICATION_CONTENT_OBSERVED_REVIEW_REQUIRED",
+    review = {"schema": 1, "status": "LOCKED_BUNDLED_PUBLICATION_CONTENT_OBSERVED_REVIEW_REQUIRED",
         "publication": {"name": selected["name"], "version": selected["version"], "url": selected["resolved"],
             "integrity": integrity, "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)},
         "expandedTarBytes": len(expanded), "archiveMemberCount": len(members),
-        "regularFileCount": len(contents), "regularPayloadBytes": sum(len(body) for body in contents.values()),
-        "parentManifestSha256": hashlib.sha256(contents["package/package.json"]).hexdigest(),
+        "regularFileCount": regular_files, "regularPayloadBytes": regular_bytes,
+        "parentManifestSha256": parent_manifest_hash,
         "declaredBundleCount": len(expected_bundles), "bundledPackages": required_bundles,
         "allArchivePackageManifests": package_manifests,
         "archivePackageManifestCount": len(package_manifests), "originalNoticeCandidates": notices,
@@ -125,6 +140,7 @@ def inspect_archive(raw, selected, *, expanded_limit=MAX_EXPANDED):
         "publisherOrRegistryAttestationsVerified": False, "applicationRuntimeReachabilityEstablished": False,
         "WASIRuntimeQualified": False, "vulnerabilityScanExecuted": False,
         "licenseReviewComplete": False, "completeSBOM": False, "releaseAccepted": False}
+    return review, package_rows
 
 
 def archive_bytes(path):
