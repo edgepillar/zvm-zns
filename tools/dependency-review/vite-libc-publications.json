@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "source": "Exact-version public npm registry metadata",
+  "families": [
+    {
+      "selection": {
+        "name": "rolldown",
+        "version": "1.2.19",
+        "resolved": "https://registry.npmjs.org/rolldown/-/rolldown-1.2.19.tgz",
+        "integrity": "sha512-QIiV1J9d0pzN4jeeTH4sjPy0AZ6cAy2cG0ExeoE1+U8Rvj+hR3gYkokx0YbeUNGlZqiQJJ2utcETe0oKXwzsuA=="
+      },
+      "publications": [
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-arm64-gnu",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.2.19.tgz",
+            "integrity": "sha512-pm/apFMBnSbFb3O6nG5pHO1iqHhZrjGDFEjSm+ot9J17XXPvH9L90y5h+jgfHCE+Qdlsvy8qKEcU4VKxgjD+vA=="
+          },
+          "selectors": {
+            "cpu": [
+              "arm64"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 18951020
+        },
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-arm64-musl",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.2.19.tgz",
+            "integrity": "sha512-K1SmQp3FFichn8oqrNIwvFoZ5wcvjC7goBzpaMNvLf9FZc+QB/QvLmnpJZgAAGHiD980tP8FZZnXk2K94rvlxg=="
+          },
+          "selectors": {
+            "cpu": [
+              "arm64"
+            ],
+            "libc": [
+              "musl"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 18960336
+        },
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-ppc64-gnu",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.2.19.tgz",
+            "integrity": "sha512-I0xwD57jP/3A7+5UPZin2w8Y7XHEmEM5zqpYZOcQ45MlNW6tUJUziymV3yRr7rL4vwyfEcRsRksC4a7Kc08p5Q=="
+          },
+          "selectors": {
+            "cpu": [
+              "ppc64"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 23871112
+        },
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-s390x-gnu",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.2.19.tgz",
+            "integrity": "sha512-BrtEHT24SNXj9HiXqy+s/kXiSiQGt6EKCPUlRirAoIioVxKGnbXBUEkbZASAei7iZJB0/Ynm+0JP00Ipx7AnSw=="
+          },
+          "selectors": {
+            "cpu": [
+              "s390x"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 22580106
+        },
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-x64-gnu",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.2.19.tgz",
+            "integrity": "sha512-rm75/9DkHKeU2WnA8w4X94WGYgLlDCFCfkQC+4bguVJmC/jvDRv2B+2wLOYhyE0fVuv7//Ckk39OoOufyCu76Q=="
+          },
+          "selectors": {
+            "cpu": [
+              "x64"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 21118337
+        },
+        {
+          "selection": {
+            "name": "@rolldown/binding-linux-x64-musl",
+            "version": "1.2.19",
+            "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/-/binding-linux-x64-musl-1.2.19.tgz",
+            "integrity": "sha512-irh/4+iYFM4GAzpluDErgjz89bj6NDtqqMAG/6O1LG38Ed3NpyebzCpcVNkFW8uhy+/3/BocUvnXDR33CXWe9A=="
+          },
+          "selectors": {
+            "cpu": [
+              "x64"
+            ],
+            "libc": [
+              "musl"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 21198261
+        }
+      ]
+    },
+    {
+      "selection": {
+        "name": "lightningcss",
+        "version": "1.33.0",
+        "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz",
+        "integrity": "sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA=="
+      },
+      "publications": [
+        {
+          "selection": {
+            "name": "lightningcss-linux-arm64-gnu",
+            "version": "1.33.0",
+            "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.33.0.tgz",
+            "integrity": "sha512-j2v/itmy4HlNxlc6voKXYgBqNi0Ng2LShg4z7GufpEgs05P+2suBVyi9I6YHq5uoVFx9ETin3eCEhLVyXGQnKg=="
+          },
+          "selectors": {
+            "cpu": [
+              "arm64"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 8909709
+        },
+        {
+          "selection": {
+            "name": "lightningcss-linux-arm64-musl",
+            "version": "1.33.0",
+            "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz",
+            "integrity": "sha512-yiO5ROMuYQgXbC60yjZU5CYSFZGKXL0HFATXt9mHJn1+zW55oCtMI9NfcVhYLMFDL7gV7oBPon/EmMMGg2OvtQ=="
+          },
+          "selectors": {
+            "cpu": [
+              "arm64"
+            ],
+            "libc": [
+              "musl"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 8909864
+        },
+        {
+          "selection": {
+            "name": "lightningcss-linux-x64-gnu",
+            "version": "1.33.0",
+            "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.33.0.tgz",
+            "integrity": "sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg=="
+          },
+          "selectors": {
+            "cpu": [
+              "x64"
+            ],
+            "libc": [
+              "glibc"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 10048780
+        },
+        {
+          "selection": {
+            "name": "lightningcss-linux-x64-musl",
+            "version": "1.33.0",
+            "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.33.0.tgz",
+            "integrity": "sha512-RYiYbkokw0trfKqqzfF55lginwEPrD3OJDfTuJzFs1MK6iFnDenaz1fqLLtX4ITG3OktJQXOeTaw1awrBAlZPw=="
+          },
+          "selectors": {
+            "cpu": [
+              "x64"
+            ],
+            "libc": [
+              "musl"
+            ],
+            "os": [
+              "linux"
+            ]
+          },
+          "unpackedBytes": 10048575
+        }
+      ]
+    }
+  ]
+}

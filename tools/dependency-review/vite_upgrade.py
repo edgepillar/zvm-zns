@@ -14,10 +14,12 @@ from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
 from lock_review import NAME, ReviewError, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
-from profile_sources import inspect_profile_archive, pin, read_regular
-from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity
+from profile_sources import inspect_profile_archive, matches_profile, pin, read_regular
+from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity, selector
 
 LOCATION = 'node_modules/vite'
+PLATFORM_PLAN = 'tools/dependency-review/vite-libc-publications.json'
+HOST_PROFILE = {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'}
 PUBLICATION = {'name': 'vite', 'version': '8.3.8',
     'resolved': 'https://registry.npmjs.org/vite/-/vite-8.3.8.tgz',
     'integrity': 'sha512-LzOn3h9rG/0vhLdXrV4yJ4QFA9eEoqCl+Yx+kGJd7aB9w6nfNgVHKSYwLPZUHrz4ZGa+t+kXjV9itvcHDLQouA=='}
@@ -46,10 +48,47 @@ def dependency_locations(rows, start):
     return visited
 
 
-def candidate_lock(baseline_raw, generated_raw):
+def carry_published_libc(rows, platform_raw):
+    plan = decode(platform_raw)
+    families = plan['families']
+    require(plan['schema'] == 1 and type(families) is list and 0 < len(families) <= 8, 'candidate platform plan differs')
+    records, carried = {}, []
+    for family in families:
+        parent = family['selection']
+        parent_location = resolve(LOCATION, parent['name'], rows)
+        require(parent['name'] in dependencies(rows[LOCATION], 'dependencies') and parent_location is not None
+            and registry_identity(parent_location, rows[parent_location]) == parent, 'reviewed native parent identity differs')
+        optional = dependencies(rows[parent_location], 'optionalDependencies')
+        for publication in family['publications']:
+            selection = publication['selection']
+            name = selection['name']
+            location = resolve(parent_location, name, rows)
+            require(optional.get(name) == selection['version'] and location is not None and location not in records,
+                'reviewed native optional dependency differs')
+            row = rows[location]
+            require(row.get('optional') is True and registry_identity(location, row) == selection,
+                'reviewed native publication identity differs')
+            selectors = publication['selectors']
+            libc = selector(selectors, 'libc')
+            require(set(selectors) == {'os', 'cpu', 'libc'} and selectors['os'] == ['linux'] and libc in (['glibc'], ['musl'])
+                and all(field in row and selector(row, field) == selector(selectors, field) for field in ('os', 'cpu')),
+                'reviewed native platform selectors differ')
+            if 'libc' in row:
+                require(selector(row, 'libc') == libc, 'conflicting published libc selector')
+            else:
+                row['libc'] = list(libc)
+                carried.append(location)
+            require(type(publication['unpackedBytes']) is int and 0 < publication['unpackedBytes'] <= 32 << 20,
+                'reviewed native unpacked byte budget differs')
+            records[location] = publication
+    require(0 < len(records) <= 32, 'candidate platform publication budget differs')
+    return {'plan': pin(platform_raw), 'carriedLocations': sorted(carried), 'publications': records}
+
+
+def candidate_lock(baseline_raw, generated_raw, platform_raw=None):
     effective_raw, selectors = preserve_platform_selectors(baseline_raw, generated_raw)
     _, before = package_table(baseline_raw)
-    _, after = package_table(effective_raw)
+    candidate, after = package_table(effective_raw)
     require(len(after) <= 512, 'candidate lock location budget')
     require(registry_identity(LOCATION, after.get(LOCATION, {})) == PUBLICATION, 'candidate Vite publication differs')
     require(after[''] == {**before[''], 'devDependencies': {**before['']['devDependencies'],
@@ -60,6 +99,12 @@ def candidate_lock(baseline_raw, generated_raw):
     for location, row in after.items():
         if location and row.get('inBundle') is not True:
             registry_identity(location, row)
+
+    platform_review = {}
+    if platform_raw is not None:
+        platform_review = carry_published_libc(after, platform_raw)
+        if platform_review['carriedLocations']:
+            effective_raw = encoded(candidate)
 
     unchanged_runtime = set()
     for root in ('node_modules/puppeteer-core', 'node_modules/zod'):
@@ -73,7 +118,7 @@ def candidate_lock(baseline_raw, generated_raw):
         require(before.get(name) == after.get(name), 'dependency outside the Vite graph changed: ' + name)
     delta = lock_delta(baseline_raw, effective_raw)
     require(not delta['topLevelChanges'] and not delta['sourceKindChanges'], 'candidate lock identity or source kind changed')
-    return effective_raw, {'lockDelta': delta, 'selectorCarry': selectors,
+    return effective_raw, {'lockDelta': delta, 'selectorCarry': selectors, 'publishedLibc': platform_review,
         'unchangedRuntimeLocations': sorted(unchanged_runtime), 'reviewedViteGraphLocations': sorted(vite_graph)}
 
 
@@ -109,6 +154,20 @@ def installed_changes(web, rows, delta):
             absent.append(location)
     require(LOCATION in installed, 'candidate Vite is missing')
     return installed, absent
+
+
+def review_platform_installation(publications, installed, absent):
+    records = publications['publications']
+    present = sorted(location for location, row in records.items() if matches_profile(row['selectors'], HOST_PROFILE))
+    excluded = sorted(set(records) - set(present))
+    require(set(present) <= set(installed) and set(excluded) <= set(absent), 'candidate install differs from the published native selectors')
+    require(all(installed[location]['manifestSelectors'] == records[location]['selectors'] for location in present),
+        'installed native selectors differ from the reviewed registry metadata')
+    without_libc = {location: {field: value for field, value in records[location]['selectors'].items() if field != 'libc'}
+        for location in excluded}
+    excluded_by_libc = [location for location in excluded if matches_profile(without_libc[location], HOST_PROFILE)]
+    return {'profile': HOST_PROFILE, 'installedLocations': present, 'absentLocations': excluded,
+        'excludedByLibc': excluded_by_libc, 'excludedUnpackedBytesFromRegistry': sum(records[location]['unpackedBytes'] for location in excluded_by_libc)}
 
 
 def review_installed_publications(web, rows, installed, cache, index, vite_archive):
@@ -214,7 +273,7 @@ def main():
         run('candidate-lock-resolution', ['npm', 'install', '--package-lock-only', *INSTALL_FLAGS])
         generated_lock = read_input(web, 'package-lock.json')
         (output / 'npm-generated-lock.json').write_bytes(generated_lock)
-        selected_lock, review = candidate_lock(baseline_lock, generated_lock)
+        selected_lock, review = candidate_lock(baseline_lock, generated_lock, read_input(repo, PLATFORM_PLAN))
         report.update(review)
         if selected_lock != generated_lock:
             (output / 'candidate-lock.json').write_bytes(selected_lock)
@@ -238,6 +297,8 @@ def main():
         report['archivedNoticeMatchesReleaseSource'] = True
         report['releaseNoticeDependencyNames'] = notice_dependency_names(read_regular(web, LOCATION + '/LICENSE.md', 1 << 20))
         report['installedChangedPublications'] = review_installed_publications(web, rows, installed, cache, index['index'], archive)
+        report['nativePlatformInstallation'] = review_platform_installation(
+            review['publishedLibc'], report['installedChangedPublications'], absent)
         report['absentOptionalChangedLocations'] = absent
         report['compiledLabels'] = {'inventorySha256': canonical_sha256(labels), 'distinctPairs': len(observed),
             'unparsedHeaders': len(labels['unparsedRegionLabels']), 'recognizedOccurrences': len(labels['generatedRegionLabels']),

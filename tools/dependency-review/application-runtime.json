@@ -59,6 +59,7 @@
   "codeFiles": [
     "tools/dependency-review/application_runtime.py",
     "tools/dependency-review/vite_upgrade.py",
+    "tools/dependency-review/vite-libc-publications.json",
     "tools/dependency-review/browser_archive.py",
     "tools/dependency-review/browser_runtime.py",
     "tools/dependency-review/browser_staging.py",

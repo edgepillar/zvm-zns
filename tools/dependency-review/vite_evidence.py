@@ -15,7 +15,7 @@ from lock_review import NAME, decode, read_input, require
 from openzeppelin_candidate import checked_name, encoded, write_json
 from profile_sources import pin, read_regular
 from proposal_delta import package_table
-from vite_upgrade import LOCATION, PUBLICATION, RELEASE_NOTICE, candidate_lock, changed_publications
+from vite_upgrade import PLATFORM_PLAN, LOCATION, PUBLICATION, RELEASE_NOTICE, candidate_lock, changed_publications, review_platform_installation
 
 MAX_ARCHIVE = 1 << 20
 MAX_MEMBER = 2 << 20
@@ -114,7 +114,7 @@ def replay(repo, members, source, run_id, attempt):
     require(members['candidate-package.json'] == encoded(expected_package)
         and pin(members['candidate-package.json']) == report['candidatePackage'], 'candidate package manifest differs')
     generated = members['npm-generated-lock.json']
-    selected, review = candidate_lock(baseline, generated)
+    selected, review = candidate_lock(baseline, generated, read_input(repo, PLATFORM_PLAN))
     require(all(report[key] == value for key, value in review.items()), 'replayed lock comparison differs from the producer')
     if selected != generated:
         expected_files.add('candidate-lock.json')
@@ -128,8 +128,11 @@ def replay(repo, members, source, run_id, attempt):
     require(canonical_sha256(labels) == report['compiledLabels']['inventorySha256'], 'candidate compiled label evidence differs')
     _, rows = package_table(selected)
     installed, absent = review_notice_evidence(rows, report)
+    platform = review_platform_installation(review['publishedLibc'], installed, absent)
+    require(platform == report['nativePlatformInstallation'], 'replayed native installation differs')
     return {'candidateLock': pin(selected), 'generatedLock': pin(generated), 'lockLocations': len(rows) - 1,
         'noticeEvidence': installed, 'absentOptionalChangedLocations': absent,
+        'publishedLibc': review['publishedLibc'], 'nativePlatformInstallation': platform,
         'releaseNoticeDependencyNames': report['releaseNoticeDependencyNames'],
         'compiledLabelInventorySha256': report['compiledLabels']['inventorySha256'],
         'lockDeltaCounts': {key: len(review['lockDelta'][key]) for key in ['addedLocations', 'removedLocations',
@@ -168,6 +171,12 @@ def main():
     print(f"Replayed {checked['replayedCommandStreams']} command streams. Verified notice records for "
         f"{len(checked['noticeEvidence'])} changed installed locations. "
         f"{len(checked['absentOptionalChangedLocations'])} changed optional locations were absent.\n")
+    published = checked['publishedLibc']
+    platform = checked['nativePlatformInstallation']
+    print(f"Restored {len(published['carriedLocations'])} published libc selectors. The glibc job installed "
+        f"{len(platform['installedLocations'])} matching native publications.")
+    print(f"The {len(platform['excludedByLibc'])} packages excluded by libc represent "
+        f"{platform['excludedUnpackedBytesFromRegistry']:,} unpacked bytes in npm registry metadata.\n")
     for location, row in checked['noticeEvidence'].items():
         license_value = row['manifestLicense']
         declared = (license_value if isinstance(license_value, str) and re.fullmatch(r'[A-Za-z0-9.+() -]{1,256}', license_value)

@@ -96,6 +96,15 @@ Puppeteer and Zod dependency graphs to remain identical before rebinding the
 reviewed runtime manifest to the candidate lock. Each command has a deadline
 and separate output bounds. Installation runs with lifecycle scripts disabled.
 
+The [platform publication plan](../tools/dependency-review/vite-libc-publications.json)
+records the `libc` declarations of ten Linux Rolldown and Lightning CSS optional
+archives. Candidates match each exact parent, version, registry URL, integrity,
+OS and CPU before restoring a missing field. A conflicting existing selector
+fails review. The original npm lock and the selected lock are retained. The
+glibc job checks the installed GNU variants against their archive manifests and
+requires incompatible variants to be absent. Other platform entries provide
+published metadata evidence, with native execution qualified on Linux x64 glibc.
+
 The job reads the exact Vite archive from the same install's npm cache. It
 compares its regular members with the installation and records the recognized
 compiled labels, unparsed headers, original notice pins and prior exact label
@@ -114,6 +123,7 @@ The `vite-evidence` job validates the candidate ZIP against its upload digest
 and reads only bounded, expected members. From those bytes it reconstructs the
 lock delta and platform carries, validates the derived runtime manifest and
 checks every recorded command stream, compiled-label report and notice receipt.
+The replay also compares the selected installation with the publication plan.
 It runs without a package install or browser launch. Raw package verification
 belongs to the producer, whose records are bound to the same commit and run.
 

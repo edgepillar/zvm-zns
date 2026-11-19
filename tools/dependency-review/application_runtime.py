@@ -197,7 +197,8 @@ def reviewed_upgrade(output, candidate_output, binding, baseline_lock):
         and report['runId'] == binding['runId'] and report['runAttempt'] == binding['runAttempt']
         and report['baselineLock'] == baseline_lock and report['baselinePlan'] == binding['planPin'],
         'candidate app evidence differs from the current job')
-    lock_file = 'candidate-lock.json' if report['selectorCarry']['carriedSelectorCount'] else 'npm-generated-lock.json'
+    lock_changed = report['lockDelta']['candidateLockSha256'] != report['selectorCarry']['originalNpmGeneratedLockSha256']
+    lock_file = 'candidate-lock.json' if lock_changed else 'npm-generated-lock.json'
     lock_sha256 = pin(read_regular(root, lock_file, 2 << 20))['sha256']
     require(lock_sha256 == report['lockDelta']['candidateLockSha256'], 'candidate application lock differs')
     expected = {'upgrade-normal': report['normalDistribution'], 'upgrade-fixture': report['fixtureBuild']['distribution']}
