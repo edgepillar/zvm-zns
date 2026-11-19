@@ -14,6 +14,16 @@ function readOnlyParams(call) {
   assert(Array.isArray(params)); return params;
 }
 
+function distributionRoles(input) {
+  const roles = ['normal', 'fixture'];
+  if (Object.hasOwn(input.distributions, 'upgrade-normal') || Object.hasOwn(input.distributions, 'upgrade-fixture')) {
+    assert.equal(input.profile, 'application');
+    roles.push('upgrade-normal', 'upgrade-fixture');
+  }
+  assert.deepEqual(Object.keys(input.distributions).sort(), [...roles].sort());
+  return roles;
+}
+
 // Only synthetic, read-only responses are available. A missing method/function
 // is a failed control, never a plausible default or a forwarded RPC request.
 async function fixture(input, viem) {
@@ -31,7 +41,7 @@ async function fixture(input, viem) {
   const report = {schema: 1, synthetic: true, requests: [], rpc: [], refusals: [], staticResponses: [],
     externalUpstreamRequests: 0, walletOrSigningProviderInjected: false};
   const distributions = {};
-  for (const role of ['normal', 'fixture']) {
+  for (const role of distributionRoles(input)) {
     const root = fs.realpathSync(input.distributions[role]); assert.equal(root, input.distributions[role]);
     const files = {}; let bytes = 0;
     function visit(directory) {
@@ -108,7 +118,8 @@ async function fixture(input, viem) {
       if (url.pathname === '/api/info') {
         response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify({l2: {chainId: 7340469}})); return;
       }
-      const match = /^\/(normal|fixture)\/(.*)$/.exec(url.pathname); assert(match);
+      const match = /^\/((?:upgrade-)?(?:normal|fixture))\/(.*)$/.exec(url.pathname); assert(match);
+      assert(Object.hasOwn(distributions, match[1]), 'Unlisted distribution');
       const role = match[1]; const name = match[2] || 'index.html'; const dist = distributions[role];
       assert(!name.includes('..') && !name.includes('%') && Object.hasOwn(dist.files, name), 'Unlisted static resource');
       const raw = read(path.join(dist.root, name), 4 << 20); assert.deepEqual(pin(raw), dist.files[name]);
@@ -126,4 +137,4 @@ async function fixture(input, viem) {
     async close() { server.closeAllConnections(); await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())); },
     distributions: Object.fromEntries(Object.entries(distributions).map(([role, row]) => [role, {files: row.files, bytes: row.bytes}]))};
 }
-module.exports = {fixture, readOnlyParams};
+module.exports = {distributionRoles, fixture, readOnlyParams};

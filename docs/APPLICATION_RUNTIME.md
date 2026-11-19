@@ -46,13 +46,19 @@ once with third-party lifecycle scripts disabled. Before preparation it binds
 the installed graph to raw SHA-512-verified current-job npm cache publications.
 After preparation it checks all nine effective members. It runs installer
 success/idempotency/refusal/rollback controls, current source-map and Vite
-controls, the actual normal build, and an explicitly synthetic fixture build.
-The fixture uses portable regular copies and explicit preparation/compiler
-steps, without npm-generated executable links or operator data.
+controls and two builds through the normal npm entry point. The hosted checkout
+builds the default application first. It then creates one synthetic deployment
+record, verifies the reused installed members and builds into a separate output.
+The controller removes its own fixture after verifying its identity and bytes.
+Both builds share the installed dependency tree.
 
 One pinned Chrome 157 archive is downloaded and extracted. Two SDK sessions
-exercise CDP/BiDi and nominal/synthetic UI behavior. Two additional full embedded
-mapper bootstraps reuse the CDP Chrome process. Twelve native Node and twelve
+exercise CDP and BiDi with the normal and synthetic UIs. A separate Vite 8
+checkout builds both scenarios and shares the job npm cache. Each existing
+Chrome session opens a fresh browser context for the Vite 8 outputs. The fixture
+server verifies the exact distributions and scopes requests to each output pair.
+Two additional full embedded mapper bootstraps reuse the CDP Chrome process.
+Twelve native Node and twelve
 generated-browser direct cases remain separate from object-only wire transport
 refusals. Source observers return native module resolution/load results unchanged;
 they are not operating-system isolation. The tracked launch flag `--no-sandbox`
@@ -64,7 +70,8 @@ leave room for Chrome's generated Unix socket path. No socket or link fixture
 is run under local managed scratch.
 
 The controller retains complete bounded command streams, current source binding,
-the raw source inventory, the explicit derivative binding and six PNG payloads.
+the raw source inventory, the explicit derivative binding and PNG captures from
+each qualified distribution pair.
 The committed mapper/maps are referenced by exact source pins, not copied into
 another artifact. It preserves a 10 GiB free-space floor plus allocation reserve.
 No wallet, chain, registration, signing, release or deployment action is included.

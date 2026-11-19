@@ -2,8 +2,17 @@
 
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const {readOnlyParams} = require('./browser-fixture.cjs');
+const {distributionRoles, readOnlyParams} = require('./browser-fixture.cjs');
 const call = (method, params) => ({jsonrpc: '2.0', id: 1, method, ...(params === undefined ? {} : {params})});
+
+test('accept only complete distribution pairs in the application lane', () => {
+  const baseline = {normal: '/normal', fixture: '/fixture'};
+  const upgrade = {...baseline, 'upgrade-normal': '/upgrade-normal', 'upgrade-fixture': '/upgrade-fixture'};
+  assert.deepEqual(distributionRoles({profile: 'baseline', distributions: baseline}), ['normal', 'fixture']);
+  assert.deepEqual(distributionRoles({profile: 'application', distributions: upgrade}), Object.keys(upgrade));
+  assert.throws(() => distributionRoles({profile: 'coherentCandidate', distributions: upgrade}));
+  assert.throws(() => distributionRoles({profile: 'application', distributions: {...baseline, 'upgrade-normal': '/upgrade-normal'}}));
+});
 
 for (const [name, input] of [
   ['chain ID without params', call('eth_chainId')],

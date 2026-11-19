@@ -4,7 +4,8 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from application_runtime import temporary_directory, verify_inputs
+from application_runtime import temporary_directory, verify_inputs, verify_reused_members
+from profile_sources import pin
 
 
 class ApplicationInputControls(unittest.TestCase):
@@ -62,6 +63,21 @@ class ApplicationInputControls(unittest.TestCase):
         self.assertEqual(package['devDependencies']['zod'], '4.6.7')
         self.assertIn('ignore-scripts=true', (web / '.npmrc').read_text())
         self.assertTrue(package['scripts']['build'].startswith('node scripts/prepare-runtime.mjs && '))
+
+    def test_reused_install_checks_prepared_member_against_its_effective_pin(self):
+        location = 'node_modules/chromium-bidi'
+        name = location + '/runtime.js'
+        original, prepared = b'original', b'prepared'
+        publications = {location: {'filePins': {'runtime.js': pin(original)}}}
+        manifest = {'effectiveMembers': {name: {'original': pin(original), 'effective': pin(prepared)}}}
+        root = Path('/synthetic')
+        with patch('application_runtime.read_regular', return_value=prepared) as reader:
+            self.assertEqual(verify_reused_members(root, publications, manifest),
+                {'publicationLocations': 1, 'regularMembers': 1, 'payloadBytes': len(prepared)})
+            reader.assert_called_once_with(root, name, 16 << 20)
+        with patch('application_runtime.read_regular', return_value=original):
+            with self.assertRaisesRegex(ValueError, 'reused installed member differs'):
+                verify_reused_members(root, publications, manifest)
 
 
 if __name__ == '__main__': unittest.main()

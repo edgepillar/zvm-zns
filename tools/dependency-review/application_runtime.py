@@ -104,55 +104,120 @@ def effective_profile(web, manifest):
         require(pin(read_regular(web, name, 16 << 20)) == row['effective'], 'effective application runtime differs')
 
 
-def stage_fixture(repo, web, output, inventory, manifest, run):
-    source_raw = read_input(repo, 'tools/dependency-review/browser-app-sources.json'); source = json.loads(source_raw)
-    root = output / 'application-fixture' / 'web'; count = size = 0; sources = []
-    require(not root.exists() and not root.is_symlink(), 'application fixture must be new')
-    for row in validate_source_plan(source):
+def verify_build_sources(repo, source):
+    rows = validate_source_plan(source)
+    for row in rows:
         provider = repo if row['sourceRepository'] == 'main' else repo / 'zvm-core'
-        raw = read_input(provider, row['sourcePath']); require(pin(raw) == row['pin'], 'fixture source differs')
-        dest = row['destinationRelativeToOutput']
-        dest = ('application-fixture/web/' + dest.removeprefix('candidate-web-parent/')
-            if dest.startswith('candidate-web-parent/') else 'application-fixture/' + dest)
-        new_file(output, dest, raw); sources.append({'sourcePath': row['sourcePath'], 'destination': dest, 'pin': row['pin']})
-    # Only explicit current source files needed for preparation/build are copied.
-    extra = ['package.json', 'package-lock.json', '.npmrc', 'scripts/prepare-runtime.mjs',
-        VENDOR + '/manifest.json', VENDOR + '/NOTICE.md', *[VENDOR + '/payload/' + name for name in manifest['payloads']]]
-    extras = {}
-    for name in extra:
-        raw = read_input(web, name) if not name.endswith('.map') else read_regular(web, name, 16 << 20)
-        new_file(root, name, raw); extras[name] = pin(raw)
-    lock = json.loads(read_input(web, 'package-lock.json'))['packages']; packages = []
-    for location in sorted(inventory['installed']):
-        publication = inventory['sources'][lock[location]['integrity']]
+        require(pin(read_input(provider, row['sourcePath'])) == row['pin'], 'browser build source differs')
+    return rows
+
+
+def verify_reused_members(web, publications, manifest):
+    count = size = 0
+    for location, publication in publications.items():
         for member, original in publication['filePins'].items():
-            name = location + '/' + member; overlay = manifest['effectiveMembers'].get(name)
+            name = location + '/' + member
+            overlay = manifest['effectiveMembers'].get(name)
             expected = overlay['effective'] if overlay else original
-            raw = read_regular(web, name, 16 << 20); require(pin(raw) == expected, 'fixture installed member differs')
-            new_file(root, name, raw, bool((web / name).stat().st_mode & 0o111)); count += 1; size += len(raw)
-            require(count <= 32768 and size <= 256 << 20, 'fixture portable package budget')
-        packages.append({'location': location, 'selection': publication['selection'], 'publishedMembers': len(publication['filePins'])})
+            require(pin(read_regular(web, name, 16 << 20)) == expected, 'reused installed member differs')
+            count += 1
+            size += expected['bytes']
+            require(count <= 32768 and size <= 256 << 20, 'reused installed package budget')
     for name, row in manifest['effectiveMembers'].items():
-        if row['original'] is not None: continue
-        raw = read_regular(web, name, 16 << 20); require(pin(raw) == row['effective'], 'fixture added member differs')
-        new_file(root, name, raw); count += 1; size += len(raw)
-    require(count <= 32768 and size <= 256 << 20, 'fixture final portable package budget')
+        if row['original'] is None:
+            count += 1
+            size += row['effective']['bytes']
+    require(count <= 32768 and size <= 256 << 20, 'reused effective package budget')
+    return {'publicationLocations': len(publications), 'regularMembers': count, 'payloadBytes': size}
+
+
+def build_distributions(repo, web, output, plan, manifest, publications, run):
+    source_raw = read_input(repo, 'tools/dependency-review/browser-app-sources.json')
+    source = json.loads(source_raw)
+    sources = verify_build_sources(repo, source)
+    require(read_input(repo, '.env') == read_input(repo, '.env.example'), 'browser build environment differs')
+    package_raw = read_input(web, 'package.json')
+    scripts = json.loads(package_raw)['scripts']
+    require(scripts['build'] == 'node scripts/prepare-runtime.mjs && vue-tsc --noEmit && vite build'
+        and not {'prebuild', 'postbuild'} & set(scripts), 'application build command differs')
+
+    deployments = repo / 'deployments'
+    dist = web / 'dist'
+    normal = output / 'normal-dist'
+    fixture_dist = output / 'fixture-dist'
+    require(all(not path.exists() and not path.is_symlink() for path in (deployments, dist, normal, fixture_dist)),
+        'application builds require fresh output paths and an empty deployment scope')
+    run('application-build', ['npm', 'run', 'build'])
+    distribution = dist_inventory(dist)
+    dist.rename(normal)
+
+    effective_profile(web, manifest)
+    reused = verify_reused_members(web, publications, manifest)
     fixture = (json.dumps(source['syntheticDeploymentFixture'], sort_keys=True, indent=2) + '\n').encode()
-    new_file(output, 'application-fixture/deployments/browser-fixture.json', fixture)
-    for label, argv in [
-        ('fixture-runtime-check', ['node', 'scripts/prepare-runtime.mjs', '--check']),
-        ('fixture-types', ['node', 'node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit']),
-        ('fixture-vite', ['node', 'node_modules/vite/bin/vite.js', 'build'])]:
-        run(label, argv, root, 120)
-    return {'schema': 1, 'sourcePlan': pin(source_raw), 'sources': sources, 'extraBuildInputs': extras,
-        'packageLocations': len(packages), 'packages': packages, 'portableRegularMembers': count,
-        'portablePackageBytes': size, 'syntheticDeployment': pin(fixture), 'distribution': dist_inventory(root / 'dist'),
-        'fixtureNpmScriptExecuted': False, 'explicitEquivalentPreparationAndCompilerStepsExecuted': True,
-        'hardLinksAliasesOrOperatorDataUsed': False, 'productionGate': 'NO_GO'}, root / 'dist'
+    deployments.mkdir(mode=0o700)
+    owned_directory = deployments.lstat()
+    target = new_file(repo, 'deployments/browser-fixture.json', fixture)
+    owned_fixture = target.lstat()
+    try:
+        run('fixture-application-build', ['npm', 'run', 'build'])
+        fixture_distribution = dist_inventory(dist)
+        dist.rename(fixture_dist)
+    finally:
+        current_directory = deployments.lstat()
+        current_fixture = target.lstat()
+        require((current_directory.st_dev, current_directory.st_ino) == (owned_directory.st_dev, owned_directory.st_ino)
+            and (current_fixture.st_dev, current_fixture.st_ino) == (owned_fixture.st_dev, owned_fixture.st_ino)
+            and set(deployments.iterdir()) == {target} and read_regular(repo, 'deployments/browser-fixture.json', 65536) == fixture,
+            'preserve unexpected synthetic deployment state')
+        target.unlink()
+        deployments.rmdir()
+    require(dist_inventory(normal) == distribution, 'normal output changed during the fixture build')
+    require(distribution != fixture_distribution, 'fixture did not change the distribution')
+    for notice in plan['retainedStaticNotices']:
+        for built in (distribution, fixture_distribution):
+            require(built['files'].get(notice['distPath']) == notice['pin'], 'static notice differs')
+    verify_build_sources(repo, source)
+    effective_profile(web, manifest)
+    require(read_input(web, 'package.json') == package_raw, 'application manifest changed during the builds')
+    return distribution, {'schema': 2, 'sourcePlan': pin(source_raw), 'sources': sources,
+        'verifiedReusedMembers': reused, 'dependencyBytesCopied': 0, 'dependencyTreesCopied': 0,
+        'syntheticDeployment': pin(fixture), 'syntheticDeploymentRemoved': True,
+        'distribution': fixture_distribution, 'fixtureNpmScriptExecuted': True, 'productionGate': 'NO_GO'}
+
+
+def reviewed_upgrade(output, candidate_output, binding, baseline_lock):
+    if candidate_output is None:
+        return None
+    root = Path(candidate_output)
+    require(root == output.parent / 'zns-vite-upgrade' and root.resolve(strict=True) == root, 'candidate evidence scope differs')
+    report_raw = read_regular(root, 'report.json', 2 << 20)
+    report = json.loads(report_raw)
+    require(report['status'] == 'VITE_CANDIDATE_APPLICATION_BUILDS_OBSERVED'
+        and report['producerCommit'] == binding['producerCommit'] and report['coreCommit'] == binding['coreCommit']
+        and report['runId'] == binding['runId'] and report['runAttempt'] == binding['runAttempt']
+        and report['baselineLock'] == baseline_lock and report['baselinePlan'] == binding['planPin'],
+        'candidate app evidence differs from the current job')
+    lock_file = 'candidate-lock.json' if report['selectorCarry']['carriedSelectorCount'] else 'npm-generated-lock.json'
+    lock_sha256 = pin(read_regular(root, lock_file, 2 << 20))['sha256']
+    require(lock_sha256 == report['lockDelta']['candidateLockSha256'], 'candidate application lock differs')
+    expected = {'upgrade-normal': report['normalDistribution'], 'upgrade-fixture': report['fixtureBuild']['distribution']}
+    paths = {'upgrade-normal': root / 'normal-dist', 'upgrade-fixture': root / 'fixture-dist'}
+    for role, path in paths.items():
+        require(dist_inventory(path) == expected[role], 'candidate browser distribution differs: ' + role)
+    return {'root': root, 'paths': paths, 'expected': expected, 'binding': {
+        'candidateReport': pin(report_raw), 'candidateLockSha256': lock_sha256,
+        'publicationSelection': report['publicationSelection'],
+        'verifiedReusedMembers': report['fixtureBuild']['verifiedReusedMembers'],
+        'dependencyBytesCopied': report['fixtureBuild']['dependencyBytesCopied'],
+        'syntheticDeployment': report['fixtureBuild']['syntheticDeployment'],
+    }}
 
 
 def main():
-    parser = argparse.ArgumentParser(); parser.add_argument('--output', required=True); args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output', required=True)
+    parser.add_argument('--vite-upgrade')
+    args = parser.parse_args()
     hosted_only(); require(platform.libc_ver()[0] == 'glibc', 'application qualification requires Linux x64 glibc')
     repo = Path(__file__).resolve().parents[2]; web = repo / 'web'; output = Path(args.output).resolve()
     temporary = temporary_directory(output)
@@ -173,11 +238,18 @@ def main():
         'legacyQualificationIsHistoricalNotCurrentRevisionEvidence': True, 'productionGate': 'NO_GO'}
     write_json(output / 'source-binding.json', binding)
     report = {'schema': 1, 'status': 'APPLICATION_RUNTIME_INCOMPLETE', 'commands': [], 'productionGate': 'NO_GO'}
-    (output / 'npm-cache').mkdir(mode=0o700)
+    upgrade = reviewed_upgrade(output, args.vite_upgrade, binding, pin(read_input(web, 'package-lock.json')))
+    npm_cache = output / 'npm-cache'
+    if upgrade is None:
+        npm_cache.mkdir(mode=0o700)
+    else:
+        npm_cache = upgrade['root'] / 'npm-cache'
+        require(npm_cache.is_dir() and not npm_cache.is_symlink(), 'candidate job cache differs')
+        report['viteUpgrade'] = upgrade['binding']
     for name in ['user.npmrc', 'global.npmrc']: (output / name).write_bytes(b'')
     env = {'PATH': os.environ['PATH'], 'LANG': 'C', 'TZ': 'UTC', 'CI': 'true',
         'GITHUB_ACTIONS': 'true', 'GITHUB_RUN_ID': os.environ['GITHUB_RUN_ID'], 'RUNNER_TEMP': os.environ['RUNNER_TEMP'],
-        'npm_config_cache': str(output / 'npm-cache'), 'npm_config_userconfig': str(output / 'user.npmrc'),
+        'npm_config_cache': str(npm_cache), 'npm_config_userconfig': str(output / 'user.npmrc'),
         'npm_config_globalconfig': str(output / 'global.npmrc'), 'npm_config_fetch_retries': '0',
         'npm_config_fetch_timeout': '45000', 'npm_config_registry': 'https://registry.npmjs.org/'}
     def run(label, argv, cwd=web, timeout=120):
@@ -218,15 +290,17 @@ def main():
             row = run_bounded(argv, web, {**env, **extra}, output, role, timeout=60); report['commands'].append(row)
             require(row['actualExit'] == 0 and row['outputComplete'], role + ' failed or incomplete')
         run('browser-request-shapes', ['node', '--test', '--test-reporter=tap', str(repo / 'tools/dependency-review/test-browser-request-shapes.cjs')])
-        package = json.loads(read_input(web, 'package.json'))
-        require(package['scripts']['build'] == 'node scripts/prepare-runtime.mjs && vue-tsc --noEmit && vite build'
-            and not any(key in package['scripts'] for key in ['prebuild', 'postbuild']), 'application build command differs')
-        run('application-build', ['npm', 'run', 'build'])
-        report['normalDistribution'] = dist_inventory(web / 'dist')
-        for notice in plan['retainedStaticNotices']:
-            require(report['normalDistribution']['files'][notice['distPath']] == notice['pin'], 'static notice differs')
-        normal = output / 'normal-dist'; (web / 'dist').rename(normal)
-        fixture, fixture_dist = stage_fixture(repo, web, output, inventory, manifest, run); report['fixtureBuild'] = fixture
+        publications = {location: inventory['sources'][row['selection']['integrity']]
+            for location, row in inventory['installed'].items()}
+        report['normalDistribution'], report['fixtureBuild'] = build_distributions(
+            repo, web, output, plan, manifest, publications, run)
+        distributions = {'normal': output / 'normal-dist', 'fixture': output / 'fixture-dist'}
+        expected_distributions = {'normal': report['normalDistribution'], 'fixture': report['fixtureBuild']['distribution']}
+        if upgrade is not None:
+            require(upgrade['binding']['syntheticDeployment'] == report['fixtureBuild']['syntheticDeployment'],
+                'candidate and baseline use different synthetic deployment bytes')
+            distributions.update(upgrade['paths'])
+            expected_distributions.update(upgrade['expected'])
         derivative = {'schema': 1, 'kind': 'REVIEWED_LOCAL_DERIVATIVE_PROFILE', 'baseProfile': 'candidate',
             'baseLockSha256': manifest['baseLockSha256'], 'sourceInventory': report['rawSourceInventory'],
             'publication': manifest['publication'], 'effectiveMembers': manifest['effectiveMembers'],
@@ -257,8 +331,8 @@ def main():
             'plan': str(repo / 'tools/dependency-review/node-consumer-plan.json'), 'resolver': str(repo / 'tools/dependency-review/node-consumer-resolve.mjs'),
             'executable': str(executable), 'executablePin': {key: selected['archiveReview']['filePins']['chrome'][key] for key in ['bytes', 'sha256']},
             'browserVersion': selected['version'], 'abi': str(repo / 'web/src/abi.ts'), 'output': str(output / 'browser-evidence'),
-            'temporaryRoot': str(temporary),
-            'runId': os.environ['GITHUB_RUN_ID'], 'distributions': {'normal': str(normal), 'fixture': str(fixture_dist)},
+            'temporaryRoot': str(temporary), 'runId': os.environ['GITHUB_RUN_ID'],
+            'distributions': {role: str(path) for role, path in distributions.items()},
             'derivation': str(derivative_path), 'derivationPin': pin(derivative_path.read_bytes()), 'mapperProbe': str(probe_path)})
         run('browser-application', ['node', '--max-old-space-size=512', '--experimental-import-meta-resolve',
             str(repo / 'tools/dependency-review/browser-worker.cjs'), str(input_path)], web, 240)
@@ -272,6 +346,18 @@ def main():
             and worker['nativeRuntimeSourceMapControls']['mappedErrorStackVerified']
             and worker['sessions'][0]['embeddedMapper']['rows'][0]['devtoolsSourceMap']['mappedSourcesAndEmbeddedContentsVerified'] == 177,
             'actual Node and DevTools source-map consumption differs')
+        require(set(worker['distributions']) == set(expected_distributions), 'browser distribution roles differ')
+        for role, expected in expected_distributions.items():
+            require(worker['distributions'][role] == {'files': expected['files'], 'bytes': expected['payloadBytes']},
+                'browser-served distribution differs: ' + role)
+        require(len(worker['sessions']) == 2 and all(row['processExit'] ==
+            {'actualExit': 0, 'signal': None, 'disconnected': True} for row in worker['sessions']), 'browser parents did not exit cleanly')
+        require(len(worker['screenshots']) == (12 if upgrade else 6), 'browser evidence image count differs')
+        if upgrade is not None:
+            for row in worker['sessions']:
+                require([item['case'] for item in row['viteUpgrade']['application']] ==
+                    [item['case'] for item in row['application']], 'candidate browser controls differ')
+            report['viteUpgrade']['nativeBrowserApplicationScenariosPassed'] = 4
         for image in worker['screenshots']:
             require(pin(read_input(output, image['path'])) == {key: image[key] for key in ['bytes', 'sha256']}, 'application image differs')
         verify_inputs(repo, plan['inputPins']); effective_profile(web, manifest)
@@ -280,7 +366,7 @@ def main():
             actualApplicationDependencyInputsAdopted=True, actualApplicationInstalledEffectiveMembers=9,
             npmInstallCommands=1, thirdPartyInstallScriptsEnabled=False, compilerDownloadOrMapperRebuildPerformed=False,
             browserDownloads=1, actualSdkChromeSessions=2, embeddedMapperBootstraps=2,
-            nativeNodeDirectCases=12, generatedBrowserDirectCases=12, screenshots=6,
+            nativeNodeDirectCases=12, generatedBrowserDirectCases=12, screenshots=len(worker['screenshots']),
             priorReferenceRunsReusedAsCurrentRevisionQualification=False, fullD04OrProductionAcceptance=False,
             walletFundingSigningLiveChainReleaseOrDeploymentPerformed=False)
     except BaseException as error:
@@ -289,6 +375,11 @@ def main():
     finally:
         write_json(output / 'report.json', report)
     print(json.dumps({'status': report['status'], 'commands': len(report['commands']), 'productionGate': 'NO_GO'}))
+    reused = report['fixtureBuild']['verifiedReusedMembers']
+    print(f"Baseline fixture reused {reused['regularMembers']:,} verified members ({reused['payloadBytes']:,} bytes).")
+    if upgrade is not None:
+        print('Vite 8 passed both application scenarios over CDP and BiDi using the same two Chrome sessions.')
+        print('Both locked installs used the current job npm cache. The browser input was downloaded once.')
 
 
 if __name__ == '__main__': main()

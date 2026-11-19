@@ -101,11 +101,85 @@ async function main() {
         error => reject(new Error('Synthetic geolocation read failed: ' + error.code)), {timeout: 5000, maximumAge: 0});
     }));
   }
+  async function applicationControls(context, protocol, row, routes) {
+    const page = await context.newPage();
+    const errors = row.pageErrors; const network = []; const geo = [];
+    try {
+      page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(15000);
+      page.on('pageerror', error => errors.push(String(error.message).slice(0, 1024)));
+      await page.setRequestInterception(true);
+      page.on('request', request => {
+        const url = new URL(request.url());
+        const ownRoute = routes.some(route => url.pathname.startsWith('/' + route + '/'));
+        const allowed = (url.origin === server.origin && (ownRoute || ['/rpc', '/api/info'].includes(url.pathname)))
+          || ['data:', 'about:'].includes(url.protocol);
+        assert(network.length < 2048); network.push({method: request.method(), path: url.origin === server.origin ? url.pathname : url.protocol, allowed});
+        if (allowed) request.continue().catch(error => errors.push('Request continuation: ' + error.name));
+        else { row.externalPageRequests.push({protocol: url.protocol, host: url.hostname}); request.abort().catch(() => {}); }
+      });
+      await page.setViewport({width: 1280, height: 900, deviceScaleFactor: 1});
+      const query = '?rpc=' + encodeURIComponent(server.origin + '/rpc');
+      await page.goto(server.origin + '/' + routes[0] + '/' + query + '#/', {waitUntil: 'networkidle0'});
+      await page.waitForFunction(() => document.body.innerText.includes('ZNS is not deployed on chain 7340469.'));
+      const nominal = await page.evaluate(() => ({heading: document.querySelector('h1')?.textContent.trim(),
+        notDeployed: document.body.innerText.includes('ZNS is not deployed on chain 7340469.'),
+        injectedProvider: typeof window.ethereum !== 'undefined', savedWallet: localStorage.getItem('zns.wallet')}));
+      assert(nominal.heading.includes('Your name on the') && nominal.notDeployed && !nominal.injectedProvider && nominal.savedWallet === null);
+      row.application.push({case: 'nominal-no-deployment', ...nominal});
+      await screenshot(page, protocol, routes[0] + '-wide');
+      if (routes[0] === 'normal') {
+        await context.overridePermissions(server.origin, ['geolocation']);
+        await page.setGeolocation({latitude: 12.5, longitude: 23.5, accuracy: 1});
+        const explicit = await position(page); assert.deepEqual(explicit, {latitude: 12.5, longitude: 23.5, accuracy: 1});
+        geo.push({case: 'valid-explicit-accuracy', observed: explicit});
+        if (protocol === 'webDriverBiDi') {
+          let omitted;
+          try { await page.setGeolocation({latitude: 12.5, longitude: 23.5}); omitted = {status: 'returned', observed: await position(page)}; }
+          catch (error) { omitted = {status: 'rejected', type: error.name, message: String(error.message).slice(0, 512)}; }
+          if (baseProfile === 'candidate') {
+            assert.equal(omitted.status, 'returned'); assert.deepEqual(omitted.observed, {latitude: 12.5, longitude: 23.5, accuracy: 0});
+            await page.setGeolocation(null); geo.push({case: 'candidate-null-reset', status: 'returned'});
+          }
+          geo.push({case: 'omitted-accuracy-benign-input', ...omitted});
+        }
+        row.geolocation = geo;
+      }
+      await page.goto(server.origin + '/' + routes[1] + '/' + query + '#/', {waitUntil: 'networkidle0'});
+      await page.waitForFunction(() => !document.body.innerText.includes('ZNS is not deployed') && document.body.innerText.includes('1 ZNN / year'));
+      await page.type('[data-testid="search"]', 'source-fixture');
+      await page.waitForSelector('[data-testid="result"]');
+      const search = await page.$eval('[data-testid="result"]', node => ({text: node.innerText, href: node.getAttribute('href')}));
+      assert(search.text.includes('Available') && search.text.includes('1 ZNN') && search.href.includes('/name/source-fixture.znn'));
+      row.application.push({case: 'synthetic-available-name-and-price', ...search});
+      await page.click('[data-testid="result"]');
+      await page.waitForFunction(() => document.querySelector('[data-testid="total"]')?.textContent.trim() === '1 ZNN');
+      await page.click('button[aria-label="One year more"]');
+      await page.waitForFunction(() => document.querySelector('[data-testid="total"]')?.textContent.trim() === '2 ZNN');
+      assert.equal(await page.$('[data-testid="register-go"]'), null);
+      const term = await page.$eval('[data-testid="years"]', node => node.textContent.trim());
+      row.application.push({case: 'synthetic-navigation-and-two-year-price', term, total: '2 ZNN', registrationActionUnavailableWithoutWallet: true});
+      const beforeTheme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+      await page.click('button[title^="Switch to the "]');
+      const theme = await page.evaluate(() => ({theme: document.documentElement.getAttribute('data-theme'), saved: localStorage.getItem('zns.theme')}));
+      assert(theme.theme !== beforeTheme && theme.saved === theme.theme); row.application.push({case: 'theme-toggle', ...theme});
+      await screenshot(page, protocol, routes[1] + '-wide');
+      await page.setViewport({width: 400, height: 860, deviceScaleFactor: 1});
+      await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth);
+      const dimensions = await page.evaluate(() => ({viewportWidth: innerWidth, documentWidth: document.documentElement.scrollWidth}));
+      assert.equal(dimensions.viewportWidth, 400); assert(dimensions.documentWidth <= 400);
+      row.application.push({case: 'mobile-layout-no-horizontal-overflow', ...dimensions});
+      await screenshot(page, protocol, routes[1] + '-mobile');
+      row.network = network; assert.equal(errors.length, 0); assert.equal(row.externalPageRequests.length, 0);
+    } finally {
+      await bounded(() => page.close(), 'Application page close');
+    }
+  }
+
   try {
     for (const protocol of ['cdp', 'webDriverBiDi']) {
       const directory = path.join(output, input.profile + '-' + protocol + '-profile'); fs.mkdirSync(directory, {mode: 0o700});
-      let browser; let process; const errors = []; const network = []; const geo = [];
-      const row = {protocol, application: [], externalPageRequests: [], pageErrors: errors}; sessions.push(row);
+      let browser; let process;
+      const row = {protocol, application: [], externalPageRequests: [], pageErrors: []}; sessions.push(row);
       try {
         checkpoint('BEGIN_CHROME_' + protocol.toUpperCase());
         // Preserve the tracked caller expression, then record the hosted-only
@@ -126,66 +200,17 @@ async function main() {
           row.embeddedMapper = await embeddedMapperControls(browser, input, source, row.embeddedMapper, checkpoint);
           checkpoint('EMBEDDED_MAPPER_CONTROLS_COMPLETED');
         }
-        const page = await browser.newPage(); page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(15000);
-        page.on('pageerror', error => errors.push(String(error.message).slice(0, 1024)));
-        await page.setRequestInterception(true);
-        page.on('request', request => {
-          const url = new URL(request.url()); const allowed = url.origin === server.origin || ['data:', 'about:'].includes(url.protocol);
-          assert(network.length < 2048); network.push({method: request.method(), path: url.origin === server.origin ? url.pathname : url.protocol, allowed});
-          if (allowed) request.continue().catch(error => errors.push('Request continuation: ' + error.name));
-          else { row.externalPageRequests.push({protocol: url.protocol, host: url.hostname}); request.abort().catch(() => {}); }
-        });
-        await page.setViewport({width: 1280, height: 900, deviceScaleFactor: 1});
-        const query = '?rpc=' + encodeURIComponent(server.origin + '/rpc');
-        await page.goto(server.origin + '/normal/' + query + '#/', {waitUntil: 'networkidle0'});
-        await page.waitForFunction(() => document.body.innerText.includes('ZNS is not deployed on chain 7340469.'));
-        const nominal = await page.evaluate(() => ({heading: document.querySelector('h1')?.textContent.trim(),
-          notDeployed: document.body.innerText.includes('ZNS is not deployed on chain 7340469.'),
-          injectedProvider: typeof window.ethereum !== 'undefined', savedWallet: localStorage.getItem('zns.wallet')}));
-        assert(nominal.heading.includes('Your name on the') && nominal.notDeployed && !nominal.injectedProvider && nominal.savedWallet === null);
-        row.application.push({case: 'nominal-no-deployment', ...nominal});
-        await screenshot(page, protocol, 'normal-wide');
-        await browser.defaultBrowserContext().overridePermissions(server.origin, ['geolocation']);
-        await page.setGeolocation({latitude: 12.5, longitude: 23.5, accuracy: 1});
-        const explicit = await position(page); assert.deepEqual(explicit, {latitude: 12.5, longitude: 23.5, accuracy: 1});
-        geo.push({case: 'valid-explicit-accuracy', observed: explicit});
-        if (protocol === 'webDriverBiDi') {
-          let omitted;
-          try { await page.setGeolocation({latitude: 12.5, longitude: 23.5}); omitted = {status: 'returned', observed: await position(page)}; }
-          catch (error) { omitted = {status: 'rejected', type: error.name, message: String(error.message).slice(0, 512)}; }
-          if (baseProfile === 'candidate') {
-            assert.equal(omitted.status, 'returned'); assert.deepEqual(omitted.observed, {latitude: 12.5, longitude: 23.5, accuracy: 0});
-            await page.setGeolocation(null); geo.push({case: 'candidate-null-reset', status: 'returned'});
+        await applicationControls(browser.defaultBrowserContext(), protocol, row, ['normal', 'fixture']);
+        if (Object.hasOwn(server.distributions, 'upgrade-normal')) {
+          const context = await browser.createBrowserContext();
+          row.viteUpgrade = {application: [], externalPageRequests: [], pageErrors: []};
+          try {
+            await applicationControls(context, protocol, row.viteUpgrade, ['upgrade-normal', 'upgrade-fixture']);
+          } finally {
+            await bounded(() => context.close(), 'Vite upgrade context close');
           }
-          geo.push({case: 'omitted-accuracy-benign-input', ...omitted});
+          checkpoint('VITE_UPGRADE_APPLICATION_CONTROLS_COMPLETED_' + protocol.toUpperCase());
         }
-        row.geolocation = geo;
-        await page.goto(server.origin + '/fixture/' + query + '#/', {waitUntil: 'networkidle0'});
-        await page.waitForFunction(() => !document.body.innerText.includes('ZNS is not deployed') && document.body.innerText.includes('1 ZNN / year'));
-        await page.type('[data-testid="search"]', 'source-fixture');
-        await page.waitForSelector('[data-testid="result"]');
-        const search = await page.$eval('[data-testid="result"]', node => ({text: node.innerText, href: node.getAttribute('href')}));
-        assert(search.text.includes('Available') && search.text.includes('1 ZNN') && search.href.includes('/name/source-fixture.znn'));
-        row.application.push({case: 'synthetic-available-name-and-price', ...search});
-        await page.click('[data-testid="result"]');
-        await page.waitForFunction(() => document.querySelector('[data-testid="total"]')?.textContent.trim() === '1 ZNN');
-        await page.click('button[aria-label="One year more"]');
-        await page.waitForFunction(() => document.querySelector('[data-testid="total"]')?.textContent.trim() === '2 ZNN');
-        assert.equal(await page.$('[data-testid="register-go"]'), null);
-        const term = await page.$eval('[data-testid="years"]', node => node.textContent.trim());
-        row.application.push({case: 'synthetic-navigation-and-two-year-price', term, total: '2 ZNN', registrationActionUnavailableWithoutWallet: true});
-        const beforeTheme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-        await page.click('button[title^="Switch to the "]');
-        const theme = await page.evaluate(() => ({theme: document.documentElement.getAttribute('data-theme'), saved: localStorage.getItem('zns.theme')}));
-        assert(theme.theme !== beforeTheme && theme.saved === theme.theme); row.application.push({case: 'theme-toggle', ...theme});
-        await screenshot(page, protocol, 'fixture-wide');
-        await page.setViewport({width: 400, height: 860, deviceScaleFactor: 1});
-        await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth);
-        const dimensions = await page.evaluate(() => ({viewportWidth: innerWidth, documentWidth: document.documentElement.scrollWidth}));
-        assert.equal(dimensions.viewportWidth, 400); assert(dimensions.documentWidth <= 400);
-        row.application.push({case: 'mobile-layout-no-horizontal-overflow', ...dimensions});
-        await screenshot(page, protocol, 'fixture-mobile');
-        row.network = network; assert.equal(errors.length, 0); assert.equal(row.externalPageRequests.length, 0);
       } finally {
         checkpoint('BEGIN_CHROME_CLOSE_' + protocol.toUpperCase());
         if (browser) await bounded(() => browser.close(), 'Chrome parent close');

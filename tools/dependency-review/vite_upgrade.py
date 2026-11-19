@@ -9,19 +9,20 @@ import re
 import shutil
 import subprocess
 
-from application_runtime import VENDOR, current_cache_index, effective_profile, installed_vite_labels, verify_inputs
+from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
 from lock_review import decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
 from profile_sources import inspect_profile_archive, pin, read_regular
 from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity
-from web_patches import dist_inventory
 
 LOCATION = 'node_modules/vite'
 PUBLICATION = {'name': 'vite', 'version': '8.3.8',
     'resolved': 'https://registry.npmjs.org/vite/-/vite-8.3.8.tgz',
     'integrity': 'sha512-LzOn3h9rG/0vhLdXrV4yJ4QFA9eEoqCl+Yx+kGJd7aB9w6nfNgVHKSYwLPZUHrz4ZGa+t+kXjV9itvcHDLQouA=='}
+# packages/vite/LICENSE.md at the verified v8.3.8 release commit b39e6e63.
+RELEASE_NOTICE = {'bytes': 98196, 'sha256': 'a22152baa1aef74402443008e767e7c689a524c0909d19b0431d97f5ab066a13'}
 PRIOR_LABELS = [('follow-redirects', '1.15.11'), ('nanoid', '5.1.6'),
     ('postcss-selector-parser', '7.1.0'), ('ws', '8.18.3')]
 INSTALL_FLAGS = ['--ignore-scripts', '--include=dev', '--include=optional', '--no-audit', '--no-fund', '--no-progress']
@@ -81,6 +82,7 @@ def inspect_vite(web, cache, cache_row, lock_row):
     archive = inspect_profile_archive(raw, PUBLICATION, lock_row, expanded_limit=4 << 20, member_limit=64)
     require(len(archive['filePins']) == 37 and archive['regularPayloadBytes'] == 2405422,
         'published Vite file count or payload differs')
+    require(archive['filePins'].get('LICENSE.md') == RELEASE_NOTICE, 'Vite archive notice differs from the release source')
     for name, expected in archive['filePins'].items():
         require(pin(read_regular(web, LOCATION + '/' + name, 4 << 20)) == expected, 'installed Vite member differs: ' + name)
     require(archive['noticeCandidates'] and (web / 'node_modules/.bin/vite').resolve(strict=True) == web / LOCATION / 'bin/vite.js',
@@ -113,11 +115,10 @@ def main():
     manifest = decode(read_input(web, vendor_path))
     require(pin(baseline_lock)['sha256'] == manifest['baseLockSha256'], 'baseline runtime lock binding differs')
     package = decode(read_input(web, 'package.json'))
-    require(package['scripts']['build'] == 'node scripts/prepare-runtime.mjs && vue-tsc --noEmit && vite build'
-        and not {'prebuild', 'postbuild'} & set(package['scripts']), 'candidate build entry point differs')
     require(package['devDependencies']['vite'] == '^' + plan['viteCompiledLabels']['version'], 'baseline Vite declaration differs')
     report = {'schema': 1, 'status': 'VITE_UPGRADE_REVIEW_INCOMPLETE', 'producerCommit': commit, 'coreCommit': core,
         'baselinePlan': pin(plan_raw), 'baselineLock': pin(baseline_lock), 'publicationSelection': PUBLICATION,
+        'runId': os.environ['GITHUB_RUN_ID'], 'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'],
         'commands': [], 'trackedApplicationInputsAdopted': False, 'browserRuntimeQualified': False,
         'publisherOrCompleteLicenseReview': False, 'productionGate': 'NO_GO'}
     (output / 'npm-cache').mkdir(mode=0o700)
@@ -164,6 +165,7 @@ def main():
         write_json(output / 'vite-compiled-labels.json', labels)
         observed = {(row['name'], row['version']) for row in labels['distinctNameVersionLabels']}
         report['viteArchive'] = archive
+        report['archivedNoticeMatchesReleaseSource'] = True
         report['compiledLabels'] = {'inventorySha256': canonical_sha256(labels), 'distinctPairs': len(observed),
             'unparsedHeaders': len(labels['unparsedRegionLabels']), 'recognizedOccurrences': len(labels['generatedRegionLabels']),
             'previousExactPairs': [{'name': name, 'version': version, 'observed': (name, version) in observed}
@@ -173,19 +175,17 @@ def main():
         with (repo / '.env').open('xb') as stream:
             stream.write(read_input(repo, '.env.example'))
         env['npm_config_offline'] = 'true'
-        run('candidate-application-build', ['npm', 'run', 'build'])
-        effective_profile(web, manifest)
+        normal, fixture = build_distributions(repo, web, output, plan, manifest, {LOCATION: archive}, run)
         require(read_input(web, 'package.json') == package_raw, 'candidate application manifest changed during build')
-        distribution = dist_inventory(web / 'dist')
-        for notice in plan['retainedStaticNotices']:
-            require(distribution['files'].get(notice['distPath']) == notice['pin'], 'existing static notice differs')
-        for group in ('viem', 'vue'):
-            require(any(re.fullmatch(r'assets/' + group + r'-[\w-]+\.js', name, re.ASCII) for name in distribution['files']),
-                'candidate distribution lost the reviewed ' + group + ' chunk')
-        report['distribution'] = distribution
-        report['status'] = 'VITE_CANDIDATE_APPLICATION_BUILD_OBSERVED'
+        for built in (normal, fixture['distribution']):
+            for group in ('viem', 'vue'):
+                require(any(re.fullmatch(r'assets/' + group + r'-[\w-]+\.js', name, re.ASCII) for name in built['files']),
+                    'candidate distribution lost the reviewed ' + group + ' chunk')
+        report['normalDistribution'] = normal
+        report['fixtureBuild'] = fixture
+        report['status'] = 'VITE_CANDIDATE_APPLICATION_BUILDS_OBSERVED'
         print('### Vite 8.3.8 candidate\n')
-        print('The installed Vite archive matched its pin and the normal application build passed.\n')
+        print('The Vite archive and its release notice matched their pins. Both application builds passed.\n')
         print(f"The scanner recognized {len(observed)} package/version pairs and recorded "
             f"{len(labels['unparsedRegionLabels'])} unparsed pnpm headers.\n")
         for row in report['compiledLabels']['previousExactPairs']:

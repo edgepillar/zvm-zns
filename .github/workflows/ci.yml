@@ -107,23 +107,45 @@ jobs:
     timeout-minutes: 10
     env:
       PYTHONDONTWRITEBYTECODE: '1'
-    defaults:
-      run:
-        working-directory: web
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: application-source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           submodules: true
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - id: node-toolchain
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           package-manager-cache: false
-      # The controller captures the actual npm ci, first-party preparation and
-      # current build. Frozen reference runs are retained as historical evidence.
-      - run: cp ../.env.example ../.env
-      - name: Qualify actual application dependencies and coherent runtime
-        run: python3 -B ../tools/dependency-review/application_runtime.py --output "$RUNNER_TEMP/zns-app"
+      - name: Check out separate Vite 8 build inputs
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: .ci-vite-upgrade
+          submodules: true
+          persist-credentials: false
+      - id: vite-builds
+        name: Review the Vite 8 archive, lock and both application builds
+        working-directory: .ci-vite-upgrade
+        shell: bash
+        run: python3 -B tools/dependency-review/vite_upgrade.py --output "$RUNNER_TEMP/zns-vite-upgrade" | tee -a "$GITHUB_STEP_SUMMARY"
+      # Preserve baseline browser evidence if the candidate build fails.
+      - name: Qualify application dependencies and both browser scenarios
+        if: ${{ !cancelled() && steps.application-source.outcome == 'success' && steps.node-toolchain.outcome == 'success' }}
+        env:
+          VITE_BUILDS_OUTCOME: ${{ steps.vite-builds.outcome }}
+        shell: bash
+        run: |
+          args=(--output "$RUNNER_TEMP/zns-app")
+          if [[ "$VITE_BUILDS_OUTCOME" == success ]]; then
+            args+=(--vite-upgrade "$RUNNER_TEMP/zns-vite-upgrade")
+          fi
+          (set -o noclobber; cat .env.example > .env)
+          python3 -B tools/dependency-review/application_runtime.py "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Retain bounded application qualification evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -139,24 +161,6 @@ jobs:
             ${{ runner.temp }}/zns-app/browser-evidence/browser-progress.json
           if-no-files-found: error
           retention-days: 14
-
-  vite-upgrade:
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          submodules: true
-          persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 22
-          package-manager-cache: false
-      - name: Review the Vite 8 archive, lock delta and application build
-        shell: bash
-        run: python3 -B tools/dependency-review/vite_upgrade.py --output "$RUNNER_TEMP/zns-vite-upgrade" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Retain the candidate locks and bounded build evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

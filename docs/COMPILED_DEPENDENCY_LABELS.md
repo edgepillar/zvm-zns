@@ -89,7 +89,7 @@ not replace code already embedded in a Vite bundle.
 
 ## Vite 8 upgrade review
 
-The hosted `vite-upgrade` job evaluates the [Vite 8.3.8 npm publication](https://registry.npmjs.org/vite/8.3.8)
+The hosted web job evaluates the [Vite 8.3.8 npm publication](https://registry.npmjs.org/vite/8.3.8)
 in a fresh application checkout. It changes only the Vite declaration in the
 candidate manifest and records the npm-generated lock. It requires the existing
 Puppeteer and Zod dependency graphs to remain identical before rebinding the
@@ -99,14 +99,16 @@ and separate output bounds. Installation runs with lifecycle scripts disabled.
 The job reads the exact Vite archive from the same install's npm cache. It
 compares its regular members with the installation and records the recognized
 compiled labels, unparsed headers, original notice pins and prior exact label
-pairs. The normal `npm run build` checks runtime preparation, types and output,
-including the two vendor chunks and the current static notices. CI retains a
-small evidence package containing the locks, label inventory and command reports.
+pairs. The original archive notice matches the [upstream release notice](https://github.com/vitejs/vite/blob/b39e6e63dcbfc3cf4be871acf3554efbd6d0e268/packages/vite/LICENSE.md).
+Both builds use `npm run build` to check runtime preparation, types, vendor
+chunks and current static notices. The default application and synthetic fixture
+share one installation. CI retains the locks, label inventory and command reports.
 
-The tracked application and its browser CI run Vite 7. Adoption of
-Vite 8 requires review of the selected dependency delta, compiled code and notice
-obligations, and native browser evidence for the candidate. The textual labels
-cover supported build markers and leave unmarked code outside this inventory.
+The tracked application uses Vite 7. Hosted CDP and BiDi controls exercise both
+Vite versions' normal and synthetic builds from the same two Chrome sessions.
+Adoption of Vite 8 requires review of the selected dependency delta, compiled
+code and shipped notice obligations. The textual labels cover supported build
+markers and leave unmarked code outside this inventory.
 
 The upstream virtual-module advisory
 [GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7)
