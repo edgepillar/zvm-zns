@@ -78,6 +78,10 @@ def review_notice_evidence(rows, report):
     require(all(rows[location].get('optional') is True for location in absent), 'candidate required publication is absent')
     for location, record in installed.items():
         require(record['selection'] == selected[location], 'candidate notice publication differs')
+        require(record['lockSelectors'] == {field: rows[location][field] for field in ('os', 'cpu', 'libc') if field in rows[location]},
+            'candidate platform selector evidence differs')
+        require(type(record['manifestSelectors']) is dict and set(record['manifestSelectors']) <= {'os', 'cpu', 'libc'},
+            'candidate manifest selector evidence differs')
         verify_pin(record['archive'], 32 << 20)
         verify_pin(record['originalManifest'], 1 << 20)
         for path, notice in record['originalNotices'].items():
@@ -169,6 +173,10 @@ def main():
         declared = (license_value if isinstance(license_value, str) and re.fullmatch(r'[A-Za-z0-9.+() -]{1,256}', license_value)
             else 'unclassified')
         print(f"- `{location}@{row['selection']['version']}` declares `{declared}` and has {len(row['originalNotices'])} notice files.")
+    omitted_libc = [location for location, row in checked['noticeEvidence'].items()
+        if 'libc' in row['manifestSelectors'] and 'libc' not in row['lockSelectors']]
+    if omitted_libc:
+        print('\nThe lock omits a published libc selector for ' + ', '.join(omitted_libc) + '.')
     print(f"\nThe pinned Vite release notice names {len(checked['releaseNoticeDependencyNames'])} packages.")
 
 

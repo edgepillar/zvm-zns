@@ -12,7 +12,7 @@ import subprocess
 from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from lock_review import NAME, decode, dependencies, read_input, require, resolve
+from lock_review import NAME, ReviewError, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
 from profile_sources import inspect_profile_archive, pin, read_regular
 from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity
@@ -23,6 +23,7 @@ PUBLICATION = {'name': 'vite', 'version': '8.3.8',
     'integrity': 'sha512-LzOn3h9rG/0vhLdXrV4yJ4QFA9eEoqCl+Yx+kGJd7aB9w6nfNgVHKSYwLPZUHrz4ZGa+t+kXjV9itvcHDLQouA=='}
 # packages/vite/LICENSE.md at the verified v8.3.8 release commit b39e6e63.
 RELEASE_NOTICE = {'bytes': 98196, 'sha256': 'a22152baa1aef74402443008e767e7c689a524c0909d19b0431d97f5ab066a13'}
+ROLLDOWN_LINUX_BINDINGS = {'@rolldown/binding-linux-x64-gnu', '@rolldown/binding-linux-x64-musl'}
 PRIOR_LABELS = [('follow-redirects', '1.15.11'), ('nanoid', '5.1.6'),
     ('postcss-selector-parser', '7.1.0'), ('ws', '8.18.3')]
 INSTALL_FLAGS = ['--ignore-scripts', '--include=dev', '--include=optional', '--no-audit', '--no-fund', '--no-progress']
@@ -119,9 +120,12 @@ def review_installed_publications(web, rows, installed, cache, index, vite_archi
             cached = index[integrity]
             raw = read_regular(cache, cached['cacheRelative'], 32 << 20)
             require(len(raw) == cached['bytes'], 'cached publication length differs: ' + location)
-            member_bytes = 32 << 20 if selection['name'] == '@rolldown/binding-linux-x64-gnu' else 16 << 20
-            archives[integrity] = inspect_profile_archive(raw, selection, rows[location],
-                expanded_limit=64 << 20, member_limit=4096, member_bytes=member_bytes)
+            member_bytes = 32 << 20 if selection['name'] in ROLLDOWN_LINUX_BINDINGS else 16 << 20
+            try:
+                archives[integrity] = inspect_profile_archive(raw, selection, rows[location],
+                    expanded_limit=64 << 20, member_limit=4096, member_bytes=member_bytes)
+            except ValueError as error:
+                raise ReviewError(f"{selection['name']}@{selection['version']}: {error}") from error
         archive = archives[integrity]
         require(archive['selection'] == selection, 'candidate publication identity collision')
         manifest_raw = read_regular(web, location + '/package.json', 1 << 20)
@@ -133,7 +137,9 @@ def review_installed_publications(web, rows, installed, cache, index, vite_archi
             require(pin(read_regular(web, location + '/' + name, 1 << 20)) == expected,
                 'candidate original notice differs: ' + location + '/' + name)
         records[location] = {'selection': selection, 'archive': archive['publication'],
-            'originalManifest': manifest_pin, 'manifestLicense': manifest.get('license'), 'originalNotices': notices}
+            'originalManifest': manifest_pin, 'manifestLicense': manifest.get('license'), 'originalNotices': notices,
+            'manifestSelectors': archive['manifestSelectors'],
+            'lockSelectors': {field: rows[location][field] for field in ('os', 'cpu', 'libc') if field in rows[location]}}
     return records
 
 
