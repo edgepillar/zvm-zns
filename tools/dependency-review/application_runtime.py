@@ -39,11 +39,7 @@ def verify_inputs(repo, expected):
         require(total <= 16 << 20 and pin(raw) == value, 'application input source or aggregate budget differs')
 
 
-def raw_profile(repo, web, output, env, run, npm_version):
-    lock_raw = read_input(web, 'package-lock.json'); rows = json.loads(lock_raw)['packages']
-    installed = {name for name in rows if name and (web / name).exists()}
-    profile = {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'}
-    selected = select_profile(lock_raw, installed, profile)['selected']
+def current_cache_index(repo, web, output, env, run, npm_version, integrities):
     npm_bin = shutil.which('npm', path=env['PATH']); require(npm_bin, 'npm executable absent')
     npm_root = Path(npm_bin).resolve(strict=True).parent.parent
     manifest = json.loads(read_regular(npm_root, 'package.json', 65536))
@@ -52,12 +48,22 @@ def raw_profile(repo, web, output, env, run, npm_version):
     require(cache.is_dir() and not cache.is_symlink(), 'current-job npm cache absent or linked')
     request = output / 'cache-input.json'
     write_json(request, {'schema': 1, 'npmRoot': str(npm_root), 'cacheRoot': str(cache), 'npmVersion': npm_version,
-        'integrities': sorted({row['selection']['integrity'] for row in selected.values()})})
+        'integrities': sorted(integrities)})
     run('application-cache-index', ['node', *permission_args([repo / 'tools/dependency-review', npm_root, cache, request]),
         str(repo / 'tools/dependency-review/npm-cache-index.cjs'), str(request)], web, 45)
     result = json.loads(read_input(output, 'streams/application-cache-index.stdout.txt'))
     require(result['npmVersion'] == npm_version and not result['historicalCacheFallbackOrAdditionalTransport']
         and not result['cacheVerifyCleanOrMutationRequested'], 'npm cache API evidence scope')
+    return cache, result
+
+
+def raw_profile(repo, web, output, env, run, npm_version):
+    lock_raw = read_input(web, 'package-lock.json'); rows = json.loads(lock_raw)['packages']
+    installed = {name for name in rows if name and (web / name).exists()}
+    profile = {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'}
+    selected = select_profile(lock_raw, installed, profile)['selected']
+    cache, result = current_cache_index(repo, web, output, env, run, npm_version,
+        {row['selection']['integrity'] for row in selected.values()})
     budgets_raw = read_input(repo, 'tools/dependency-review/profile-source-budgets.json')
     inventory = verify_profile(web, lock_raw, cache, result['index'], profile, json.loads(budgets_raw))
     inventory['sourceBudgetPlanPin'] = pin(budgets_raw)
@@ -65,24 +71,28 @@ def raw_profile(repo, web, output, env, run, npm_version):
     return inventory, result
 
 
-def verify_vite_labels(web, inventory, expected):
+def installed_vite_labels(web, publication):
     location = 'node_modules/vite'
-    require(location in inventory['installed'], 'installed Vite publication missing')
-    selected = inventory['installed'][location]['selection']
-    require(selected['name'] == 'vite' and selected['version'] == expected['version'], 'installed Vite identity differs')
-    publication = inventory['sources'][selected['integrity']]
     files = {}
     for name, value in publication['filePins'].items():
         if name.endswith(('.js', '.mjs', '.cjs')):
             raw = read_regular(web, location + '/' + name, 2 << 20)
             require(pin(raw) == value, 'installed Vite label source differs from its publication')
             files[name] = raw
-    labels = inspect_labels(files)
+    return inspect_labels(files)
+
+
+def verify_vite_labels(web, inventory, expected):
+    location = 'node_modules/vite'
+    require(location in inventory['installed'], 'installed Vite publication missing')
+    selected = inventory['installed'][location]['selection']
+    require(selected['name'] == 'vite' and selected['version'] == expected['version'], 'installed Vite identity differs')
+    labels = installed_vite_labels(web, inventory['sources'][selected['integrity']])
     require(not labels['unparsedRegionLabels'], 'installed Vite has unreviewed compiled labels')
     digest = canonical_sha256(labels)
     require(digest == expected['inventorySha256'], 'installed Vite compiled label inventory differs')
     return {'version': selected['version'], 'integrity': selected['integrity'],
-        'inventorySha256': digest, 'fileCount': len(files),
+        'inventorySha256': digest, 'fileCount': len(labels['sourceFilePins']),
         'occurrences': len(labels['generatedRegionLabels']), 'pairs': len(labels['distinctNameVersionLabels']),
         'evidenceAuthority': labels['evidenceAuthority']}
 

@@ -87,6 +87,27 @@ candidate, authenticate the labelled package independently or substitute for
 testing a reviewed replacement publication. A top-level override alone does
 not replace code already embedded in a Vite bundle.
 
+## Vite 8 upgrade review
+
+The hosted `vite-upgrade` job evaluates the [Vite 8.3.8 npm publication](https://registry.npmjs.org/vite/8.3.8)
+in a fresh application checkout. It changes only the Vite declaration in the
+candidate manifest and records the npm-generated lock. It requires the existing
+Puppeteer and Zod dependency graphs to remain identical before rebinding the
+reviewed runtime manifest to the candidate lock. Each command has a deadline
+and separate output bounds. Installation runs with lifecycle scripts disabled.
+
+The job reads the exact Vite archive from the same install's npm cache. It
+compares its regular members with the installation and records the recognized
+compiled labels, unparsed headers, original notice pins and prior exact label
+pairs. The normal `npm run build` checks runtime preparation, types and output,
+including the two vendor chunks and the current static notices. CI retains a
+small evidence package containing the locks, label inventory and command reports.
+
+The tracked application and its browser CI run Vite 7. Adoption of
+Vite 8 requires review of the selected dependency delta, compiled code and notice
+obligations, and native browser evidence for the candidate. The textual labels
+cover supported build markers and leave unmarked code outside this inventory.
+
 The upstream virtual-module advisory
 [GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7)
 was observed independently after that response, which did not return it. Its
