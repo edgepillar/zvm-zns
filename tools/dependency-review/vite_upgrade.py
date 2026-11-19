@@ -12,14 +12,16 @@ import subprocess
 from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
+from distribution_evidence import OUTPUT_EVIDENCE, complete_trace, review_traces, verify_publications
 from lock_review import NAME, ReviewError, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
-from profile_sources import inspect_profile_archive, matches_profile, pin, read_regular
+from profile_sources import inspect_profile_archive, inspect_with_budget, matches_profile, pin, read_regular
 from proposal_delta import lock_delta, package_table, preserve_platform_selectors, registry_identity, selector
 
 LOCATION = 'node_modules/vite'
 PLATFORM_PLAN = 'tools/dependency-review/vite-libc-publications.json'
 HOST_PROFILE = {'os': 'linux', 'cpu': 'x64', 'libc': 'glibc'}
+BUILD_STAGES = {'application-build': 'normal', 'fixture-application-build': 'fixture'}
 PUBLICATION = {'name': 'vite', 'version': '8.3.8',
     'resolved': 'https://registry.npmjs.org/vite/-/vite-8.3.8.tgz',
     'integrity': 'sha512-LzOn3h9rG/0vhLdXrV4yJ4QFA9eEoqCl+Yx+kGJd7aB9w6nfNgVHKSYwLPZUHrz4ZGa+t+kXjV9itvcHDLQouA=='}
@@ -170,8 +172,7 @@ def review_platform_installation(publications, installed, absent):
         'excludedByLibc': excluded_by_libc, 'excludedUnpackedBytesFromRegistry': sum(records[location]['unpackedBytes'] for location in excluded_by_libc)}
 
 
-def review_installed_publications(web, rows, installed, cache, index, vite_archive):
-    archives = {PUBLICATION['integrity']: vite_archive}
+def review_installed_publications(web, rows, installed, cache, index, archives, budgets):
     records = {}
     for location, selection in installed.items():
         integrity = selection['integrity']
@@ -181,8 +182,11 @@ def review_installed_publications(web, rows, installed, cache, index, vite_archi
             require(len(raw) == cached['bytes'], 'cached publication length differs: ' + location)
             member_bytes = 32 << 20 if selection['name'] in ROLLDOWN_LINUX_BINDINGS else 16 << 20
             try:
-                archives[integrity] = inspect_profile_archive(raw, selection, rows[location],
-                    expanded_limit=64 << 20, member_limit=4096, member_bytes=member_bytes)
+                if integrity in budgets['overrides']:
+                    archives[integrity] = inspect_with_budget(raw, selection, rows[location], budgets)
+                else:
+                    archives[integrity] = inspect_profile_archive(raw, selection, rows[location],
+                        expanded_limit=64 << 20, member_limit=4096, member_bytes=member_bytes)
             except ValueError as error:
                 raise ReviewError(f"{selection['name']}@{selection['version']}: {error}") from error
         archive = archives[integrity]
@@ -256,7 +260,11 @@ def main():
         'npm_config_fetch_timeout': '45000', 'npm_config_registry': 'https://registry.npmjs.org/'}
 
     def run(label, argv, cwd=web, timeout=120):
-        row = run_bounded(argv, cwd, env, output, label, timeout=timeout)
+        command_env = env
+        if label in BUILD_STAGES:
+            argv = [*argv, '--', '--config', str(repo / 'tools/dependency-review/vite-output.config.mjs')]
+            command_env = {**env, 'ZNS_DISTRIBUTION_EVIDENCE': str(output / (BUILD_STAGES[label] + '-bundle.json'))}
+        row = run_bounded(argv, cwd, command_env, output, label, timeout=timeout)
         report['commands'].append(row)
         require(row['actualExit'] == 0 and row['outputComplete'], label + ' failed or incomplete')
         return read_input(output, row['streams']['stdout']['path'])
@@ -288,15 +296,19 @@ def main():
             'candidate npm ci changed the selected inputs')
         _, rows = package_table(selected_lock)
         installed, absent = installed_changes(web, rows, report['lockDelta'])
+        installed_registry = {location: registry_identity(location, row) for location, row in rows.items()
+            if location and not row.get('inBundle') and (web / location).is_dir()}
         cache, index = current_cache_index(repo, web, output, env, run, npm,
-            {selection['integrity'] for selection in installed.values()})
+            {selection['integrity'] for selection in installed_registry.values()})
         archive, labels = inspect_vite(web, cache, index['index'][PUBLICATION['integrity']], rows[LOCATION])
+        archives = {PUBLICATION['integrity']: archive}
+        budgets = decode(read_input(repo, 'tools/dependency-review/profile-source-budgets.json'))
         write_json(output / 'vite-compiled-labels.json', labels)
         observed = {(row['name'], row['version']) for row in labels['distinctNameVersionLabels']}
         report['viteArchive'] = archive
         report['archivedNoticeMatchesReleaseSource'] = True
         report['releaseNoticeDependencyNames'] = notice_dependency_names(read_regular(web, LOCATION + '/LICENSE.md', 1 << 20))
-        report['installedChangedPublications'] = review_installed_publications(web, rows, installed, cache, index['index'], archive)
+        report['installedChangedPublications'] = review_installed_publications(web, rows, installed, cache, index['index'], archives, budgets)
         report['nativePlatformInstallation'] = review_platform_installation(
             review['publishedLibc'], report['installedChangedPublications'], absent)
         report['absentOptionalChangedLocations'] = absent
@@ -317,6 +329,25 @@ def main():
                     'candidate distribution lost the reviewed ' + group + ' chunk')
         report['normalDistribution'] = normal
         report['fixtureBuild'] = fixture
+        distributions = {'normal': normal, 'fixture': fixture['distribution']}
+        traces = {stage: complete_trace(web, built, output, stage) for stage, built in distributions.items()}
+        member_paths, stage_reports = review_traces(traces, distributions, rows)
+        package_sources = review_installed_publications(web, rows, {path: installed_registry[path] for path in member_paths},
+            cache, index['index'], archives, budgets)
+        for location, members in member_paths.items():
+            source = package_sources[location]
+            archive_members = archives[source['selection']['integrity']]['filePins']
+            source['originalMembers'] = {}
+            for member in sorted(members):
+                actual = pin(read_regular(web, location + '/' + member, 16 << 20))
+                require(archive_members.get(member) == actual, 'reported output source differs from its registry archive')
+                source['originalMembers'][member] = actual
+        summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
+        evidence = {'schema': 1, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
+            'selectedLockSha256': pin(selected_lock)['sha256']}
+        result_path = output / OUTPUT_EVIDENCE
+        write_json(result_path, evidence)
+        report['distributionEvidence'] = pin(read_input(output, OUTPUT_EVIDENCE))
         report['status'] = 'VITE_CANDIDATE_APPLICATION_BUILDS_OBSERVED'
         print('### Vite 8.3.8 candidate\n')
         print('The Vite archive and its release notice matched their pins. Both application builds passed.\n')

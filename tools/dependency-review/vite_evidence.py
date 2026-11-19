@@ -11,6 +11,7 @@ from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
+from distribution_evidence import OUTPUT_EVIDENCE, review_traces, verify_publications
 from lock_review import NAME, decode, read_input, require
 from openzeppelin_candidate import checked_name, encoded, write_json
 from profile_sources import pin, read_regular
@@ -20,7 +21,8 @@ from vite_upgrade import PLATFORM_PLAN, LOCATION, PUBLICATION, RELEASE_NOTICE, c
 MAX_ARCHIVE = 1 << 20
 MAX_MEMBER = 2 << 20
 MAX_PAYLOAD = 6 << 20
-INPUTS = {'report.json', 'candidate-package.json', 'npm-generated-lock.json', 'candidate-lock.json', 'vite-compiled-labels.json'}
+INPUTS = {'report.json', 'candidate-package.json', 'npm-generated-lock.json', 'candidate-lock.json',
+    'vite-compiled-labels.json', OUTPUT_EVIDENCE}
 COMMANDS = ('node-version', 'npm-version', 'candidate-lock-resolution', 'candidate-install',
     'application-cache-index', 'application-build', 'fixture-application-build')
 
@@ -30,7 +32,7 @@ def review_members(raw, digest):
     require(raw.startswith(b'PK\x03\x04'), 'candidate artifact must be a ZIP file')
     files, total = {}, 0
     with ZipFile(BytesIO(raw)) as archive:
-        require(0 < len(archive.infolist()) <= 5 + 2 * len(COMMANDS), 'candidate artifact member budget')
+        require(0 < len(archive.infolist()) <= len(INPUTS) + 2 * len(COMMANDS), 'candidate artifact member budget')
         for member in archive.infolist():
             name = member.filename
             is_stream = re.fullmatch(r'streams/([a-z-]+)\.(stdout|stderr)\.txt', name)
@@ -130,9 +132,28 @@ def replay(repo, members, source, run_id, attempt):
     installed, absent = review_notice_evidence(rows, report)
     platform = review_platform_installation(review['publishedLibc'], installed, absent)
     require(platform == report['nativePlatformInstallation'], 'replayed native installation differs')
+    evidence_raw = members[OUTPUT_EVIDENCE]
+    require(pin(evidence_raw) == report['distributionEvidence'], 'distribution evidence receipt differs')
+    distribution_evidence = decode(evidence_raw)
+    require(distribution_evidence['schema'] == 1 and distribution_evidence['selectedLockSha256'] == pin(selected)['sha256'],
+        'distribution lock binding differs')
+    distributions = {'normal': report['normalDistribution'], 'fixture': report['fixtureBuild']['distribution']}
+    member_paths, stage_reports = review_traces(distribution_evidence['traces'], distributions, rows)
+    package_sources = distribution_evidence['packageSources']
+    for row in package_sources.values():
+        verify_pin(row['archive'], 32 << 20)
+        for path, value in {**row['originalMembers'], **row['originalNotices']}.items():
+            checked_name(path)
+            if value != pin(b''):
+                verify_pin(value, 16 << 20)
+    distribution_summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
+    require(distribution_summary == distribution_evidence['summary'], 'replayed distribution summary differs')
     return {'candidateLock': pin(selected), 'generatedLock': pin(generated), 'lockLocations': len(rows) - 1,
         'noticeEvidence': installed, 'absentOptionalChangedLocations': absent,
         'publishedLibc': review['publishedLibc'], 'nativePlatformInstallation': platform,
+        'distributionEvidence': pin(evidence_raw), 'distributionSummary': distribution_summary,
+        'distributionPackageNotices': {location: {key: row[key] for key in ('selection', 'manifestLicense', 'originalNotices')}
+            for location, row in package_sources.items()},
         'releaseNoticeDependencyNames': report['releaseNoticeDependencyNames'],
         'compiledLabelInventorySha256': report['compiledLabels']['inventorySha256'],
         'lockDeltaCounts': {key: len(review['lockDelta'][key]) for key in ['addedLocations', 'removedLocations',
@@ -187,6 +208,17 @@ def main():
     if omitted_libc:
         print('\nThe lock omits a published libc selector for ' + ', '.join(omitted_libc) + '.')
     print(f"\nThe pinned Vite release notice names {len(checked['releaseNoticeDependencyNames'])} packages.")
+    print('\n### Vite 8 static distribution evidence\n')
+    for stage, row in checked['distributionSummary'].items():
+        print(f"- The {stage} build contains {row['outputFiles']} files, with {len(row['packageLocations'])} reported npm origins, "
+            f"{len(row['standaloneNativeCandidates'])} standalone native candidates and "
+            f"{len(row['locationsWithOriginalNoticeBytesInOutput'])} npm origins with exact original notice bytes in the output.")
+        families = ', '.join(row['generatedFamilies']) or 'none recorded'
+        print(f"  Generated origin categories are {families}. {row['assetsWithoutReportedOrigins']} assets have empty origin metadata.")
+    print('')
+    for row in checked['distributionPackageNotices'].values():
+        selection = row['selection']
+        print(f"- The observer bound `{selection['name']}@{selection['version']}` to its published archive.")
 
 
 if __name__ == '__main__':

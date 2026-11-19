@@ -113,6 +113,16 @@ Both builds use `npm run build` to check runtime preparation, types, vendor
 chunks and current static notices. The default application and synthetic fixture
 share one installation. CI retains the locks, label inventory and command reports.
 
+The candidate builds load the application Vite configuration with a read-only
+bundle observer. It records relative module and asset origins and hashes the
+emitted files. The producer checks that those hashes and the static public
+copies cover the final distribution. It then verifies reported npm source files
+and original notices against the locked publications in the current job's npm
+cache. This reuses the existing builds and avoids retaining another distribution
+archive. The report records generated origin categories, assets with empty
+origin metadata, standalone native file candidates and exact notice copies.
+Generated or inlined material can have incomplete origin metadata.
+
 The web job also checks the npm registry archive, original package manifest and
 notice pins for each added or replaced publication installed on Linux x64 glibc.
 Its report identifies changed optional locations absent from that installation.
@@ -124,6 +134,8 @@ and reads only bounded, expected members. From those bytes it reconstructs the
 lock delta and platform carries, validates the derived runtime manifest and
 checks every recorded command stream, compiled-label report and notice receipt.
 The replay also compares the selected installation with the publication plan.
+It checks the captured distribution receipts against the selected lock and the
+producer's final file hashes.
 It runs without a package install or browser launch. Raw package verification
 belongs to the producer, whose records are bound to the same commit and run.
 

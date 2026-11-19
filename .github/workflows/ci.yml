@@ -175,6 +175,7 @@ jobs:
             ${{ runner.temp }}/zns-vite-upgrade/candidate-package.json
             ${{ runner.temp }}/zns-vite-upgrade/*-lock.json
             ${{ runner.temp }}/zns-vite-upgrade/vite-compiled-labels.json
+            ${{ runner.temp }}/zns-vite-upgrade/vite-distribution-evidence.json
             ${{ runner.temp }}/zns-vite-upgrade/streams/*.txt
           if-no-files-found: error
           retention-days: 14
