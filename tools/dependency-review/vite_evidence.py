@@ -135,7 +135,7 @@ def replay(repo, members, source, run_id, attempt):
     evidence_raw = members[OUTPUT_EVIDENCE]
     require(pin(evidence_raw) == report['distributionEvidence'], 'distribution evidence receipt differs')
     distribution_evidence = decode(evidence_raw)
-    require(distribution_evidence['schema'] == 1 and distribution_evidence['selectedLockSha256'] == pin(selected)['sha256'],
+    require(distribution_evidence['schema'] == 2 and distribution_evidence['selectedLockSha256'] == pin(selected)['sha256'],
         'distribution lock binding differs')
     distributions = {'normal': report['normalDistribution'], 'fixture': report['fixtureBuild']['distribution']}
     member_paths, stage_reports = review_traces(distribution_evidence['traces'], distributions, rows)
@@ -147,7 +147,7 @@ def replay(repo, members, source, run_id, attempt):
             if value != pin(b''):
                 verify_pin(value, 16 << 20)
     distribution_summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
-    verify_notice_indexes(distribution_evidence['traces'], distributions, rows, {**installed, **package_sources}, distribution_summary)
+    verify_notice_indexes(distribution_evidence['traces'], distributions, rows, package_sources, distribution_summary)
     require(distribution_summary == distribution_evidence['summary'], 'replayed distribution summary differs')
     return {'candidateLock': pin(selected), 'generatedLock': pin(generated), 'lockLocations': len(rows) - 1,
         'noticeEvidence': installed, 'absentOptionalChangedLocations': absent,
@@ -215,14 +215,23 @@ def main():
             f"{len(row['standaloneNativeCandidates'])} standalone native candidates and "
             f"{len(row['locationsWithOriginalNoticeBytesInOutput'])} npm origins with exact original notice bytes in the output.")
         families = ', '.join(row['generatedFamilies']) or 'none recorded'
-        print(f"  Generated origin categories are {families}. {row['assetsWithoutReportedOrigins']} assets have empty origin metadata.")
+        print(f"  Generated origin categories are {families}. {row['assetsWithoutReportedOrigins']} assets lack origin evidence.")
+        for role, location in row['generatedPackageLocations'].items():
+            selection = checked['distributionPackageNotices'][location]['selection']
+            print(f"  {role} maps to {selection['name']}@{selection['version']}.")
+        for name, version in row['tailwindCssBanners'].items():
+            print(f"  The final CSS asset {name} contains the Tailwind {version} publication banner.")
+        for label, names in (('Assets without origin evidence', row['assetsWithoutOriginNames']),
+                ('Outputs with unresolved origins', row['outputsWithUnresolvedOrigins'])):
+            if names:
+                print(f"  {label} ({len(names)}): " + ', '.join(names[:12]) + '.')
         notices = row['shippedNotices']
         print(f"  The shipped index covers {len(notices['locationsWithOriginalNotices'])} locked origins with "
             f"{notices['noticeFiles']} distinct original notice files.")
     print('')
     for row in checked['distributionPackageNotices'].values():
         selection = row['selection']
-        print(f"- The observer bound `{selection['name']}@{selection['version']}` to its published archive.")
+        print(f"- Verified the published archive receipt for `{selection['name']}@{selection['version']}`.")
 
 
 if __name__ == '__main__':

@@ -125,10 +125,20 @@ Generated or inlined material can have incomplete origin metadata.
 
 The normal application build emits a `notices/npm/index.json` from its
 reported package origins. It copies the original notice files from the installed
-lock selections and reuses identical bytes across packages. Reported Vite or
-Rolldown runtime helpers contribute their corresponding package notices. The
-same build path feeds Pages and the candidate scenarios. Hosted CI verifies the
-index and the shipped file hashes against the original archive receipts.
+lock selections and reuses identical bytes across packages. Exact virtual IDs
+identify the Vite preload modules, the Rolldown runtime and the Vue export
+helper. The report binds those roles to the published packages and lists
+remaining unresolved outputs by their distribution-relative names. [Vite preload
+source](https://github.com/vitejs/vite/blob/b39e6e63dcbfc3cf4be871acf3554efbd6d0e268/packages/vite/src/node/plugins/importAnalysisBuild.ts#L129-L131),
+[Rolldown runtime source](https://github.com/rolldown/rolldown/blob/b9c75ddc8bd50f2c1a4c7be0b548bdab5cba85ab/crates/rolldown_common/src/module_loader/runtime_module_brief.rs#L8-L9),
+[Vue helper source](https://github.com/vitejs/vite-plugin-vue/blob/822c69d687a5c6bdc4a72f2326aed9b0e1ba7030/packages/plugin-vue/src/helper.ts#L1-L9)
+
+For compiled CSS, the browser build reads the Tailwind version banner and
+requires the matching locked package. Hosted verification independently reads
+the banner from the final file and checks the installed Tailwind stylesheets
+against their archive. The same build path feeds Pages and the candidate
+scenarios. Hosted CI compares the index and shipped notice hashes with the
+original archive receipts. [Tailwind banner source](https://github.com/tailwindlabs/tailwindcss/blob/c2b24dd15fed1c59dd521bd86082f520c9f5ad0d/packages/tailwindcss/src/index.ts#L721-L724)
 
 The web job also checks the npm registry archive, original package manifest and
 notice pins for each added or replaced publication installed on Linux x64 glibc.

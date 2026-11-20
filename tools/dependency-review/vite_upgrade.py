@@ -332,8 +332,11 @@ def main():
         distributions = {'normal': normal, 'fixture': fixture['distribution']}
         traces = {stage: complete_trace(web, built, output, stage) for stage, built in distributions.items()}
         member_paths, stage_reports = review_traces(traces, distributions, rows)
-        package_sources = review_installed_publications(web, rows, {path: installed_registry[path] for path in member_paths},
-            cache, index['index'], archives, budgets)
+        reviewed = report['installedChangedPublications']
+        package_sources = {path: dict(reviewed[path]) for path in member_paths if path in reviewed}
+        package_sources.update(review_installed_publications(web, rows,
+            {path: installed_registry[path] for path in member_paths if path not in reviewed},
+            cache, index['index'], archives, budgets))
         for location, members in member_paths.items():
             source = package_sources[location]
             archive_members = archives[source['selection']['integrity']]['filePins']
@@ -343,9 +346,8 @@ def main():
                 require(archive_members.get(member) == actual, 'reported output source differs from its registry archive')
                 source['originalMembers'][member] = actual
         summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
-        notice_sources = {**report['installedChangedPublications'], **package_sources}
-        verify_notice_indexes(traces, distributions, rows, notice_sources, summary)
-        evidence = {'schema': 1, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
+        verify_notice_indexes(traces, distributions, rows, package_sources, summary)
+        evidence = {'schema': 2, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
             'selectedLockSha256': pin(selected_lock)['sha256']}
         result_path = output / OUTPUT_EVIDENCE
         write_json(result_path, evidence)

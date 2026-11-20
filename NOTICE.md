@@ -25,11 +25,11 @@ not establish complete distribution notices or legal acceptance for all other
 packages. See [`docs/WEB_DEPENDENCY_PATCHES.md`](docs/WEB_DEPENDENCY_PATCHES.md)
 for source bindings, selected controls and remaining qualification.
 
-The browser build publishes `notices/npm/index.json` with the original notice
-files for its reported npm origins and identified bundler runtime helpers.
-Identical notice bytes share one file. Hosted CI compares the shipped files
-with their locked publication archives. Review of generated and inlined
-material remains open.
+The browser build publishes `notices/npm/index.json` with original notices for
+reported npm origins, identified generated runtime helpers and CSS with the
+Tailwind publication banner. Identical notice bytes share one file. Hosted CI
+compares the shipped files with the locked publication archives. Review of
+remaining generated and inlined material is tracked in the qualification report.
 
 ## Selected compiler runtime dependencies
 

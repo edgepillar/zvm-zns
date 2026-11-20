@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto'
 import {existsSync, lstatSync, readFileSync, readdirSync, realpathSync} from 'node:fs'
 import {dirname, join} from 'node:path'
 import type {Plugin} from 'vite'
-import {bundleOrigins, portablePath} from './bundle-origins'
+import {bundleOrigins, generatedPackageLocation, portablePath} from './bundle-origins'
 
 const indexFile = 'notices/npm/index.json'
 const noticeName = /^(LICENSE|LICENCE|COPYING|NOTICE|COPYRIGHT|OFL|UNLICENSE)/i
@@ -54,16 +54,13 @@ export function browserNotices(directory: string): Plugin {
         const reported = new Set(Object.values(bundle).flatMap(output => bundleOrigins(output, dirname(web))))
         const selected = new Set<string>()
         for (const origin of reported) {
+          const generatedLocation = generatedPackageLocation(origin, lock.packages)
+          if (generatedLocation) selected.add(generatedLocation)
           if (!origin.startsWith('web/node_modules/')) continue
           const path = origin.slice(4)
           const location = locations.find(candidate => path.startsWith(candidate + '/'))
           if (!location) throw new Error('A browser origin has no dependency lock row')
           selected.add(location)
-        }
-        if (reported.has('@generated/vite') || reported.has('@generated/commonjs')) selected.add('node_modules/vite')
-        if (reported.has('@generated/rolldown')) {
-          selected.add(locations.includes('node_modules/vite/node_modules/rolldown')
-            ? 'node_modules/vite/node_modules/rolldown' : 'node_modules/rolldown')
         }
         if (selected.size > 128) throw new Error('Browser notice package limit')
 

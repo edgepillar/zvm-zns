@@ -390,6 +390,9 @@ def main():
     for stage, notices in report['shippedNotices'].items():
         print(f"The Vite 7 {stage} build ships {notices['noticeFiles']} exact notice files for "
             f"{len(notices['locationsWithOriginalNotices'])} locked package locations.")
+        for origin_location in ('node_modules/@vitejs/plugin-vue', 'node_modules/tailwindcss'):
+            if origin_location in notices['locationsWithOriginalNotices']:
+                print(f"The Vite 7 {stage} build ships the original notice for {origin_location.removeprefix('node_modules/')}.")
     if upgrade is not None:
         print('Vite 8 passed both application scenarios over CDP and BiDi using the same two Chrome sessions.')
         print('Both locked installs used the current job npm cache. The browser input was downloaded once.')
