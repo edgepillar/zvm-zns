@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto'
 import {existsSync, lstatSync, readFileSync, readdirSync, realpathSync} from 'node:fs'
 import {dirname, join} from 'node:path'
 import type {Plugin} from 'vite'
-import {bundleOrigins, generatedPackageLocation, portablePath} from './bundle-origins'
+import {bundleOrigins, generatedPackageLocation, portablePath, stylesheetChunkInputs} from './bundle-origins'
 
 const indexFile = 'notices/npm/index.json'
 const noticeName = /^(LICENSE|LICENCE|COPYING|NOTICE|COPYRIGHT|OFL|UNLICENSE)/i
@@ -51,7 +51,9 @@ export function browserNotices(directory: string): Plugin {
         const locations = Object.keys(lock.packages).filter(path => path.startsWith('node_modules/') && portablePath(path))
         if (locations.length > 512) throw new Error('Browser notices lock location limit')
         locations.sort((a, b) => b.length - a.length || (a < b ? -1 : 1))
-        const reported = new Set(Object.values(bundle).flatMap(output => bundleOrigins(output, dirname(web))))
+        const repo = dirname(web)
+        const outputs = Object.values(bundle)
+        const reported = new Set(outputs.flatMap(output => bundleOrigins(output, repo)))
         const selected = new Set<string>()
         for (const origin of reported) {
           const generatedLocation = generatedPackageLocation(origin, lock.packages)
@@ -61,6 +63,16 @@ export function browserNotices(directory: string): Plugin {
           const location = locations.find(candidate => path.startsWith(candidate + '/'))
           if (!location) throw new Error('A browser origin has no dependency lock row')
           selected.add(location)
+        }
+        const styleEntryEmitted = outputs.some(output => {
+          if (output.type !== 'chunk') return false
+          const stylesheet = stylesheetChunkInputs(output, repo)
+          return stylesheet !== undefined && stylesheet.sources.includes('web/src/style.css')
+            && bundle[stylesheet.file]?.type === 'asset'
+        })
+        if (styleEntryEmitted && /^[ \t]*@import[ \t]+(['"])tailwindcss\1[ \t]*;/m
+          .test(readBounded(web, 'src/style.css', 1 << 20).toString())) {
+          selected.add('node_modules/tailwindcss')
         }
         if (selected.size > 128) throw new Error('Browser notice package limit')
 

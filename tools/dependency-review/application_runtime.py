@@ -13,6 +13,7 @@ from browser_runtime import download_browser, extract_browser
 from browser_staging import hosted_only, new_file, validate_source_plan
 from coherent_derivation import PACKAGE, MAPPER, runtime_probe
 from compiled_labels import canonical_sha256, inspect_labels
+from distribution_evidence import has_tailwind_style_import
 from distribution_notices import read_notice_index, verify_notice_index
 from lock_review import read_input, require
 from node_consumer_controls import permission_args
@@ -306,6 +307,9 @@ def main():
         lock_rows = json.loads(read_input(web, 'package-lock.json'))['packages']
         report['shippedNotices'] = {stage: verify_notice_index(read_notice_index(path), expected_distributions[stage],
             lock_rows, notice_inputs) for stage, path in distributions.items()}
+        if has_tailwind_style_import(repo):
+            require(all('node_modules/tailwindcss' in row['locationsWithOriginalNotices']
+                for row in report['shippedNotices'].values()), 'application stylesheet is missing the Tailwind notice')
         if upgrade is not None:
             require(upgrade['binding']['syntheticDeployment'] == report['fixtureBuild']['syntheticDeployment'],
                 'candidate and baseline use different synthetic deployment bytes')

@@ -26,8 +26,8 @@ packages. See [`docs/WEB_DEPENDENCY_PATCHES.md`](docs/WEB_DEPENDENCY_PATCHES.md)
 for source bindings, selected controls and remaining qualification.
 
 The browser build publishes `notices/npm/index.json` with original notices for
-reported npm origins, identified generated runtime helpers and CSS with the
-Tailwind publication banner. Identical notice bytes share one file. Hosted CI
+reported npm origins, identified generated runtime helpers and emitted
+stylesheets associated with Tailwind. Identical notice bytes share one file. Hosted CI
 compares the shipped files with the locked publication archives. Review of
 remaining generated and inlined material is tracked in the qualification report.
 

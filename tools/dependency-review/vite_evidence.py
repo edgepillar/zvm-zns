@@ -11,7 +11,8 @@ from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from distribution_evidence import OUTPUT_EVIDENCE, review_traces, verify_notice_indexes, verify_publications
+from distribution_evidence import (OUTPUT_EVIDENCE, has_tailwind_style_import, review_traces,
+    verify_notice_indexes, verify_publications)
 from lock_review import NAME, decode, read_input, require
 from openzeppelin_candidate import checked_name, encoded, write_json
 from profile_sources import pin, read_regular
@@ -135,10 +136,11 @@ def replay(repo, members, source, run_id, attempt):
     evidence_raw = members[OUTPUT_EVIDENCE]
     require(pin(evidence_raw) == report['distributionEvidence'], 'distribution evidence receipt differs')
     distribution_evidence = decode(evidence_raw)
-    require(distribution_evidence['schema'] == 2 and distribution_evidence['selectedLockSha256'] == pin(selected)['sha256'],
+    require(distribution_evidence['schema'] == 3 and distribution_evidence['selectedLockSha256'] == pin(selected)['sha256'],
         'distribution lock binding differs')
     distributions = {'normal': report['normalDistribution'], 'fixture': report['fixtureBuild']['distribution']}
-    member_paths, stage_reports = review_traces(distribution_evidence['traces'], distributions, rows)
+    member_paths, stage_reports = review_traces(distribution_evidence['traces'], distributions, rows,
+        has_tailwind_style_import(repo))
     package_sources = distribution_evidence['packageSources']
     for row in package_sources.values():
         verify_pin(row['archive'], 32 << 20)
@@ -221,6 +223,8 @@ def main():
             print(f"  {role} maps to {selection['name']}@{selection['version']}.")
         for name, version in row['tailwindCssBanners'].items():
             print(f"  The final CSS asset {name} contains the Tailwind {version} publication banner.")
+        for name, sources in list(row['stylesheetInputs'].items())[:12]:
+            print(f"  Vite links {name} to " + ', '.join(sources[:12]) + '.')
         for label, names in (('Assets without origin evidence', row['assetsWithoutOriginNames']),
                 ('Outputs with unresolved origins', row['outputsWithUnresolvedOrigins'])):
             if names:

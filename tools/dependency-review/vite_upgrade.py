@@ -12,7 +12,8 @@ import subprocess
 from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from distribution_evidence import OUTPUT_EVIDENCE, complete_trace, review_traces, verify_notice_indexes, verify_publications
+from distribution_evidence import (OUTPUT_EVIDENCE, complete_trace, has_tailwind_style_import, review_traces,
+    verify_notice_indexes, verify_publications)
 from lock_review import NAME, ReviewError, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
 from profile_sources import inspect_profile_archive, inspect_with_budget, matches_profile, pin, read_regular
@@ -331,7 +332,7 @@ def main():
         report['fixtureBuild'] = fixture
         distributions = {'normal': normal, 'fixture': fixture['distribution']}
         traces = {stage: complete_trace(web, built, output, stage) for stage, built in distributions.items()}
-        member_paths, stage_reports = review_traces(traces, distributions, rows)
+        member_paths, stage_reports = review_traces(traces, distributions, rows, has_tailwind_style_import(repo))
         reviewed = report['installedChangedPublications']
         package_sources = {path: dict(reviewed[path]) for path in member_paths if path in reviewed}
         package_sources.update(review_installed_publications(web, rows,
@@ -347,7 +348,7 @@ def main():
                 source['originalMembers'][member] = actual
         summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
         verify_notice_indexes(traces, distributions, rows, package_sources, summary)
-        evidence = {'schema': 2, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
+        evidence = {'schema': 3, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
             'selectedLockSha256': pin(selected_lock)['sha256']}
         result_path = output / OUTPUT_EVIDENCE
         write_json(result_path, evidence)

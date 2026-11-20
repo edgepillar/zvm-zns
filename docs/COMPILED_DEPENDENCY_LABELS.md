@@ -133,12 +133,16 @@ source](https://github.com/vitejs/vite/blob/b39e6e63dcbfc3cf4be871acf3554efbd6d0
 [Rolldown runtime source](https://github.com/rolldown/rolldown/blob/b9c75ddc8bd50f2c1a4c7be0b548bdab5cba85ab/crates/rolldown_common/src/module_loader/runtime_module_brief.rs#L8-L9),
 [Vue helper source](https://github.com/vitejs/vite-plugin-vue/blob/822c69d687a5c6bdc4a72f2326aed9b0e1ba7030/packages/plugin-vue/src/helper.ts#L1-L9)
 
-For compiled CSS, the browser build reads the Tailwind version banner and
-requires the matching locked package. Hosted verification independently reads
-the banner from the final file and checks the installed Tailwind stylesheets
-against their archive. The same build path feeds Pages and the candidate
-scenarios. Hosted CI compares the index and shipped notice hashes with the
-original archive receipts. [Tailwind banner source](https://github.com/tailwindlabs/tailwindcss/blob/c2b24dd15fed1c59dd521bd86082f520c9f5ad0d/packages/tailwindcss/src/index.ts#L721-L724)
+For compiled CSS, the browser build can identify the Tailwind version banner
+or connect an emitted stylesheet with the importing application entry through
+Vite's bundle metadata. The observer also records stylesheet inputs from Vue
+components. Each recorded link binds an emitted CSS asset to the style modules
+of a chunk with a single CSS association. Hosted verification independently
+reads the final banner when present and checks the installed Tailwind
+stylesheets against their archive. The same build path feeds Pages and the
+candidate scenarios. Hosted CI compares the index and shipped notice hashes
+with the original archive receipts. [Vite output metadata](https://vite.dev/guide/api-plugin.html#output-bundle-metadata),
+[Tailwind banner source](https://github.com/tailwindlabs/tailwindcss/blob/c2b24dd15fed1c59dd521bd86082f520c9f5ad0d/packages/tailwindcss/src/index.ts#L721-L724)
 
 The web job also checks the npm registry archive, original package manifest and
 notice pins for each added or replaced publication installed on Linux x64 glibc.

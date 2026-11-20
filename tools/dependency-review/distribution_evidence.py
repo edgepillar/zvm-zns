@@ -13,6 +13,8 @@ OUTPUT_EVIDENCE = 'vite-distribution-evidence.json'
 STAGES = ('normal', 'fixture')
 UNRESOLVED = '@generated/unresolved'
 TAILWIND_ORIGIN = '@generated/tailwindcss/'
+STYLE_ENTRY = 'web/src/style.css'
+TAILWIND_IMPORT = re.compile(rb"""^[ \t]*@import[ \t]+(['"])tailwindcss\1[ \t]*;""", re.MULTILINE)
 TAILWIND_BANNER = re.compile(rb'/\*! tailwindcss v([0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)*)'
     rb' \| MIT License \| https://tailwindcss\.com \*/')
 GENERATED_PACKAGES = {
@@ -46,9 +48,14 @@ def generated_package_locations(sources, rows):
     return result
 
 
+def has_tailwind_style_import(repo):
+    return bool(TAILWIND_IMPORT.search(read_input(repo, STYLE_ENTRY)))
+
+
 def complete_trace(web, distribution, output, stage):
     observed = decode(read_input(output, stage + '-bundle.json'))
-    require(observed['schema'] == 1 and type(observed['outputs']) is dict, 'distribution observer schema differs')
+    require(observed['schema'] == 2 and type(observed['outputs']) is dict
+        and type(observed['stylesheets']) is dict, 'distribution observer schema differs')
     files = distribution['files']
     copied = {}
     for name in sorted(set(files) - set(observed['outputs'])):
@@ -67,11 +74,26 @@ def complete_trace(web, distribution, output, stage):
             if marker:
                 tailwind_banners[name] = marker.group(1).decode('ascii')
     return {'observed': observed['outputs'], 'publicCopies': copied, 'nativeHeaderCandidates': signatures,
-        'tailwindCssBanners': tailwind_banners,
+        'tailwindCssBanners': tailwind_banners, 'stylesheets': observed['stylesheets'],
         'noticeIndex': read_notice_index(output / (stage + '-dist'))}
 
 
-def review_traces(traces, distributions, rows):
+def stylesheet_sources(seen, stylesheets):
+    result = {}
+    require(type(stylesheets) is dict and len(stylesheets) <= len(seen), 'stylesheet evidence shape differs')
+    for chunk, row in stylesheets.items():
+        target, sources = row['file'], row['sources']
+        require(chunk in seen and seen[chunk]['type'] == 'chunk' and target in seen
+            and seen[target]['type'] == 'asset' and target.endswith('.css'), 'stylesheet has no observed chunk or output')
+        require(type(sources) is list and 0 < len(sources) <= 8192
+            and all(isinstance(path, str) and path.endswith(('.css', '.vue')) for path in sources)
+            and sources == sorted(set(sources)) and set(sources) <= set(seen[chunk]['sources']),
+            'stylesheet sources differ from the associated chunk')
+        result.setdefault(target, set()).update(sources)
+    return {name: sorted(sources) for name, sources in sorted(result.items())}
+
+
+def review_traces(traces, distributions, rows, tailwind_imported=False):
     require(set(traces) == set(distributions) == set(STAGES), 'distribution evidence phases differ')
     locations = sorted((location for location in rows if location), key=len, reverse=True)
     all_members, stage_reports = {}, {}
@@ -84,6 +106,7 @@ def review_traces(traces, distributions, rows):
             and all(files[name] == value for name, value in copies.items()), 'distribution public copies differ')
         require(set(trace['nativeHeaderCandidates']) <= set(files)
             and set(trace['nativeHeaderCandidates'].values()) <= set(MAGIC.values()) | {'possible PE'}, 'native header evidence differs')
+        stylesheets = stylesheet_sources(seen, trace['stylesheets'])
         stage_members, generated = set(), set()
         missing_assets, unresolved_outputs, observed_banners = [], [], {}
         for name, entry in seen.items():
@@ -93,7 +116,7 @@ def review_traces(traces, distributions, rows):
             sources = entry['sources']
             require(type(sources) is list and all(type(source) is str for source in sources)
                 and sources == sorted(set(sources)) and len(sources) <= 8192, 'bundle source records differ')
-            if entry['type'] == 'asset' and not sources and not name.startswith('notices/npm/'):
+            if entry['type'] == 'asset' and not sources and name not in stylesheets and not name.startswith('notices/npm/'):
                 missing_assets.append(name)
             if UNRESOLVED in sources:
                 unresolved_outputs.append(name)
@@ -120,6 +143,11 @@ def review_traces(traces, distributions, rows):
                         or source == 'web/index.html' or (stage == 'fixture' and source == 'deployments/browser-fixture.json'),
                         'bundle source is outside the reviewed application')
         require(observed_banners == trace['tailwindCssBanners'], 'bundle origin differs from the final CSS banner')
+        tailwind_outputs = [name for name, sources in stylesheets.items() if tailwind_imported and STYLE_ENTRY in sources]
+        if tailwind_outputs:
+            location = 'node_modules/tailwindcss'
+            require(location in rows, 'Tailwind stylesheet input has no lock location')
+            generated.add(TAILWIND_ORIGIN + rows[location]['version'])
         role_locations = generated_package_locations(generated, rows)
         for role, location in role_locations.items():
             members = all_members.setdefault(location, set())
@@ -130,6 +158,7 @@ def review_traces(traces, distributions, rows):
         stage_reports[stage] = {'outputFiles': len(files), 'bundlerFiles': len(seen), 'copiedFiles': len(copies),
             'packageLocations': sorted(stage_members), 'generatedFamilies': sorted(generated),
             'generatedPackageLocations': role_locations, 'tailwindCssBanners': observed_banners,
+            'stylesheetInputs': stylesheets, 'tailwindStyleEntryOutputs': tailwind_outputs,
             'assetsWithoutReportedOrigins': len(missing_assets), 'assetsWithoutOriginNames': sorted(missing_assets),
             'outputsWithUnresolvedOrigins': sorted(unresolved_outputs), 'standaloneNativeCandidates': native}
     require(0 < len(all_members) <= 128 and sum(map(len, all_members.values())) <= 8192, 'distribution source inventory budget')

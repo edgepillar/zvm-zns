@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto'
 import {writeFileSync} from 'node:fs'
 import {isAbsolute} from 'node:path'
-import {bundleOrigins, portablePath} from '../../web/scripts/bundle-origins.ts'
+import {bundleOrigins, portablePath, stylesheetChunkInputs} from '../../web/scripts/bundle-origins.ts'
 
 export function distributionObserver(repo, destination) {
   if (!destination || !isAbsolute(destination)) throw new Error('Distribution evidence requires an absolute destination')
@@ -13,6 +13,7 @@ export function distributionObserver(repo, destination) {
       order: 'post',
       handler(_options, bundle) {
         const outputs = {}
+        const stylesheets = {}
         let sourceCount = 0
         const names = Object.keys(bundle).sort()
         if (names.length > 512) throw new Error('Distribution evidence file limit')
@@ -30,8 +31,12 @@ export function distributionObserver(repo, destination) {
             sha256: createHash('sha256').update(source).digest('hex'),
             sources,
           }
+          if (chunk) {
+            const stylesheet = stylesheetChunkInputs(output, repo)
+            if (stylesheet && bundle[stylesheet.file]?.type === 'asset') stylesheets[name] = stylesheet
+          }
         }
-        const data = JSON.stringify({schema: 1, outputs}) + '\n'
+        const data = JSON.stringify({schema: 2, outputs, stylesheets}) + '\n'
         if (Buffer.byteLength(data) > 1 << 20) throw new Error('Distribution evidence byte limit')
         writeFileSync(destination, data, {flag: 'wx', mode: 0o600})
       },

@@ -51,7 +51,7 @@ class DistributionEvidenceControls(unittest.TestCase):
         trace = {'observed': {'assets/app.js': {**files['assets/app.js'], 'type': 'chunk',
                 'sources': ['@generated/rolldown/runtime', 'web/' + self.location + '/index.js']}},
             'publicCopies': {'notices/child-LICENSE': files['notices/child-LICENSE']},
-            'nativeHeaderCandidates': {}, 'tailwindCssBanners': {}}
+            'nativeHeaderCandidates': {}, 'tailwindCssBanners': {}, 'stylesheets': {}}
         self.traces = {'normal': trace, 'fixture': deepcopy(trace)}
         self.distributions = {'normal': distribution, 'fixture': deepcopy(distribution)}
 
@@ -88,6 +88,25 @@ class DistributionEvidenceControls(unittest.TestCase):
         stage['tailwindCssBanners'].clear()
         with self.assertRaisesRegex(ReviewError, 'differs from the final CSS banner'):
             review_traces(self.traces, self.distributions, self.rows)
+
+    def test_stylesheet_link_covers_asset_and_tailwind_import_without_banner(self):
+        self.rows['node_modules/tailwindcss'] = {'version': '4.3.3'}
+        stage = self.traces['normal']
+        source = 'web/src/style.css'
+        target = 'assets/app.css'
+        css = pin(b'compiled stylesheet')
+        self.distributions['normal']['files'][target] = css
+        stage['observed'][target] = {**css, 'type': 'asset', 'sources': []}
+        stage['observed']['assets/app.js']['sources'].append(source)
+        stage['stylesheets']['assets/app.js'] = {'file': target, 'sources': [source]}
+        members, stages = review_traces(self.traces, self.distributions, self.rows, tailwind_imported=True)
+        self.assertIn('node_modules/tailwindcss', members)
+        self.assertEqual(stages['normal']['tailwindStyleEntryOutputs'], [target])
+        self.assertEqual(stages['normal']['stylesheetInputs'], {target: [source]})
+        self.assertEqual(stages['normal']['assetsWithoutReportedOrigins'], 0)
+        stage['stylesheets']['assets/app.js']['sources'] = ['web/src/other.css']
+        with self.assertRaisesRegex(ReviewError, 'stylesheet sources differ'):
+            review_traces(self.traces, self.distributions, self.rows, tailwind_imported=True)
 
     def test_trace_must_match_emitted_and_copied_bytes(self):
         for section, name in [('observed', 'assets/app.js'), ('publicCopies', 'notices/child-LICENSE')]:

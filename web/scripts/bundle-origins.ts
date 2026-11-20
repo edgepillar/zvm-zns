@@ -47,7 +47,11 @@ export function generatedPackageLocation(origin: string, rows: Record<string, {v
   }
 }
 
-type ModuleOrigins = {type: 'chunk', modules: Record<string, unknown>}
+type ModuleOrigins = {
+  type: 'chunk'
+  modules: Record<string, unknown>
+  viteMetadata?: {importedCss: ReadonlySet<string>}
+}
 type AssetOrigins = {
   type: 'asset'
   fileName: string
@@ -67,4 +71,24 @@ export function bundleOrigins(output: ModuleOrigins | AssetOrigins, repo: string
     if (version) origins.add(tailwindOrigin + version)
   }
   return [...origins].sort()
+}
+
+export function stylesheetChunkInputs(chunk: ModuleOrigins, repo: string) {
+  const files = [...(chunk.viteMetadata?.importedCss ?? [])]
+  // A chunk may inherit several stylesheets. Its module IDs only identify
+  // the input of one output when there is a single CSS association.
+  if (files.length !== 1 || !portablePath(files[0]) || !files[0].endsWith('.css')) return
+  const ids = Object.keys(chunk.modules)
+  if (ids.length > 8192) throw new Error('Stylesheet source limit')
+  const sources = new Set<string>()
+  for (const id of ids) {
+    const [path, search] = id.split('?', 2)
+    const query = new URLSearchParams(search)
+    const vueStyle = path.endsWith('.vue') && query.has('vue') && query.get('type') === 'style'
+    const css = path.endsWith('.css') && !['inline', 'raw', 'url'].some(key => query.has(key))
+    if (!vueStyle && !css) continue
+    const source = sourceOrigin(id, repo)
+    if (source !== '@generated/unresolved') sources.add(source)
+  }
+  if (sources.size) return {file: files[0], sources: [...sources].sort()}
 }
