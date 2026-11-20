@@ -3,6 +3,7 @@ import {dirname, resolve} from 'node:path'
 import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwind from '@tailwindcss/vite'
+import {browserNotices} from './scripts/browser-notices'
 
 /**
  * Libraries in their own chunks, so a deploy that only touches the app does
@@ -49,7 +50,7 @@ export default defineConfig(({mode}) => {
       },
       dedupe: ['vue', 'viem'],
     },
-    plugins: [vue(), tailwind()],
+    plugins: [vue(), tailwind(), browserNotices(__dirname)],
     build: {
       target: 'es2022',
       assetsInlineLimit: 4096,

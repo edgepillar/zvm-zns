@@ -13,6 +13,7 @@ from browser_runtime import download_browser, extract_browser
 from browser_staging import hosted_only, new_file, validate_source_plan
 from coherent_derivation import PACKAGE, MAPPER, runtime_probe
 from compiled_labels import canonical_sha256, inspect_labels
+from distribution_notices import read_notice_index, verify_notice_index
 from lock_review import read_input, require
 from node_consumer_controls import permission_args
 from openzeppelin_candidate import run_bounded, write_json
@@ -20,6 +21,7 @@ from profile_sources import pin, read_regular, select_profile, verify_profile
 from web_patches import dist_inventory
 
 VENDOR = 'vendor/chromium-bidi-157-reviewed'
+CURRENT_BUILD_FILES = ('web/vite.config.ts', 'web/scripts/browser-notices.ts', 'web/scripts/bundle-origins.ts')
 
 
 def temporary_directory(output):
@@ -104,8 +106,9 @@ def effective_profile(web, manifest):
         require(pin(read_regular(web, name, 16 << 20)) == row['effective'], 'effective application runtime differs')
 
 
-def verify_build_sources(repo, source):
-    rows = validate_source_plan(source)
+def verify_build_sources(repo, source, current_pins):
+    rows = [row for row in validate_source_plan(source) if row['sourcePath'] not in CURRENT_BUILD_FILES]
+    rows.extend({'sourceRepository': 'main', 'sourcePath': path, 'pin': current_pins[path]} for path in CURRENT_BUILD_FILES)
     for row in rows:
         provider = repo if row['sourceRepository'] == 'main' else repo / 'zvm-core'
         require(pin(read_input(provider, row['sourcePath'])) == row['pin'], 'browser build source differs')
@@ -134,7 +137,7 @@ def verify_reused_members(web, publications, manifest):
 def build_distributions(repo, web, output, plan, manifest, publications, run):
     source_raw = read_input(repo, 'tools/dependency-review/browser-app-sources.json')
     source = json.loads(source_raw)
-    sources = verify_build_sources(repo, source)
+    sources = verify_build_sources(repo, source, plan['inputPins'])
     require(read_input(repo, '.env') == read_input(repo, '.env.example'), 'browser build environment differs')
     package_raw = read_input(web, 'package.json')
     scripts = json.loads(package_raw)['scripts']
@@ -176,7 +179,7 @@ def build_distributions(repo, web, output, plan, manifest, publications, run):
     for notice in plan['retainedStaticNotices']:
         for built in (distribution, fixture_distribution):
             require(built['files'].get(notice['distPath']) == notice['pin'], 'static notice differs')
-    verify_build_sources(repo, source)
+    verify_build_sources(repo, source, plan['inputPins'])
     effective_profile(web, manifest)
     require(read_input(web, 'package.json') == package_raw, 'application manifest changed during the builds')
     return distribution, {'schema': 2, 'sourcePlan': pin(source_raw), 'sources': sources,
@@ -297,6 +300,12 @@ def main():
             repo, web, output, plan, manifest, publications, run)
         distributions = {'normal': output / 'normal-dist', 'fixture': output / 'fixture-dist'}
         expected_distributions = {'normal': report['normalDistribution'], 'fixture': report['fixtureBuild']['distribution']}
+        notice_inputs = {location: {'selection': archive['selection'],
+            'originalNotices': {name: archive['filePins'][name] for name in archive['noticeCandidates']}}
+            for location, archive in publications.items()}
+        lock_rows = json.loads(read_input(web, 'package-lock.json'))['packages']
+        report['shippedNotices'] = {stage: verify_notice_index(read_notice_index(path), expected_distributions[stage],
+            lock_rows, notice_inputs) for stage, path in distributions.items()}
         if upgrade is not None:
             require(upgrade['binding']['syntheticDeployment'] == report['fixtureBuild']['syntheticDeployment'],
                 'candidate and baseline use different synthetic deployment bytes')
@@ -378,6 +387,9 @@ def main():
     print(json.dumps({'status': report['status'], 'commands': len(report['commands']), 'productionGate': 'NO_GO'}))
     reused = report['fixtureBuild']['verifiedReusedMembers']
     print(f"Baseline fixture reused {reused['regularMembers']:,} verified members ({reused['payloadBytes']:,} bytes).")
+    for stage, notices in report['shippedNotices'].items():
+        print(f"The Vite 7 {stage} build ships {notices['noticeFiles']} exact notice files for "
+            f"{len(notices['locationsWithOriginalNotices'])} locked package locations.")
     if upgrade is not None:
         print('Vite 8 passed both application scenarios over CDP and BiDi using the same two Chrome sessions.')
         print('Both locked installs used the current job npm cache. The browser input was downloaded once.')

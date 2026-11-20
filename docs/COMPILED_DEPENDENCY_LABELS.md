@@ -123,6 +123,13 @@ archive. The report records generated origin categories, assets with empty
 origin metadata, standalone native file candidates and exact notice copies.
 Generated or inlined material can have incomplete origin metadata.
 
+The normal application build emits a `notices/npm/index.json` from its
+reported package origins. It copies the original notice files from the installed
+lock selections and reuses identical bytes across packages. Reported Vite or
+Rolldown runtime helpers contribute their corresponding package notices. The
+same build path feeds Pages and the candidate scenarios. Hosted CI verifies the
+index and the shipped file hashes against the original archive receipts.
+
 The web job also checks the npm registry archive, original package manifest and
 notice pins for each added or replaced publication installed on Linux x64 glibc.
 Its report identifies changed optional locations absent from that installation.

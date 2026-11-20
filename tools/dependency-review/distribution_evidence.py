@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from distribution_notices import read_notice_index, verify_notice_index
 from lock_review import decode, read_input, require
 from openzeppelin_candidate import checked_name
 from profile_sources import pin, read_regular
@@ -32,7 +33,8 @@ def complete_trace(web, distribution, output, stage):
         signature = 'possible PE' if header.startswith(b'MZ') else MAGIC.get(header)
         if signature is not None:
             signatures[name] = signature
-    return {'observed': observed['outputs'], 'publicCopies': copied, 'nativeHeaderCandidates': signatures}
+    return {'observed': observed['outputs'], 'publicCopies': copied, 'nativeHeaderCandidates': signatures,
+        'noticeIndex': read_notice_index(output / (stage + '-dist'))}
 
 
 def review_traces(traces, distributions, rows):
@@ -56,7 +58,7 @@ def review_traces(traces, distributions, rows):
                 'observed bundle member differs: ' + name)
             sources = entry['sources']
             require(type(sources) is list and sources == sorted(set(sources)) and len(sources) <= 8192, 'bundle source records differ')
-            empty_assets += int(entry['type'] == 'asset' and not sources)
+            empty_assets += int(entry['type'] == 'asset' and not sources and not name.startswith('notices/npm/'))
             for source in sources:
                 if source in GENERATED:
                     generated.add(source)
@@ -91,4 +93,20 @@ def verify_publications(rows, member_paths, package_sources, distributions, stag
         final_pins = {(value['bytes'], value['sha256']) for value in distributions[stage]['files'].values()}
         review['locationsWithOriginalNoticeBytesInOutput'] = sorted(location for location in review['packageLocations']
             if any((value['bytes'], value['sha256']) in final_pins for value in package_sources[location]['originalNotices'].values()))
+    return stage_reports
+
+
+def verify_notice_indexes(traces, distributions, rows, publications, stage_reports):
+    for stage, review in stage_reports.items():
+        expected = set(review['packageLocations'])
+        generated = set(review['generatedFamilies'])
+        if generated & {'@generated/vite', '@generated/commonjs'}:
+            expected.add('node_modules/vite')
+        if '@generated/rolldown' in generated:
+            nested = 'node_modules/vite/node_modules/rolldown'
+            expected.add(nested if nested in rows else 'node_modules/rolldown')
+        review['shippedNotices'] = verify_notice_index(
+            traces[stage]['noticeIndex'], distributions[stage], rows, publications, expected)
+        require(set(review['packageLocations']) <= set(review['shippedNotices']['locationsWithOriginalNotices']),
+            'a reported browser package has no verified shipped notice')
     return stage_reports

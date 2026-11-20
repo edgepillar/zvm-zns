@@ -112,7 +112,8 @@ def inspect_profile_archive(raw, selection, row, *, expanded_limit=192 << 20, me
         'filePins': files, 'manifestSha256': files['package.json']['sha256'],
         'manifestSelectors': {field: manifest[field] for field in ('os', 'cpu', 'libc') if field in manifest},
         'manifestEngines': manifest.get('engines', {}),
-        'noticeCandidates': sorted(name for name in files if name.rsplit('/', 1)[-1].upper().startswith(('LICENSE', 'LICENCE', 'COPYING', 'NOTICE', 'COPYRIGHT'))),
+        'noticeCandidates': sorted(name for name in files if name.rsplit('/', 1)[-1].upper().startswith(
+            ('LICENSE', 'LICENCE', 'COPYING', 'NOTICE', 'COPYRIGHT', 'OFL', 'UNLICENSE'))),
         'publisherAuthenticationOrCompleteLegalReview': False}
 
 

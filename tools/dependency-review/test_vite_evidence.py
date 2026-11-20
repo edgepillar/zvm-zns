@@ -6,6 +6,7 @@ import unittest
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from distribution_evidence import review_traces, verify_publications
+from distribution_notices import NOTICE_INDEX, verify_notice_index
 from lock_review import ReviewError
 from profile_sources import pin
 from vite_evidence import review_members
@@ -66,3 +67,19 @@ class DistributionEvidenceControls(unittest.TestCase):
             traces['normal'][section][name]['bytes'] += 1
             with self.subTest(section=section), self.assertRaises(ReviewError):
                 review_traces(traces, self.distributions, self.rows)
+
+    def test_shipped_index_requires_exact_archive_and_output_bytes(self):
+        import json
+
+        path = 'notices/npm/child@1.0.0/LICENSE'
+        value = pin(b'original notice')
+        source = {self.location: {'selection': self.selection, 'originalNotices': {'LICENSE': value}}}
+        entry = {'location': self.location, 'name': 'child', 'version': '1.0.0', 'license': 'MIT',
+            'notices': [{'member': 'LICENSE', 'file': path, **value}]}
+        text = json.dumps({'schema': 1, 'packages': [entry]})
+        distribution = {'files': {NOTICE_INDEX: pin(text.encode()), path: value}}
+        result = verify_notice_index(text, distribution, self.rows, source, {self.location})
+        self.assertEqual(result['locationsWithOriginalNotices'], [self.location])
+        distribution['files'][path] = pin(b'different text')
+        with self.assertRaisesRegex(ReviewError, 'shipped notice bytes differ'):
+            verify_notice_index(text, distribution, self.rows, source, {self.location})

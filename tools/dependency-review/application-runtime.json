@@ -63,6 +63,7 @@
     "tools/dependency-review/vite-output.config.mjs",
     "tools/dependency-review/distribution-observer.mjs",
     "tools/dependency-review/distribution_evidence.py",
+    "tools/dependency-review/distribution_notices.py",
     "tools/dependency-review/browser_archive.py",
     "tools/dependency-review/browser_runtime.py",
     "tools/dependency-review/browser_staging.py",
@@ -147,6 +148,14 @@
     "web/public/notices/vite-7.3.8-LICENSE.md": {
       "bytes": 101176,
       "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
+    },
+    "web/scripts/browser-notices.ts": {
+      "bytes": 6701,
+      "sha256": "41a9d5c9ead2689ce1714b936fe761bb372c6abd920a4580f27ef96503bd9e3d"
+    },
+    "web/scripts/bundle-origins.ts": {
+      "bytes": 1779,
+      "sha256": "f84bc161cf080f80c95fc3ecc24cc91f78e879b66af8b1761d452b5770dbd322"
     },
     "web/scripts/prepare-runtime.mjs": {
       "bytes": 11434,
@@ -425,8 +434,8 @@
       "sha256": "0da6a2353c2f98fc22dcc44247f9369f66d65febb4e39ff064c0015762a8e0f1"
     },
     "web/vite.config.ts": {
-      "bytes": 2471,
-      "sha256": "153068076a63ea6894cfc0007c2d907fba315e39069e7dc0c3a5b0dc537468cb"
+      "bytes": 2555,
+      "sha256": "f4fcb6308dc9d29618197be7a2f842d8cac5912c491d4ce30e4802545ef67fe8"
     }
   },
   "legacyReferenceCommit": "1fb99473f5acbed0c41a40f7ae3eb2e2aa474ef8",

@@ -12,7 +12,7 @@ import subprocess
 from application_runtime import VENDOR, build_distributions, current_cache_index, installed_vite_labels, verify_inputs
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from distribution_evidence import OUTPUT_EVIDENCE, complete_trace, review_traces, verify_publications
+from distribution_evidence import OUTPUT_EVIDENCE, complete_trace, review_traces, verify_notice_indexes, verify_publications
 from lock_review import NAME, ReviewError, decode, dependencies, read_input, require, resolve
 from openzeppelin_candidate import encoded, run_bounded, write_json
 from profile_sources import inspect_profile_archive, inspect_with_budget, matches_profile, pin, read_regular
@@ -343,6 +343,8 @@ def main():
                 require(archive_members.get(member) == actual, 'reported output source differs from its registry archive')
                 source['originalMembers'][member] = actual
         summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
+        notice_sources = {**report['installedChangedPublications'], **package_sources}
+        verify_notice_indexes(traces, distributions, rows, notice_sources, summary)
         evidence = {'schema': 1, 'traces': traces, 'packageSources': package_sources, 'summary': summary,
             'selectedLockSha256': pin(selected_lock)['sha256']}
         result_path = output / OUTPUT_EVIDENCE

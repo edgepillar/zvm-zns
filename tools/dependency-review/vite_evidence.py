@@ -11,7 +11,7 @@ from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 
 from browser_staging import hosted_only
 from compiled_labels import canonical_sha256
-from distribution_evidence import OUTPUT_EVIDENCE, review_traces, verify_publications
+from distribution_evidence import OUTPUT_EVIDENCE, review_traces, verify_notice_indexes, verify_publications
 from lock_review import NAME, decode, read_input, require
 from openzeppelin_candidate import checked_name, encoded, write_json
 from profile_sources import pin, read_regular
@@ -147,6 +147,7 @@ def replay(repo, members, source, run_id, attempt):
             if value != pin(b''):
                 verify_pin(value, 16 << 20)
     distribution_summary = verify_publications(rows, member_paths, package_sources, distributions, stage_reports)
+    verify_notice_indexes(distribution_evidence['traces'], distributions, rows, {**installed, **package_sources}, distribution_summary)
     require(distribution_summary == distribution_evidence['summary'], 'replayed distribution summary differs')
     return {'candidateLock': pin(selected), 'generatedLock': pin(generated), 'lockLocations': len(rows) - 1,
         'noticeEvidence': installed, 'absentOptionalChangedLocations': absent,
@@ -215,6 +216,9 @@ def main():
             f"{len(row['locationsWithOriginalNoticeBytesInOutput'])} npm origins with exact original notice bytes in the output.")
         families = ', '.join(row['generatedFamilies']) or 'none recorded'
         print(f"  Generated origin categories are {families}. {row['assetsWithoutReportedOrigins']} assets have empty origin metadata.")
+        notices = row['shippedNotices']
+        print(f"  The shipped index covers {len(notices['locationsWithOriginalNotices'])} locked origins with "
+            f"{notices['noticeFiles']} distinct original notice files.")
     print('')
     for row in checked['distributionPackageNotices'].values():
         selection = row['selection']

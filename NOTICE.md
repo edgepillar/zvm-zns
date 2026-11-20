@@ -25,6 +25,12 @@ not establish complete distribution notices or legal acceptance for all other
 packages. See [`docs/WEB_DEPENDENCY_PATCHES.md`](docs/WEB_DEPENDENCY_PATCHES.md)
 for source bindings, selected controls and remaining qualification.
 
+The browser build publishes `notices/npm/index.json` with the original notice
+files for its reported npm origins and identified bundler runtime helpers.
+Identical notice bytes share one file. Hosted CI compares the shipped files
+with their locked publication archives. Review of generated and inlined
+material remains open.
+
 ## Selected compiler runtime dependencies
 
 The unchanged solc 0.8.26 tooling selects follow-redirects 1.16.3 (within its
